@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
+import { MyCake } from './MyCake.js';
 
 /**
  *  This class contains the contents of out application
@@ -29,8 +30,8 @@ class MyContents  {
             specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
         
         this.table = new THREE.Group();
-        this.cake = new THREE.Group();
-        this.cakeSlice = new THREE.Group();
+        this.cake = null;
+        this.cakeSlice = null;
     }
 
     /**
@@ -160,66 +161,18 @@ class MyContents  {
      * build cake
      */
     buildCake() {
-        // Create the cylinder geometry
-        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32, 1, false, 0, 11 * Math.PI / 6);
-        const material = new THREE.MeshPhongMaterial({ color: 0xffa500 });
-        let cakeMesh = new THREE.Mesh(geometry, material);
-        //cakeMesh.position.y = 3
-        // Add the cylinder to the scene
-        this.app.scene.add(cakeMesh);
-
-        let plane = new THREE.PlaneGeometry( 0.5, 0.5 );
-        let cover1 = new THREE.Mesh( plane, material );
-        cover1.position.z = 0.25
-        cover1.rotation.y = -Math.PI / 2
-        
-        let cover2 = new THREE.Mesh(plane, material)
-        cover2.position.x = -0.125
-        cover2.position.z = 0.21650
-        cover2.rotation.y = 2 * Math.PI / 6
-        //cover2.rotation.y = Math.PI / 2 + 11 * Math.PI / 6
-        
-        cakeMesh.add( cover1 )
-        cakeMesh.add( cover2 )
-
-        this.cake.add(cakeMesh);
-        this.cake.add(cover1);
-        this.cake.add(cover2);
-
+        this.cake = new MyCake(this.app, 0.5, 0.5, 0, 11 * Math.PI / 6, - Math.PI/2, 2 * Math.PI / 6, 0.25, -0.125, 0.21650);
+        this.app.scene.add(this.cake);
         this.cake.position.y = 2.3
-        this.app.scene.add(this.cake)
         
     }
 
     buildCakeSlice(){
-        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32, 1, false, 0, Math.PI / 6);
-        const material = new THREE.MeshPhongMaterial({ color: 0xffa500 });
-        let cakeMesh = new THREE.Mesh(geometry, material);
-        //cakeMesh.position.y = 3
-        // Add the cylinder to the scene
-        this.app.scene.add(cakeMesh);
-
-        let plane = new THREE.PlaneGeometry( 0.5, 0.5 );
-        let cover1 = new THREE.Mesh( plane, material );
-        cover1.position.z = 0.25
-        cover1.rotation.y = -Math.PI / 2
-        
-        let cover2 = new THREE.Mesh(plane, material)
-        cover2.position.x = 0.125
-        cover2.position.z = 0.21650
-        cover2.rotation.y = Math.PI / 2 + Math.PI / 6
-        //cover2.position.x = -0.25
-        
-        cakeMesh.add( cover1 )
-        cakeMesh.add( cover2 )
-
-        this.cakeSlice.add(cakeMesh)
-        this.cakeSlice.add(cover1)
-        this.cakeSlice.add(cover2)
+        this.cakeSlice = new MyCake(this.app, 0.5, 0.5, 0, Math.PI / 6, - Math.PI / 2, 4 * Math.PI / 6, 0.25, 0.125, 0.21650)
+        this.app.scene.add(this.cakeSlice);
         this.cakeSlice.position.y = 2.3
         this.cakeSlice.position.x = 1.45
         this.cakeSlice.position.z = -0.25
-        this.app.scene.add(this.cakeSlice)
         
     }
 
