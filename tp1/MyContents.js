@@ -17,7 +17,7 @@ class MyContents  {
         // box related attributes
         this.boxMesh = null
         this.boxMeshSize = 1.0
-        this.boxEnabled = true
+        this.boxEnabled = false
         this.lastBoxEnabled = null
         this.boxDisplacement = new THREE.Vector3(0,2,0)
 
@@ -27,6 +27,9 @@ class MyContents  {
         this.planeShininess = 30
         this.planeMaterial = new THREE.MeshPhongMaterial({ color: this.diffusePlaneColor, 
             specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
+        
+        this.table = new THREE.Group();
+        this.cake = new THREE.Group();
     }
 
     /**
@@ -39,8 +42,151 @@ class MyContents  {
         // Create a Cube Mesh with basic material
         let box = new THREE.BoxGeometry(  this.boxMeshSize,  this.boxMeshSize,  this.boxMeshSize );
         this.boxMesh = new THREE.Mesh( box, boxMaterial );
+        
         this.boxMesh.rotation.x = -Math.PI / 2;
         this.boxMesh.position.y = this.boxDisplacement.y;
+    }
+    /**
+     * builds the table
+     */
+    buildTable() {
+        let tableMaterial = new THREE.MeshPhongMaterial({ color: "#d8b281", 
+        specular: "#000000", emissive: "#000000", shininess: 90 })
+
+        // Create Table top with basic material
+        let tableTop = new THREE.BoxGeometry( 4,  2.5,  0.2 );
+        this.tableTopMesh = new THREE.Mesh( tableTop, tableMaterial );
+        
+        this.tableTopMesh.rotation.x = - Math.PI / 2;
+        this.tableTopMesh.position.y = 2;
+
+        this.app.scene.add(this.tableTopMesh)
+
+        // Create table legs
+        // Define the cylinder's parameters
+        const radiusTop = 0.2; // Radius of the top circle
+        const radiusBottom = 0.2; // Radius of the bottom circle
+        const height = 2; // Height of the cylinder
+        const radialSegments = 32; // Number of segments around the cylinder
+        const heightSegments = 1; // Number of segments along the height
+        const openEnded = false; // Whether the cylinder has open ends
+
+        // Create the cylinder geometry
+        let geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded);
+
+        // Create the cylinder mesh
+        let legMesh = new THREE.Mesh(geometry, tableMaterial);
+        legMesh.position.y = 1
+        legMesh.position.x = 1.6
+        legMesh.position.z = -1
+        this.tableTopMesh.add(legMesh)
+
+        let legMesh2 = new THREE.Mesh(geometry, tableMaterial);
+        legMesh2.position.y = 1
+        legMesh2.position.x = -1.6
+        legMesh2.position.z = 1
+        this.tableTopMesh.add(legMesh2)
+
+        let legMesh3 = new THREE.Mesh(geometry, tableMaterial);
+        legMesh3.position.y = 1
+        legMesh3.position.x = -1.6
+        legMesh3.position.z = -1
+        this.tableTopMesh.add(legMesh3)
+
+        let legMesh4 = new THREE.Mesh(geometry, tableMaterial);
+        legMesh4.position.y = 1
+        legMesh4.position.x = 1.6
+        legMesh4.position.z = 1
+        this.tableTopMesh.add(legMesh4)
+
+        this.table.add(this.tableTopMesh)
+        this.table.add(legMesh)
+        this.table.add(legMesh2)
+        this.table.add(legMesh3)
+        this.table.add(legMesh4)
+        
+        this.app.scene.add(this.table)
+
+    }
+
+    /**
+     * builds walls 
+     */
+    buildWalls() {
+
+        //Builds the ground wall
+        
+        let plane = new THREE.PlaneGeometry( 10, 10 );
+        this.planeMesh = new THREE.Mesh( plane, this.planeMaterial );
+        this.planeMesh.rotation.x = -Math.PI / 2;
+        this.planeMesh.position.y = -0;
+        this.app.scene.add( this.planeMesh );
+
+        // defining materials for walls
+        let wallsMaterial = new THREE.MeshPhongMaterial({ color: "#f0f0f0", 
+            specular: "#777777", emissive: "#000000", shininess: 30 })
+        let wallHeight = 7;
+        plane = new THREE.PlaneGeometry( 10, wallHeight )
+
+        // note: frontWall is the visible wall with the frontal ortoghonal camera (actually is the backWall)
+        this.frontWallMesh = new THREE.Mesh( plane, wallsMaterial );
+        this.frontWallMesh.position.y = wallHeight / 2
+        this.frontWallMesh.position.z = -5
+        
+        this.rightWallMesh = new THREE.Mesh(plane, wallsMaterial)
+        this.rightWallMesh.position.x = -5
+        this.rightWallMesh.position.y = wallHeight / 2
+        this.rightWallMesh.rotation.y = Math.PI / 2
+        
+        this.backWallMesh = new THREE.Mesh(plane, wallsMaterial)
+        this.backWallMesh.position.y = wallHeight / 2
+        this.backWallMesh.position.z = 5
+        this.backWallMesh.rotation.y = Math.PI
+        
+        this.leftWallMesh = new THREE.Mesh(plane, wallsMaterial)
+        this.leftWallMesh.position.x = 5        
+        this.leftWallMesh.position.y = wallHeight / 2
+        this.leftWallMesh.rotation.y = 3 * Math.PI / 2
+        
+        this.app.scene.add( this.frontWallMesh );
+        this.app.scene.add( this.rightWallMesh );
+        this.app.scene.add( this.backWallMesh );
+        this.app.scene.add( this.leftWallMesh );
+
+    }
+
+    /**
+     * build cake
+     */
+    buildCake() {
+        // Create the cylinder geometry
+        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32, 1, false, 0, 11 * Math.PI / 6);
+        const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        let cakeMesh = new THREE.Mesh(geometry, material);
+        //cakeMesh.position.y = 3
+        // Add the cylinder to the scene
+        this.app.scene.add(cakeMesh);
+
+        let plane = new THREE.PlaneGeometry( 0.5, 0.5 );
+        let cover1 = new THREE.Mesh( plane, material );
+        cover1.position.z = 0.25
+        cover1.rotation.y = -Math.PI / 2
+        
+        let cover2 = new THREE.Mesh(plane, material)
+        cover2.position.x = -0.125
+        cover2.position.z = 0.21650
+        cover2.rotation.y = 2 * Math.PI / 6
+        //cover2.rotation.y = Math.PI / 2 + 11 * Math.PI / 6
+        
+        cakeMesh.add( cover1 )
+        cakeMesh.add( cover2 )
+
+        this.cake.add(cakeMesh);
+        this.cake.add(cover1)
+        this.cake.add(cover2)
+
+        this.app.scene.add(this.cake)
+        
     }
 
     /**
@@ -70,14 +216,11 @@ class MyContents  {
         this.app.scene.add( ambientLight );
 
         this.buildBox()
-        
-        // Create a Plane Mesh with basic material
-        
-        let plane = new THREE.PlaneGeometry( 10, 10 );
-        this.planeMesh = new THREE.Mesh( plane, this.planeMaterial );
-        this.planeMesh.rotation.x = -Math.PI / 2;
-        this.planeMesh.position.y = -0;
-        this.app.scene.add( this.planeMesh );
+        this.buildWalls()
+        this.buildTable()
+        this.buildCake()
+        this.cake.position.y = 3
+
     }
     
     /**
