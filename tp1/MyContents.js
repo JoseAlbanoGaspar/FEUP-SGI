@@ -182,11 +182,46 @@ class MyContents  {
         cakeMesh.add( cover2 )
 
         this.cake.add(cakeMesh);
-        this.cake.add(cover1)
-        this.cake.add(cover2)
+        this.cake.add(cover1);
+        this.cake.add(cover2);
 
+        this.cake.position.y = 2.3
         this.app.scene.add(this.cake)
         
+    }
+
+    buildPlate() {
+        let plateCylinder = new THREE.CylinderGeometry(0.2, 0.2, 1, 36);
+        let colorWhite = new THREE.MeshBasicMaterial({colorWhite: 0xffffff});
+        this.plate = new THREE.Mesh( plateCylinder, colorWhite);
+        this.plate.scale.set(3.2, 0, 3.2);
+        this.plate.position.y = 2.11;
+        this.app.scene.add( this.plate );
+    }
+
+    buildGlass() {
+        let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
+        let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e});
+        this.glass = new THREE.Mesh( dif_cylinder, color_glass);
+        this.glass.position.y = 2.2;
+        this.glass.position.z = -0.5;
+        this.glass.position.x = 1;
+        this.glass.scale.set(0.05, 0.08, 0.05);
+        this.app.scene.add(this.glass);
+    }
+
+    buildCandle() {
+        let cylinder = new THREE.CylinderGeometry(0.03, 0.03, 0.4, 36);
+        let candleMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+        this.candle = new THREE.Mesh( cylinder, candleMaterial);
+        this.candle.position.y = 2.6;
+        this.app.scene.add( this.candle );
+
+        let cone = new THREE.ConeGeometry(0.03, 0.06, 20);
+        let coneMaterial = new THREE.MeshBasicMaterial({color: 0xffa500});
+        this.flame = new THREE.Mesh( cone, coneMaterial );
+        this.flame.position.y = 2.83;
+        this.app.scene.add( this.flame );
     }
 
     /**
@@ -217,10 +252,11 @@ class MyContents  {
 
         this.buildBox()
         this.buildWalls()
+        this.buildPlate()
         this.buildTable()
         this.buildCake()
-        this.cake.position.y = 3
-
+        this.buildCandle()
+        this.buildGlass()
     }
     
     /**
