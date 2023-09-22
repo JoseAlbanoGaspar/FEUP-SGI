@@ -197,6 +197,12 @@ class MyContents  {
         this.plate.scale.set(3.2, 0, 3.2);
         this.plate.position.y = 2.11;
         this.app.scene.add( this.plate );
+
+        this.plate1 = new THREE.Mesh( plateCylinder, colorWhite);
+        this.plate1.scale.set(1.8, 0, 1.8);
+        this.plate1.position.x = 1.5;
+        this.plate1.position.y = 2.11;
+        this.app.scene.add( this.plate1 );
     }
 
     buildGlass() {
