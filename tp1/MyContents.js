@@ -161,7 +161,7 @@ class MyContents  {
     buildCake() {
         // Create the cylinder geometry
         const geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32, 1, false, 0, 11 * Math.PI / 6);
-        const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        const material = new THREE.MeshPhongMaterial({ color: 0xffa500 });
         let cakeMesh = new THREE.Mesh(geometry, material);
         //cakeMesh.position.y = 3
         // Add the cylinder to the scene
