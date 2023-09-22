@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
+import { MyTable } from './MyTable.js';
 
 /**
  *  This class contains the contents of out application
@@ -29,7 +30,7 @@ class MyContents  {
         this.planeMaterial = new THREE.MeshPhongMaterial({ color: this.diffusePlaneColor, 
             specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
         
-        this.table = new THREE.Group();
+        this.table = null;
         this.cake = null;
         this.cakeSlice = null;
     }
@@ -48,65 +49,12 @@ class MyContents  {
         this.boxMesh.rotation.x = -Math.PI / 2;
         this.boxMesh.position.y = this.boxDisplacement.y;
     }
+    
     /**
      * builds the table
      */
     buildTable() {
-        let tableMaterial = new THREE.MeshPhongMaterial({ color: "#d8b281", 
-        specular: "#000000", emissive: "#000000", shininess: 90 })
-
-        // Create Table top with basic material
-        let tableTop = new THREE.BoxGeometry( 4,  2.5,  0.2 );
-        this.tableTopMesh = new THREE.Mesh( tableTop, tableMaterial );
-        
-        this.tableTopMesh.rotation.x = - Math.PI / 2;
-        this.tableTopMesh.position.y = 2;
-
-        this.app.scene.add(this.tableTopMesh)
-
-        // Create table legs
-        // Define the cylinder's parameters
-        const radiusTop = 0.2; // Radius of the top circle
-        const radiusBottom = 0.2; // Radius of the bottom circle
-        const height = 2; // Height of the cylinder
-        const radialSegments = 32; // Number of segments around the cylinder
-        const heightSegments = 1; // Number of segments along the height
-        const openEnded = false; // Whether the cylinder has open ends
-
-        // Create the cylinder geometry
-        let geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded);
-
-        // Create the cylinder mesh
-        let legMesh = new THREE.Mesh(geometry, tableMaterial);
-        legMesh.position.y = 1
-        legMesh.position.x = 1.6
-        legMesh.position.z = -1
-        this.tableTopMesh.add(legMesh)
-
-        let legMesh2 = new THREE.Mesh(geometry, tableMaterial);
-        legMesh2.position.y = 1
-        legMesh2.position.x = -1.6
-        legMesh2.position.z = 1
-        this.tableTopMesh.add(legMesh2)
-
-        let legMesh3 = new THREE.Mesh(geometry, tableMaterial);
-        legMesh3.position.y = 1
-        legMesh3.position.x = -1.6
-        legMesh3.position.z = -1
-        this.tableTopMesh.add(legMesh3)
-
-        let legMesh4 = new THREE.Mesh(geometry, tableMaterial);
-        legMesh4.position.y = 1
-        legMesh4.position.x = 1.6
-        legMesh4.position.z = 1
-        this.tableTopMesh.add(legMesh4)
-
-        this.table.add(this.tableTopMesh)
-        this.table.add(legMesh)
-        this.table.add(legMesh2)
-        this.table.add(legMesh3)
-        this.table.add(legMesh4)
-        
+        this.table = new MyTable(this.app, 4, 2.5, 0.2, 2, 0.2);
         this.app.scene.add(this.table)
 
     }
@@ -250,6 +198,7 @@ class MyContents  {
         this.buildCandle()
         this.buildGlass()
         this.buildCakeSlice()
+
     }
     
     /**

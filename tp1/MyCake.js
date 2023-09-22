@@ -18,14 +18,13 @@ class MyCake extends THREE.Object3D {
 
         let plane = new THREE.PlaneGeometry( radius, height );
         let cover1 = new THREE.Mesh( plane, material );
-        cover1.position.z = z1 //0.25
-        cover1.rotation.y = rot1 //-Math.PI / 2
+        cover1.position.z = z1 
+        cover1.rotation.y = rot1 
         
         let cover2 = new THREE.Mesh(plane, material)
-        cover2.position.x = x2//-0.125
-        cover2.position.z = z2 //0.21650
-        cover2.rotation.y = rot2 //2 * Math.PI / 6
-        //cover2.rotation.y = Math.PI / 2 + 11 * Math.PI / 6
+        cover2.position.x = x2
+        cover2.position.z = z2 
+        cover2.rotation.y = rot2
         
         cakeMesh.add( cover1 )
         cakeMesh.add( cover2 )
