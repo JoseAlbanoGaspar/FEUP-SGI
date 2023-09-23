@@ -230,6 +230,31 @@ class MyContents  {
         this.app.scene.add( this.flame );
     }
 
+    buildBottle() {
+        let cylinder = new THREE.CylinderGeometry(0.2, 0.2, 0.7, 36);
+        let bottleMaterial = new THREE.MeshBasicMaterial({color: 0xadd8e6});
+        this.bottle = new THREE.Mesh( cylinder, bottleMaterial);
+        this.bottle.position.y = 2.3;
+        this.bottle.position.z = -0.6;
+        this.bottle.position.x = -1;
+        this.app.scene.add(this.bottle);
+
+        let tampaMaterial = new THREE.MeshBasicMaterial({color: 0x0000ff});
+        this.tampa = new THREE.Mesh(cylinder, tampaMaterial);
+        this.tampa.position.y = 2.86;
+        this.tampa.position.x = -1;
+        this.tampa.position.z = -0.6;
+        this.tampa.scale.set(0.3, 0.08, 0.3);
+        this.app.scene.add(this.tampa);
+
+        let parte = new THREE.CylinderGeometry(0.05, 0.2, 0.2, 36);
+        this.neck = new THREE.Mesh(parte, bottleMaterial);
+        this.neck.position.x = -1;
+        this.neck.position.z = -0.6;
+        this.neck.position.y = 2.75;
+        this.app.scene.add(this.neck);
+    }
+
     /**
      * initializes the contents
      */
@@ -262,6 +287,7 @@ class MyContents  {
         this.buildTable()
         this.buildCake()
         this.buildCandle()
+        this.buildBottle()
         this.buildGlass()
     }
     
