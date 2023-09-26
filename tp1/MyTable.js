@@ -1,9 +1,5 @@
 import * as THREE from 'three';
-import { MyApp } from './MyApp.js';
 
-/**
- * This class contains a 3D axis representation
- */
 class MyTable extends THREE.Object3D {
 
     constructor(app, width, heightTop, depth, heightLegs, radiusLegs ) {
@@ -11,8 +7,26 @@ class MyTable extends THREE.Object3D {
         this.app = app;
         this.type = 'Group';
         
-        let tableMaterial = new THREE.MeshPhongMaterial({ color: "#d8b281", 
-        specular: "#000000", emissive: "#000000", shininess: 90 })
+        
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('textures/wood.jpg');
+
+        let tableMaterial = new THREE.MeshPhongMaterial({ 
+            map: texture,
+            color: "#d8b281", 
+            specular: "#000000",
+            emissive: "#000000",
+            shininess: 90
+        })
+
+        let tableLegMaterial = new THREE.MeshPhongMaterial({ 
+            //map: texture,
+            color: "#d8b281", 
+            specular: "#aaaaaa",
+            emissive: "#000000",
+            shininess: 90
+        })
+        
 
         // Create Table top with basic material
         let tableTop = new THREE.BoxGeometry( width,  heightTop,  depth );
@@ -34,25 +48,25 @@ class MyTable extends THREE.Object3D {
         let geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded);
 
         // Create the cylinder mesh
-        let legMesh = new THREE.Mesh(geometry, tableMaterial);
+        let legMesh = new THREE.Mesh(geometry, tableLegMaterial);
         legMesh.position.y = 1
         legMesh.position.x = 1.6
         legMesh.position.z = -1
         this.tableTopMesh.add(legMesh)
 
-        let legMesh2 = new THREE.Mesh(geometry, tableMaterial);
+        let legMesh2 = new THREE.Mesh(geometry, tableLegMaterial);
         legMesh2.position.y = 1
         legMesh2.position.x = -1.6
         legMesh2.position.z = 1
         this.tableTopMesh.add(legMesh2)
 
-        let legMesh3 = new THREE.Mesh(geometry, tableMaterial);
+        let legMesh3 = new THREE.Mesh(geometry, tableLegMaterial);
         legMesh3.position.y = 1
         legMesh3.position.x = -1.6
         legMesh3.position.z = -1
         this.tableTopMesh.add(legMesh3)
 
-        let legMesh4 = new THREE.Mesh(geometry, tableMaterial);
+        let legMesh4 = new THREE.Mesh(geometry, tableLegMaterial);
         legMesh4.position.y = 1
         legMesh4.position.x = 1.6
         legMesh4.position.z = 1
