@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
+import { MyWindow } from './MyWindow.js';
 
 /**
  *  This class contains the contents of out application
@@ -33,6 +34,7 @@ class MyContents  {
         this.table = null;
         this.cake = null;
         this.cakeSlice = null;
+        this.window = null;
     }
 
     /**
@@ -189,6 +191,12 @@ class MyContents  {
         this.app.scene.add(this.neck);
     }
 
+    buildWindow() {
+        this.window = new MyWindow(this.app, 5, 3);
+        this.window.position.y = 4
+        this.window.position.z = -5
+        this.app.scene.add(this.window)
+    }
     /**
      * initializes the contents
      */
@@ -224,6 +232,7 @@ class MyContents  {
         this.buildBottle()
         this.buildGlass()
         this.buildCakeSlice()
+        this.buildWindow()
 
     }
     
