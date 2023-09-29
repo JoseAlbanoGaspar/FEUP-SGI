@@ -28,7 +28,16 @@ class MyContents  {
         this.diffusePlaneColor = "#00ffff"
         this.specularPlaneColor = "#777777"
         this.planeShininess = 30
-        this.planeMaterial = new THREE.MeshPhongMaterial({ color: this.diffusePlaneColor, 
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('textures/floor.jpg');
+
+        texture.wrapS = THREE.RepeatWrapping; // Repeat the texture in the horizontal direction (U)
+        texture.wrapT = THREE.RepeatWrapping; // Repeat the texture in the vertical direction (V)
+        texture.repeat.set(2, 2);
+
+
+        this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: this.diffusePlaneColor, 
             specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
         
         this.table = null;
@@ -75,6 +84,7 @@ class MyContents  {
         this.app.scene.add( this.planeMesh );
 
         // defining materials for walls
+
         let wallsMaterial = new THREE.MeshPhongMaterial({ color: "#f0f0f0", 
             specular: "#777777", emissive: "#000000", shininess: 30 })
         let wallHeight = 7;
