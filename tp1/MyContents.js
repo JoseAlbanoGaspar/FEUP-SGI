@@ -192,10 +192,54 @@ class MyContents  {
     }
 
     buildWindow() {
-        this.window = new MyWindow(this.app, 5, 3);
-        this.window.position.y = 4
-        this.window.position.z = -5
-        this.app.scene.add(this.window)
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('textures/wood.jpg');
+        const texture1 = textureLoader.load('textures/view.png');
+
+        this.window1 = new MyWindow(this.app, 2, 2, texture);
+        this.window1.position.y = 4
+        this.window1.position.x = -2
+        this.window1.position.z = -5
+        this.app.scene.add(this.window1)
+
+        this.window2 = new MyWindow(this.app, 2, 2, texture);
+        this.window2.position.y = 4
+        this.window2.position.x = 2
+        this.window2.position.z = -5
+        this.app.scene.add(this.window2)
+
+        let material = new THREE.MeshPhongMaterial({ 
+            map: texture,
+            color: "#ffffff", 
+            specular: "#000000",
+            emissive: "#000000",
+            shininess: 90
+        })
+
+        const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
+        const rectangle = new THREE.Mesh( geometry, material ); 
+        rectangle.scale.set(0.1, 1, 0.1)
+        rectangle.position.x = -4.85
+        rectangle.position.y = 4
+        rectangle.position.z = 0
+        this.app.scene.add( rectangle );
+
+        const retangleHorizontal = new THREE.Mesh(geometry, material);
+        retangleHorizontal.rotation.x = Math.PI / 2
+        retangleHorizontal.position.x = -4.85
+        retangleHorizontal.position.y = 4
+        retangleHorizontal.z = 0
+        retangleHorizontal.scale.set(0.1, 1.3, 0.1)
+        this.app.scene.add(retangleHorizontal)
+
+
+        this.window3 = new MyWindow(this.app, 4, 3, texture, texture1);
+        this.window3.rotation.y = Math.PI / 2
+        this.window3.position.y = 4
+        this.window3.position.x = -5
+        this.window3.position.z = 0
+        this.app.scene.add(this.window3)
     }
     /**
      * initializes the contents
@@ -218,6 +262,14 @@ class MyContents  {
         const sphereSize = 0.5;
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
+
+        const spotLight = new THREE.SpotLight(0xffffff, 30, 2, Math.PI / 20);
+        spotLight.position.set(0, 8, 0);
+        this.app.scene.add(spotLight);
+
+        const spotLightHandler = new THREE.SpotLightHelper(spotLight, sphereSize);
+        this.app.scene.add(spotLightHandler)
+    
 
         // add an ambient light
         const ambientLight = new THREE.AmbientLight( 0x555555 );

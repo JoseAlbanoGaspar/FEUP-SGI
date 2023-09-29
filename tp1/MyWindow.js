@@ -2,17 +2,13 @@ import * as THREE from 'three';
 
 class MyWindow extends THREE.Object3D {
 
-    constructor(app, width, height) {
+    constructor(app, width, height, main_texture, img_texture) {
         super();
         this.app = app;
         this.type = 'Group';
-        
-        
-        const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('textures/wood.jpg');
 
         let mainFrameMaterial = new THREE.MeshPhongMaterial({ 
-            map: texture,
+            map: main_texture,
             color: "#ffffff", 
             specular: "#000000",
             emissive: "#000000",
@@ -20,7 +16,7 @@ class MyWindow extends THREE.Object3D {
         })
         
         let imgFrameMaterial = new THREE.MeshPhongMaterial({ 
-            //map: texture,
+            map: img_texture ?? null,
             color: "#ffffff", 
             specular: "#000000",
             emissive: "#000000",
