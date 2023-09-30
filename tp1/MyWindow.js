@@ -8,7 +8,7 @@ class MyWindow extends THREE.Object3D {
         this.type = 'Group';
 
         let mainFrameMaterial = new THREE.MeshPhongMaterial({ 
-            map: main_texture,
+            map: main_texture ?? null,
             color: "#ffffff", 
             specular: "#000000",
             emissive: "#000000",
@@ -24,11 +24,12 @@ class MyWindow extends THREE.Object3D {
         })
 
         // Create mainFrame with basic material
-        let mainFrame = new THREE.BoxGeometry( width,  height,  0.2 );
+        let mainFrame = new THREE.BoxGeometry( width,  height,  0.1 );
         this.mainFrameMesh = new THREE.Mesh( mainFrame, mainFrameMaterial );
 
-        let imgFrame = new THREE.BoxGeometry( width - 0.2,  height - 0.2,  0.3 );
+        let imgFrame = new THREE.BoxGeometry( width - 0.2,  height - 0.2,  0.1 );
         this.imgFrameMesh = new THREE.Mesh( imgFrame, imgFrameMaterial );
+        this.imgFrameMesh.position.z = 0.04
 
         this.mainFrameMesh.add(this.imgFrameMesh);
         this.add(this.mainFrameMesh)

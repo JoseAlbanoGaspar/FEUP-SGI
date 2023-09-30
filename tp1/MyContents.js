@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
@@ -174,6 +175,11 @@ class MyContents  {
         this.flame = new THREE.Mesh( cone, coneMaterial );
         this.flame.position.y = 2.83;
         this.app.scene.add( this.flame );
+
+        this.pointLight = new THREE.PointLight(0xffa500, 20, 1, Math.PI/10, 10, 2);
+        this.pointLight.position.set(0, 3, 0);
+
+        this.app.scene.add(this.pointLight)
     }
 
     buildBottle() {
@@ -206,21 +212,22 @@ class MyContents  {
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('textures/wood.jpg');
         const texture1 = textureLoader.load('textures/view.png');
+        const picture1 = textureLoader.load('textures/picture1.jpg');
+        const student = textureLoader.load('textures/student.jpeg')
 
-        this.window1 = new MyWindow(this.app, 2, 2, texture);
+        this.window1 = new MyWindow(this.app, 2, 2, texture, picture1);
         this.window1.position.y = 4
         this.window1.position.x = -2
         this.window1.position.z = -5
         this.app.scene.add(this.window1)
 
-        this.window2 = new MyWindow(this.app, 2, 2, texture);
+        this.window2 = new MyWindow(this.app, 2, 2, texture, student);
         this.window2.position.y = 4
         this.window2.position.x = 2
         this.window2.position.z = -5
         this.app.scene.add(this.window2)
 
         let material = new THREE.MeshPhongMaterial({ 
-            map: texture,
             color: "#ffffff", 
             specular: "#000000",
             emissive: "#000000",
@@ -230,27 +237,60 @@ class MyContents  {
         const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
         const rectangle = new THREE.Mesh( geometry, material ); 
         rectangle.scale.set(0.1, 1, 0.1)
-        rectangle.position.x = -4.85
+        rectangle.position.x = -4.8
         rectangle.position.y = 4
         rectangle.position.z = 0
         this.app.scene.add( rectangle );
 
         const retangleHorizontal = new THREE.Mesh(geometry, material);
         retangleHorizontal.rotation.x = Math.PI / 2
-        retangleHorizontal.position.x = -4.85
+        retangleHorizontal.position.x = -4.8
         retangleHorizontal.position.y = 4
-        retangleHorizontal.z = 0
+        retangleHorizontal.position.z = 0
         retangleHorizontal.scale.set(0.1, 1.3, 0.1)
         this.app.scene.add(retangleHorizontal)
 
 
-        this.window3 = new MyWindow(this.app, 4, 3, texture, texture1);
+        this.window3 = new MyWindow(this.app, 4, 3, null, texture1);
         this.window3.rotation.y = Math.PI / 2
         this.window3.position.y = 4
-        this.window3.position.x = -5
+        this.window3.position.x = -4.9
         this.window3.position.z = 0
         this.app.scene.add(this.window3)
     }
+
+    buildLamp() {
+        const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
+        const material = new MeshBasicMaterial({color: 0x000000})
+        const rectangle = new THREE.Mesh( geometry, material ); 
+        rectangle.scale.set(0.2, 1.4, 0.2)
+        rectangle.position.x = 4
+        rectangle.position.y = 1.9
+        rectangle.position.z = 4
+        this.app.scene.add( rectangle );
+
+        let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
+        let color_glass = new THREE.MeshBasicMaterial({color: 0xe1c16e});
+        this.glass = new THREE.Mesh( dif_cylinder, color_glass);
+        this.glass.position.y = 4;
+        this.glass.position.z = 4;
+        this.glass.position.x = 4;
+        this.glass.scale.set(0.3, 0.3, 0.3);
+        this.glass.rotation.z = Math.PI;
+        this.app.scene.add(this.glass);
+
+        this.pointLight = new THREE.SpotLight(0xe1c16e, 100, 4, Math.PI/10, 10, 3);
+        this.pointLight.position.set(4, 4, 4);
+
+        this.target = new THREE.Object3D();
+        this.target.position.set(4, 2, 4); // Set the target coordinates
+        this.app.scene.add(this.target);
+
+        this.pointLight.target = this.target;
+        this.app.scene.add(this.pointLight)
+
+    }
+    
     /**
      * initializes the contents
      */
@@ -273,13 +313,16 @@ class MyContents  {
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
 
-        const spotLight = new THREE.SpotLight(0xffffff, 30, 2, Math.PI / 20);
-        spotLight.position.set(0, 8, 0);
-        this.app.scene.add(spotLight);
+        this.spotLight = new THREE.SpotLight(0xffffff, 60, 1, (Math.PI / 180), 10, 0)
+        this.spotLight.position.set(0, 4, 0)
 
-        const spotLightHandler = new THREE.SpotLightHelper(spotLight, sphereSize);
-        this.app.scene.add(spotLightHandler)
-    
+        
+        this.target = new THREE.Object3D();
+        this.target.position.set(0, 1, 0); // Set the target coordinates
+        this.app.scene.add(this.target);
+
+        this.spotLight.target = this.target;
+        this.app.scene.add(this.spotLight)
 
         // add an ambient light
         const ambientLight = new THREE.AmbientLight( 0x555555 );
@@ -295,6 +338,7 @@ class MyContents  {
         this.buildGlass()
         this.buildCakeSlice()
         this.buildWindow()
+        this.buildLamp()
 
     }
     
