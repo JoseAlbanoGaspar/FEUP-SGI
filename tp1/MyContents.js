@@ -38,8 +38,8 @@ class MyContents  {
         texture.repeat.set(2, 2);
 
 
-        this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: this.diffusePlaneColor, 
-            specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
+        this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
+            specular: "#a28e81", emissive: "#000000", shininess: 10 })
         
         this.table = null;
         this.cake = null;
@@ -270,7 +270,7 @@ class MyContents  {
         this.app.scene.add( rectangle );
 
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
-        let color_glass = new THREE.MeshBasicMaterial({color: 0xe1c16e});
+        let color_glass = new THREE.MeshPhongMaterial({color: 0xe1c16e, shininess: 3});
         this.glass = new THREE.Mesh( dif_cylinder, color_glass);
         this.glass.position.y = 4;
         this.glass.position.z = 4;
@@ -279,15 +279,25 @@ class MyContents  {
         this.glass.rotation.z = Math.PI;
         this.app.scene.add(this.glass);
 
-        this.pointLightLamp = new THREE.SpotLight(0xe1c16e, 100, 6, Math.PI/3, 1, 1);
-        this.pointLightLamp.position.set(4, 4, 4);
+        
+    }
+    buildBoardLightSupport() {
+        let boxMaterial = new THREE.MeshPhongMaterial({ color: "#000000", 
+        specular: "#000000", emissive: "#000000", shininess: 50 })
 
-        this.targetLamp = new THREE.Object3D();
-        this.targetLamp.position.set(4, 0, 4); // Set the target coordinates
-        this.app.scene.add(this.targetLamp);
+        // Create a Cube Mesh with basic material
+        let box = new THREE.BoxGeometry(3, 0.25, 0.25);
+        const boxMesh = new THREE.Mesh( box, boxMaterial );
+        this.app.scene.add(boxMesh)
+        boxMesh.position.y = 5.2
+        boxMesh.position.z = -5 + (0.25 / 2)
+        boxMesh.position.x = -2
 
-        this.pointLightLamp.target = this.targetLamp;
-        this.app.scene.add(this.pointLightLamp)
+        const boxMesh2 = new THREE.Mesh( box, boxMaterial );
+        this.app.scene.add(boxMesh2)
+        boxMesh2.position.y = 5.2
+        boxMesh2.position.z = -5 + (0.25 / 2)
+        boxMesh2.position.x = 2
     }
     
     /**
@@ -323,6 +333,82 @@ class MyContents  {
         this.spotLight.target = this.target;
         this.app.scene.add(this.spotLight)
 
+        // lamp
+        this.pointLightLamp = new THREE.SpotLight(0xe1c16e, 100, 6, Math.PI/3, 1, 1);
+        this.pointLightLamp.position.set(4, 4, 4);
+
+        this.targetLamp = new THREE.Object3D();
+        this.targetLamp.position.set(4, 0, 4); // Set the target coordinates
+        this.app.scene.add(this.targetLamp);
+
+        this.pointLightLamp.target = this.targetLamp;
+        this.app.scene.add(this.pointLightLamp)
+
+        // cake slice light
+        this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 1.5, Math.PI/6, 1, 1);
+        this.sliceLight.position.set(1.3, 3, -1);
+
+        this.targetSlice = new THREE.Object3D();
+        this.targetSlice.position.set(2,2,2);
+        //this.app.scene.add(this.targetSlice)
+        
+        this.sliceLight.target = this.targetSlice
+        this.app.scene.add(this.sliceLight)
+
+        this.helper = new THREE.SpotLightHelper(this.sliceLight)
+
+        // boards' lights
+
+        const bl1 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl1.position.set(1,5.6,-4.6)
+
+        const blTarget = new THREE.Object3D()
+        blTarget.position.set(2,0,-5)
+
+        bl1.target = blTarget
+        this.app.scene.add(bl1)
+
+        this.bl1helper = new THREE.SpotLightHelper(bl1)
+        //this.app.scene.add(this.bl1helper)
+
+
+        const bl2 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl2.position.set(2,5.6,-4.6)
+
+        bl2.target = blTarget
+        this.app.scene.add(bl2)
+
+        const bl3 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl3.position.set(3,5.6,-4.6)
+
+        bl3.target = blTarget
+        this.app.scene.add(bl3)
+
+        const bl4 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl4.position.set(-1,5.6,-4.6)
+
+        const blTarget2 = new THREE.Object3D()
+        blTarget2.position.set(-2,0,-5)
+
+        bl4.target = blTarget2
+        this.app.scene.add(bl4)
+
+        const bl4helper = new THREE.SpotLightHelper(bl4)
+        //this.app.scene.add(bl4helper)
+
+
+        const bl5 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl5.position.set(-2,5.6,-4.6)
+
+        bl5.target = blTarget2
+        this.app.scene.add(bl5)
+
+        const bl6 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
+        bl6.position.set(-3,5.6,-4.6)
+
+        bl6.target = blTarget2
+        this.app.scene.add(bl6)
+
         // add an ambient light
         const ambientLight = new THREE.AmbientLight( 0x555555 );
         this.app.scene.add( ambientLight );
@@ -338,6 +424,7 @@ class MyContents  {
         this.buildCakeSlice()
         this.buildWindow()
         this.buildLamp()
+        this.buildBoardLightSupport()
 
     }
     
