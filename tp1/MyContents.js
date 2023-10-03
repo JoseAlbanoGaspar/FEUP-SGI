@@ -279,16 +279,15 @@ class MyContents  {
         this.glass.rotation.z = Math.PI;
         this.app.scene.add(this.glass);
 
-        this.pointLight = new THREE.SpotLight(0xe1c16e, 100, 4, Math.PI/10, 10, 3);
-        this.pointLight.position.set(4, 4, 4);
+        this.pointLightLamp = new THREE.SpotLight(0xe1c16e, 100, 6, Math.PI/3, 1, 1);
+        this.pointLightLamp.position.set(4, 4, 4);
 
-        this.target = new THREE.Object3D();
-        this.target.position.set(4, 2, 4); // Set the target coordinates
-        this.app.scene.add(this.target);
+        this.targetLamp = new THREE.Object3D();
+        this.targetLamp.position.set(4, 0, 4); // Set the target coordinates
+        this.app.scene.add(this.targetLamp);
 
-        this.pointLight.target = this.target;
-        this.app.scene.add(this.pointLight)
-
+        this.pointLightLamp.target = this.targetLamp;
+        this.app.scene.add(this.pointLightLamp)
     }
     
     /**
