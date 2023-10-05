@@ -1,9 +1,11 @@
 import * as THREE from 'three';
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial, RectAreaLight } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
 import { MyWindow } from './MyWindow.js';
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
 /**
  *  This class contains the contents of out application
@@ -125,7 +127,6 @@ class MyContents  {
         this.cake = new MyCake(this.app, 0.5, 0.5, 0, 11 * Math.PI / 6, - Math.PI/2, 2 * Math.PI / 6, 0.25, -0.125, 0.21650);
         this.app.scene.add(this.cake);
         this.cake.position.y = 2.3
-        
     }
 
     buildCakeSlice(){
@@ -134,7 +135,6 @@ class MyContents  {
         this.cakeSlice.position.y = 2.3
         this.cakeSlice.position.x = 1.45
         this.cakeSlice.position.z = -0.25
-        
     }
 
     buildPlate() {
@@ -257,6 +257,24 @@ class MyContents  {
         this.window3.position.x = -4.9
         this.window3.position.z = 0
         this.app.scene.add(this.window3)
+
+        const rectLight = new THREE.DirectionalLight( 0xffffff, 2 );
+        rectLight.position.set( -4.9, 4, 0);
+        this.app.scene.add( rectLight )
+
+        /*
+        RectAreaLightUniformsLib.init()
+        const width = 4;
+        const height = 4;
+        const intensity = 100;
+        const rectLight = new THREE.RectAreaLight( 0xffffff, intensity,  width, height );
+        rectLight.position.set( -4.9, 4, 0);
+        rectLight.rotation.y = Math.PI /2;
+
+        const helper = new RectAreaLightHelper( rectLight );
+        rectLight.add(helper)
+        this.app.scene.add( rectLight )
+        */
     }
 
     buildLamp() {
@@ -332,6 +350,29 @@ class MyContents  {
 
         this.spotLight.target = this.target;
         this.app.scene.add(this.spotLight)
+
+        this.cakeLight = new THREE.SpotLight(0xffffff, 150, 1, Math.PI/12, 10, 0)
+        this.cakeLight.position.set(0, 2.3, 0);
+        
+        this.cakeLight.target = this.target;
+        this.app.scene.add(this.cakeLight)
+
+        /*
+        //window light
+        RectAreaLightUniformsLib.init()
+        // Create a RectAreaLight
+        const lightColor = 0xffffff; // Color of the light
+        const lightIntensity = 50; // Intensity of the light
+        const lightWidth = 5; // Width of the light
+        const lightHeight = 5; // Height of the light
+        this.rectAreaLight = new THREE.RectAreaLight(lightColor, lightIntensity, lightWidth, lightHeight);
+
+        // Set the position of the RectAreaLight
+        this.rectAreaLight.position.set(0, 2.3, 0);
+
+        // Add the RectAreaLight to the scene
+        this.app.scene.add(this.rectAreaLight);
+        */
 
         // lamp
         this.pointLightLamp = new THREE.SpotLight(0xe1c16e, 100, 6, Math.PI/3, 1, 1);
