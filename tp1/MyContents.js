@@ -6,6 +6,7 @@ import { MyTable } from './MyTable.js';
 import { MyWindow } from './MyWindow.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 
 /**
  *  This class contains the contents of out application
@@ -39,7 +40,17 @@ class MyContents  {
         texture.wrapT = THREE.RepeatWrapping; // Repeat the texture in the vertical direction (V)
         texture.repeat.set(2, 2);
 
+        // jar related
+        
+        
 
+        this.builder = new MyNurbsBuilder()
+        this.meshes = []
+        this.samplesU = 8         // maximum defined in MyGuiInterface
+        this.samplesV = 8        // maximum defined in MyGuiInterface
+        
+
+        // plane material
         this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
             specular: "#a28e81", emissive: "#000000", shininess: 10 })
         
@@ -48,6 +59,9 @@ class MyContents  {
         this.cakeSlice = null;
         this.window = null;
         this.beatleGroup = new THREE.Group();
+        this.jar = new THREE.Group();
+
+
     }
 
     /**
@@ -396,6 +410,76 @@ class MyContents  {
 
     }
 
+    createNurbsSurfaces() {  
+        // are there any meshes to remove?
+        if (this.meshes !== null) {
+            // traverse mesh array
+            for (let i=0; i<this.meshes.length; i++) {
+                // remove all meshes from the scene
+                 this.app.scene.remove(this.meshes[i])
+            }
+            this.meshes = [] // empty the array  
+        }
+        // declare local variables
+
+        let controlPoints = [];
+        let surfaceData;
+        let mesh;
+        let orderU = 2
+        let orderV = 2
+        
+        controlPoints = [   // U = 0
+            [ // V = 0..1;
+                [ -1.5, -1.5, 0.0, 1 ],
+                [-0.5, 0, 0, 1 ],
+                [ -1,  1.5, 0.0, 1 ]
+            ],
+        // U = 1
+            [ // V = 0..1
+                [ 0, -1.5, 2.0, 1 ],
+                [0, 0, 1,1 ],
+                [ 0,  1.5, 2.0, 1 ]
+            ],
+        // U = 2
+            [ // V = 0..1
+                [ 1.5, -1.5, 0.0, 1 ],
+                [0.5, 0 , 0 , 1],
+                [ 1,  1.5, 0.0, 1 ]
+            ]
+        ]
+
+
+        const map = new THREE.TextureLoader().load( 'textures/jar.jpg' );
+
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = THREE.SRGBColorSpace;
+
+
+        const jarMaterial = new THREE.MeshLambertMaterial( { map: map,
+            side: THREE.DoubleSide,
+         } );
+        
+        surfaceData = this.builder.build(controlPoints,
+                      orderU, orderV, this.samplesU,
+                      this.samplesV, jarMaterial)  
+
+        mesh = new THREE.Mesh( surfaceData, jarMaterial );
+
+        let othermesh = mesh.clone()
+        othermesh.rotation.y = Math.PI
+
+        this.jar.add(mesh)
+        this.jar.add(othermesh)
+        this.app.scene.add(this.jar)
+        this.meshes.push (mesh)
+
+        this.jar.scale.set(0.3, 0.3, 0.3)
+        this.jar.position.set(-1.3,2.5,0.6)
+        this.jar.rotation.y = Math.PI / 7
+
+        }
+
     /**
      * initializes the contents
      */
@@ -545,6 +629,7 @@ class MyContents  {
         this.buildLamp()
         this.buildBoardLightSupport()
         this.initBeatle()
+        this.createNurbsSurfaces()
 
     }
     
