@@ -328,7 +328,7 @@ class MyContents  {
         let sampledPoints = curve.getPoints( 16 );
     
         this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
-        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 50.0} )
+        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, linewidth: 50.0} )
 
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
         this.beatleGroup.add(this.lineObj)
