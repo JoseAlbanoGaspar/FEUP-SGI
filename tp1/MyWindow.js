@@ -7,7 +7,7 @@ class MyWindow extends THREE.Object3D {
         this.app = app;
         this.type = 'Group';
 
-        let mainFrameMaterial = new THREE.MeshPhongMaterial({ 
+        let mainFrameMaterial = new THREE.MeshStandardMaterial({ 
             map: main_texture ?? null,
             color: "#ffffff", 
             specular: "#000000",
@@ -15,7 +15,7 @@ class MyWindow extends THREE.Object3D {
             shininess: 90
         })
         
-        let imgFrameMaterial = new THREE.MeshPhongMaterial({ 
+        let imgFrameMaterial = new THREE.MeshStandardMaterial({ 
             map: img_texture ?? null,
             color: "#ffffff", 
             specular: "#000000",
