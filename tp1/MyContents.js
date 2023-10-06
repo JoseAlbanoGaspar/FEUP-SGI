@@ -47,6 +47,7 @@ class MyContents  {
         this.cake = null;
         this.cakeSlice = null;
         this.window = null;
+        this.beatleGroup = new THREE.Group();
     }
 
     /**
@@ -262,6 +263,13 @@ class MyContents  {
         rectLight.position.set( -4.9, 4, 0);
         this.app.scene.add( rectLight )
 
+        this.window4 = new MyWindow(this.app, 5, 3, texture, null);
+        this.window4.position.y = 4
+        this.window4.position.x = 0
+        this.window4.position.z = 5
+        this.window4.rotation.y = Math.PI
+        this.app.scene.add(this.window4)
+
         /*
         RectAreaLightUniformsLib.init()
         const width = 4;
@@ -318,6 +326,81 @@ class MyContents  {
         boxMesh2.position.x = 2
     }
     
+    drawBezier(points) {
+        let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
+    
+        // sample a number of points on the curve
+        let sampledPoints = curve.getPoints( 16 );
+    
+        this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
+        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 50.0} )
+
+        this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
+        this.beatleGroup.add(this.lineObj)
+    }
+
+    initBeatle() {
+        // roda 1
+        let points = [
+            new THREE.Vector3( 0.0, 0.0, 0.0  ), // starting point
+            new THREE.Vector3( 0.0,  4.0, 0.0 ), // control point
+            new THREE.Vector3(  6.0, 4.0, 0.0 ),  // control point
+            new THREE.Vector3(  6.0, 0.0, 0.0 ),  // ending point
+        ]
+        
+        this.drawBezier(points)
+
+        //roda 2
+        points = [
+            new THREE.Vector3( 10.0, 0.0, 0.0  ), // starting point
+            new THREE.Vector3( 10.0,  4.0, 0.0 ), // control point
+            new THREE.Vector3(  16.0, 4.0, 0.0 ),  // control point
+            new THREE.Vector3(  16.0, 0.0, 0.0 ),  // ending point
+        ]
+
+        this.drawBezier(points)
+
+        // capô
+        
+        points = [
+            new THREE.Vector3( 12.0, 4.0, 0.0  ), // starting point
+            new THREE.Vector3( 12.0,  4.0, 0.0 ), // control point
+            new THREE.Vector3(  16.0, 4.0, 0.0 ),  // control point
+            new THREE.Vector3(  16.0, 0.0, 0.0 ),  // ending point
+        ]
+
+        this.drawBezier([points[0], points[1], points[2], points[3]])
+
+        // frente
+        let x = 2.5
+        points = [
+            new THREE.Vector3( 8.0, 8.0, 0.0  ), // starting point
+            new THREE.Vector3( 8.0 + x,  8.0, 0.0 ), // control point
+            new THREE.Vector3(  12.0, 4.0 + x, 0.0 ),  // control point
+            new THREE.Vector3(  12.0, 4.0, 0.0 ),  // ending point
+        ]
+
+        this.drawBezier(points)
+        
+        //trás
+        x = 4.5
+        points = [
+            new THREE.Vector3( 8.0, 8.0, 0.0  ), // starting point
+            new THREE.Vector3( 8.0 - x,  8.0, 0.0 ), // control point
+            new THREE.Vector3(  0.0, x, 0.0 ),  // control point
+            new THREE.Vector3(  0.0, 0.0, 0.0 ),  // ending point
+        ]
+
+        this.drawBezier(points)
+
+        this.beatleGroup.scale.set(0.2, 0.2, 0.2)
+        this.app.scene.add(this.beatleGroup)
+        this.beatleGroup.position.z = 4.8
+        this.beatleGroup.position.y = 3.2
+        this.beatleGroup.position.x = -1.5
+
+    }
+
     /**
      * initializes the contents
      */
@@ -466,6 +549,7 @@ class MyContents  {
         this.buildWindow()
         this.buildLamp()
         this.buildBoardLightSupport()
+        this.initBeatle()
 
     }
     
