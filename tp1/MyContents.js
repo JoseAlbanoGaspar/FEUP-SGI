@@ -89,7 +89,7 @@ class MyContents  {
 
         // defining materials for walls
 
-        let wallsMaterial = new THREE.MeshPhongMaterial({ color: "#f0f0f0", 
+        let wallsMaterial = new THREE.MeshStandardMaterial({ color: "#f0f0f0", 
             specular: "#777777", emissive: "#000000", shininess: 30 })
         let wallHeight = 7;
         plane = new THREE.PlaneGeometry( 10, wallHeight )
@@ -259,9 +259,11 @@ class MyContents  {
         this.window3.position.z = 0
         this.app.scene.add(this.window3)
 
+        /*
         const rectLight = new THREE.DirectionalLight( 0xffffff, 2 );
         rectLight.position.set( -4.9, 4, 0);
         this.app.scene.add( rectLight )
+        */
 
         this.window4 = new MyWindow(this.app, 5, 3, texture, null);
         this.window4.position.y = 4
@@ -270,19 +272,12 @@ class MyContents  {
         this.window4.rotation.y = Math.PI
         this.app.scene.add(this.window4)
 
-        /*
         RectAreaLightUniformsLib.init()
-        const width = 4;
-        const height = 4;
-        const intensity = 100;
-        const rectLight = new THREE.RectAreaLight( 0xffffff, intensity,  width, height );
-        rectLight.position.set( -4.9, 4, 0);
-        rectLight.rotation.y = Math.PI /2;
-
-        const helper = new RectAreaLightHelper( rectLight );
-        rectLight.add(helper)
+        const rectLight = new THREE.RectAreaLight( 0xffffff, 10, 3.9, 2.5 );
+        rectLight.position.set( -4.9, 5.5, 0);
+        rectLight.rotation.y = -Math.PI / 2;
+        rectLight.lookAt(1, 1, 0)
         this.app.scene.add( rectLight )
-        */
     }
 
     buildLamp() {
