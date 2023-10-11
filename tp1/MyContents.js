@@ -60,8 +60,6 @@ class MyContents  {
         this.window = null;
         this.beatleGroup = new THREE.Group();
         this.jar = new THREE.Group();
-
-
     }
 
     /**
@@ -313,9 +311,8 @@ class MyContents  {
         this.glass.scale.set(0.3, 0.3, 0.3);
         this.glass.rotation.z = Math.PI;
         this.app.scene.add(this.glass);
-
-        
     }
+
     buildBoardLightSupport() {
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#000000", 
         specular: "#000000", emissive: "#000000", shininess: 50 })
@@ -407,7 +404,6 @@ class MyContents  {
         this.beatleGroup.position.z = 4.8
         this.beatleGroup.position.y = 3.2
         this.beatleGroup.position.x = -1.5
-
     }
 
     createNurbsSurfaces() {  
@@ -448,13 +444,11 @@ class MyContents  {
             ]
         ]
 
-
         const map = new THREE.TextureLoader().load( 'textures/jar.jpg' );
 
         map.wrapS = map.wrapT = THREE.RepeatWrapping;
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
-
 
         const jarMaterial = new THREE.MeshLambertMaterial( { map: map,
             side: THREE.DoubleSide,
@@ -477,7 +471,6 @@ class MyContents  {
         this.jar.scale.set(0.3, 0.3, 0.3)
         this.jar.position.set(-1.3,2.5,0.6)
         this.jar.rotation.y = Math.PI / 7
-
         }
 
     /**
@@ -505,7 +498,6 @@ class MyContents  {
         this.spotLight = new THREE.SpotLight(0xffffff, 60, 1, (Math.PI / 180), 10, 0)
         this.spotLight.position.set(0, 4, 0)
 
-        
         this.target = new THREE.Object3D();
         this.target.position.set(0, 1, 0); // Set the target coordinates
         this.app.scene.add(this.target);
@@ -574,7 +566,6 @@ class MyContents  {
         this.bl1helper = new THREE.SpotLightHelper(bl1)
         //this.app.scene.add(this.bl1helper)
 
-
         const bl2 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl2.position.set(2,5.6,-4.6)
 
@@ -598,7 +589,6 @@ class MyContents  {
 
         const bl4helper = new THREE.SpotLightHelper(bl4)
         //this.app.scene.add(bl4helper)
-
 
         const bl5 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl5.position.set(-2,5.6,-4.6)
@@ -630,7 +620,6 @@ class MyContents  {
         this.buildBoardLightSupport()
         this.initBeatle()
         this.createNurbsSurfaces()
-
     }
     
     /**
