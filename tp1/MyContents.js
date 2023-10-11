@@ -42,13 +42,17 @@ class MyContents  {
 
         // jar related
         
-        
-
         this.builder = new MyNurbsBuilder()
         this.meshes = []
         this.samplesU = 8         // maximum defined in MyGuiInterface
         this.samplesV = 8        // maximum defined in MyGuiInterface
         
+
+        // journal
+        this.builder2 = new MyNurbsBuilder()
+        this.meshes = []
+        this.samplesU = 16         // maximum defined in MyGuiInterface
+        this.samplesV = 16         // maximum defined in MyGuiInterface
 
         // plane material
         this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
@@ -473,10 +477,6 @@ class MyContents  {
         this.jar.rotation.y = Math.PI / 7
         }
 
-        buildMola(){
-
-        }
-
         buildFlower(){
             const geometry = new THREE.CircleGeometry( 0.5, 40 ); 
             const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
@@ -534,8 +534,6 @@ class MyContents  {
         this.lineObj.position.set(4.5,6,2.4);
         this.lineObj.rotation.x = Math.PI/2
         this.app.scene.add( this.lineObj );
-    
-
         }
 
         createNurbsSurfaces2() {  
@@ -576,8 +574,28 @@ class MyContents  {
                 [ 1.5, -1.5, 0.0, 1 ],
                 [ 1.5,  1.5, 0.0, 1 ]
             ]
-    ]      
-    
+    ]    
+
+        const journalMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff,
+            side: THREE.DoubleSide,
+         } );
+        
+         surfaceData = this.builder.build(controlPoints,
+            orderU, orderV, this.samplesU,
+            this.samplesV, journalMaterial)  
+
+        mesh = new THREE.Mesh( surfaceData, journalMaterial );
+
+        mesh.rotation.x = Math.PI / 2
+        mesh.rotation.y = 0
+        mesh.rotation.z = 0
+
+        mesh.scale.set( 0.08, 0.15, 0.1 )
+        mesh.position.set( 1.7, 2.25, 0.8 )
+        this.app.scene.add( mesh )
+        this.meshes.push (mesh)
+
+    /*
             surfaceData = this.builder.build(controlPoints,
                           orderU, orderV, this.samplesU,
                           this.samplesV, this.material)  
@@ -592,6 +610,7 @@ class MyContents  {
             mesh.position.set( 1.7, 2.27, 0.8 )
             this.app.scene.add( mesh )
             this.meshes.push (mesh)
+            */
     }
 
     /**
