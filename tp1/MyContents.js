@@ -512,6 +512,30 @@ class MyContents  {
            petala_mesh4.position.set(4.2, 6, 2);
            this.app.scene.add(petala_mesh4);
 
+           
+        let points = [
+            new THREE.Vector3( -0.6, -0.6, 0.0 ), // starting point
+            new THREE.Vector3( -0.6,  0.2, 0.0 ), // control point
+            new THREE.Vector3(  0.6, -0.6, 1.0 ),  // control point
+            new THREE.Vector3(  0.2, 0.6, 1.0 ),  // ending point
+        ]
+    
+        //let position = new THREE.Vector3(-4,0,0)4
+        //this.drawHull(position, points);
+    
+        let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
+    
+        // sample a number of points on the curve
+        let sampledPoints = curve.getPoints( 24 );
+    
+        this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
+        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } )
+        this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
+        this.lineObj.position.set(4.5,6,2.4);
+        this.lineObj.rotation.x = Math.PI/2
+        this.app.scene.add( this.lineObj );
+    
+
         }
 
         createNurbsSurfaces2() {  
