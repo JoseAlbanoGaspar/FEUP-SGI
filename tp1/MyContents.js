@@ -740,6 +740,12 @@ class MyContents  {
         bl6.target = blTarget2
         this.app.scene.add(bl6)
 
+        // add a spotlight above scene simulating a chandelier
+        const bl7 = new THREE.SpotLight(0xe1c16e, 60, 100, Math.PI/3, 1, 2);
+        bl7.position.set(0, 7, 0)
+    
+        this.app.scene.add(bl7)
+
         // add an ambient light
         const ambientLight = new THREE.AmbientLight( 0x555555 );
         this.app.scene.add( ambientLight );
