@@ -516,8 +516,8 @@ class MyContents  {
         let points = [
             new THREE.Vector3( -0.6, -0.6, 0.0 ), // starting point
             new THREE.Vector3( -0.6,  0.2, 0.0 ), // control point
-            new THREE.Vector3(  0.6, -0.6, 1.0 ),  // control point
-            new THREE.Vector3(  0.2, 0.6, 1.0 ),  // ending point
+            new THREE.Vector3(  0.6, -0.6, 0.0 ),  // control point
+            new THREE.Vector3(  0.2, 0.6, .0 ),  // ending point
         ]
     
         //let position = new THREE.Vector3(-4,0,0)4
@@ -531,8 +531,7 @@ class MyContents  {
         this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
         this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } )
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
-        this.lineObj.position.set(4.5,6,2.4);
-        this.lineObj.rotation.x = Math.PI/2
+        this.lineObj.position.set(3.8,5.4,2);
         this.app.scene.add( this.lineObj );
         }
 
