@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { MeshBasicMaterial, RectAreaLight } from 'three';
+import { Mesh, MeshBasicMaterial, RectAreaLight, Triangle } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
@@ -473,6 +473,103 @@ class MyContents  {
         this.jar.rotation.y = Math.PI / 7
         }
 
+        buildMola(){
+
+        }
+
+        buildFlower(){
+            const geometry = new THREE.CircleGeometry( 0.5, 40 ); 
+            const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+            const circle = new THREE.Mesh( geometry, material );
+            circle.rotation.x = -Math.PI / 2;
+            circle.scale.set(0.3, 0.3, 0.3);
+            circle.position.set(4, 6.01, 2);
+            this.app.scene.add(circle);
+
+           const material2 = new THREE.MeshBasicMaterial( {color: 0xff00ff} );
+           const petala = new THREE.BoxGeometry(0.5, 0.5, 0.001);
+           const petala_mesh = new Mesh(petala, material2);
+           petala_mesh.rotation.x = -Math.PI/2;
+           petala_mesh.scale.set(0.5, 0.5, 0.5)
+           petala_mesh.position.set(4, 6, 2.24);
+           this.app.scene.add(petala_mesh)
+
+           const petala_mesh2 = new Mesh(petala, material2);
+           petala_mesh2.rotation.x = -Math.PI/2;
+           petala_mesh2.scale.set(0.5, 0.5, 0.5)
+           petala_mesh2.position.set(4, 6, 1.76);
+           this.app.scene.add(petala_mesh2)
+
+           const petala_mesh3 = new Mesh(petala, material2);
+           petala_mesh3.rotation.x = -Math.PI/2;
+           petala_mesh3.scale.set(0.5, 0.5, 0.5)
+           petala_mesh3.position.set(3.8, 6, 2);
+           this.app.scene.add(petala_mesh3)
+
+           const petala_mesh4 = new Mesh(petala, material2);
+           petala_mesh4.rotation.x = -Math.PI/2;
+           petala_mesh4.scale.set(0.5, 0.5, 0.5)
+           petala_mesh4.position.set(4.2, 6, 2);
+           this.app.scene.add(petala_mesh4);
+
+        }
+
+        createNurbsSurfaces2() {  
+            // are there any meshes to remove?
+    
+            if (this.meshes !== null) {
+                // traverse mesh array
+    
+                for (let i=0; i<this.meshes.length; i++) {
+                    // remove all meshes from the scene
+                    this.app.scene.remove(this.meshes[i])
+                }
+                this.meshes = [] // empty the array  
+            }
+    
+            // declare local variables
+            let controlPoints;
+            let surfaceData;
+            let mesh;
+            let orderU = 2
+            let orderV = 1
+    
+            // build nurb #1
+    
+            controlPoints =
+            [   // U = 0
+            [ // V = 0..1;
+                [ -1.5, -1.5, 0.0, 1 ],
+                [ -1.5,  1.5, 0.0, 1 ]
+            ],
+        // U = 1
+            [ // V = 0..1
+                [ 0, -1.5, 3.0, 1 ],
+                [ 0,  1.5, 3.0, 1 ]
+            ],
+        // U = 2
+            [ // V = 0..1
+                [ 1.5, -1.5, 0.0, 1 ],
+                [ 1.5,  1.5, 0.0, 1 ]
+            ]
+    ]      
+    
+            surfaceData = this.builder.build(controlPoints,
+                          orderU, orderV, this.samplesU,
+                          this.samplesV, this.material)  
+    
+            mesh = new THREE.Mesh( surfaceData, this.material );
+    
+            mesh.rotation.x = Math.PI / 2
+            mesh.rotation.y = 0
+            mesh.rotation.z = 0
+    
+            mesh.scale.set( 0.08, 0.15, 0.1 )
+            mesh.position.set( 1.7, 2.27, 0.8 )
+            this.app.scene.add( mesh )
+            this.meshes.push (mesh)
+    }
+
     /**
      * initializes the contents
      */
@@ -553,7 +650,6 @@ class MyContents  {
         this.helper = new THREE.SpotLightHelper(this.sliceLight)
 
         // boards' lights
-
         const bl1 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl1.position.set(1,5.6,-4.6)
 
@@ -620,6 +716,8 @@ class MyContents  {
         this.buildBoardLightSupport()
         this.initBeatle()
         this.createNurbsSurfaces()
+        this.createNurbsSurfaces2()
+        this.buildFlower()
     }
     
     /**
@@ -690,7 +788,6 @@ class MyContents  {
         this.boxMesh.position.x = this.boxDisplacement.x
         this.boxMesh.position.y = this.boxDisplacement.y
         this.boxMesh.position.z = this.boxDisplacement.z
-        
     }
 
 }
