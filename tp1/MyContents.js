@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { DoubleSide, Mesh, MeshBasicMaterial, RectAreaLight, Triangle, TriangleFanDrawMode } from 'three';
 import { Mesh, MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
@@ -469,33 +468,33 @@ class MyContents  {
         buildFlower(){
            
             this.flower = new MyFlower(this.app);
-            this.flower.scale.set(0.2,0.2,0.2)
-            this.flower.position.set(-1.5, 3.5, 0.5)
+            this.flower.scale.set(0.1,0.1,0.1)
+            this.flower.position.set(-1.4, 3.5, 0)
 
             this.flower1 = new MyFlower(this.app);
             this.flower1.rotation.y = Math.PI/3
-            this.flower1.scale.set(0.2,0.2,0.2)
-            this.flower1.position.set(-1.5, 3.5, 0.5)
+            this.flower1.scale.set(0.1,0.1,0.1)
+            this.flower1.position.set(-1.4, 3.5, 0)
 
             this.flower2 = new MyFlower(this.app);
             this.flower2.rotation.y = 2*Math.PI/3
-            this.flower2.scale.set(0.2,0.2,0.2)
-            this.flower2.position.set(-1.5, 3.5, 0.5)
+            this.flower2.scale.set(0.1,0.1,0.1)
+            this.flower2.position.set(-1.4, 3.5, 0)
 
             this.flower3 = new MyFlower(this.app);
             this.flower3.rotation.y = Math.PI
-            this.flower3.scale.set(0.2,0.2,0.2)
-            this.flower3.position.set(-1.5, 3.5, 0.5)
+            this.flower3.scale.set(0.1,0.1,0.1)
+            this.flower3.position.set(-1.4, 3.5, 0)
 
             this.flower4 = new MyFlower(this.app);
             this.flower4.rotation.y = -Math.PI/3
-            this.flower4.scale.set(0.2,0.2,0.2)
-            this.flower4.position.set(-1.5, 3.5, 0.5)
+            this.flower4.scale.set(0.1,0.1,0.1)
+            this.flower4.position.set(-1.4, 3.5, 0)
 
             this.flower5 = new MyFlower(this.app);
             this.flower5.rotation.y = -2*Math.PI/3
-            this.flower5.scale.set(0.2,0.2,0.2)
-            this.flower5.position.set(-1.5, 3.5, 0.5)
+            this.flower5.scale.set(0.1,0.1,0.1)
+            this.flower5.position.set(-1.4, 3.5, 0)
         
             this.app.scene.add(this.flower)
             this.app.scene.add(this.flower1)
@@ -508,8 +507,8 @@ class MyContents  {
             const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
             const circle = new THREE.Mesh( geometry, material );
             circle.rotation.x = -Math.PI / 2;
-            circle.scale.set(0.3, 0.3, 0.3);
-            circle.position.set(-1.5, 3.55, 0.5)
+            circle.scale.set(0.2, 0.2, 0.2);
+            circle.position.set(-1.4, 3.52, 0)
             this.app.scene.add(circle);
 
     
@@ -529,7 +528,8 @@ class MyContents  {
         this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } )
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
         this.lineObj.rotation.y = Math.PI/2
-        this.lineObj.position.set(-1.2, 2.9, 0.8);
+        this.lineObj.position.set(-1.3, 3.1, 0.2);
+        this.lineObj.scale.set(0.6, 0.6, 0.6)
         this.app.scene.add( this.lineObj );
         }
 
@@ -577,7 +577,7 @@ class MyContents  {
     buildSpiral(){
         const spiralPoints = [];
         
-        for (let i = 0; i < 6 * 200; i++) {
+        for (let i = 0; i < 5 * 200; i++) {
             const t = i / 200;
             const x = 0.2 * Math.cos(t * 2 * Math.PI);
             const y = 0.2 * Math.sin(t * 2 * Math.PI);
@@ -589,8 +589,8 @@ class MyContents  {
         const spiralGeometry = new THREE.BufferGeometry().setFromPoints(spiralPoints);
 
         this.mesh = new THREE.Line(spiralGeometry, spiralMaterial);
-        this.mesh.rotation.x = -Math.PI / 2
-        this.mesh.position.set(1, 2.1, -1)
+        this.mesh.position.set(0.8, 2.3, -1)
+        this.mesh.rotation.y = Math.PI / 2
         this.app.scene.add(this.mesh)
     }
 
