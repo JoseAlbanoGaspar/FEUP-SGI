@@ -268,6 +268,9 @@ class MyContents  {
         this.app.scene.add( rectLight )
     }
 
+    /**
+     * builds floor lamp
+     */
     buildLamp() {
         const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
         const material = new MeshBasicMaterial({color: 0x000000})
@@ -289,6 +292,9 @@ class MyContents  {
         this.app.scene.add(this.glass);
     }
 
+    /**
+     * builds the dark little "shelfs" above boards
+     */
     buildBoardLightSupport() {
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#000000", 
         specular: "#000000", emissive: "#000000", shininess: 50 })
@@ -307,6 +313,9 @@ class MyContents  {
         boxMesh2.position.x = 2
     }
 
+    /**
+     * draw the beatle at one of the boards
+     */
     buildBeatle() {
         
         this.beatleGroup = new MyBeatle(this.app)
@@ -318,6 +327,14 @@ class MyContents  {
         this.beatleGroup.position.x = -1.5
     }
 
+    /**
+     * 
+     * @param {controlPoints of the nurb} controlPoints 
+     * @param {order in U} orderU 
+     * @param {order in V} orderV 
+     * @param {Surface texture} texture 
+     * @returns mesh - the created nurb surface
+     */
     createNurbSurface(controlPoints, orderU, orderV, texture) {
         // are there any meshes to remove?
         if (this.meshes !== null) {
@@ -344,6 +361,9 @@ class MyContents  {
         return mesh
     }
 
+    /**
+     * builds a jar
+     */
     buildJar() {  
         
         let controlPoints = [   // U = 0
@@ -445,7 +465,10 @@ class MyContents  {
         this.app.scene.add( this.lineObj );
         }
 
-        buildNewspaper() {  
+    /**
+     * build the newspaper
+     */
+    buildNewspaper() {  
         let controlPoints =
             [   // U = 0
                 [ // V = 0..1;
