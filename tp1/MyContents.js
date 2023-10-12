@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import { DoubleSide, Mesh, MeshBasicMaterial, RectAreaLight, Triangle, TriangleFanDrawMode } from 'three';
+import { Mesh, MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
 import { MyWindow } from './MyWindow.js';
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyFlower } from './MyFlower.js';
+import { MyBeatle } from './MyBeatle.js';
 
 /**
  *  This class contains the contents of out application
@@ -41,19 +42,12 @@ class MyContents  {
         texture.wrapT = THREE.RepeatWrapping; // Repeat the texture in the vertical direction (V)
         texture.repeat.set(2, 2);
 
-        // jar related
+        // nurbs related
         
         this.builder = new MyNurbsBuilder()
         this.meshes = []
         this.samplesU = 8         // maximum defined in MyGuiInterface
         this.samplesV = 8        // maximum defined in MyGuiInterface
-        
-
-        // journal
-        this.builder2 = new MyNurbsBuilder()
-        this.meshes = []
-        this.samplesU = 16         // maximum defined in MyGuiInterface
-        this.samplesV = 16         // maximum defined in MyGuiInterface
 
         // plane material
         this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
@@ -63,10 +57,23 @@ class MyContents  {
         this.cake = null;
         this.cakeSlice = null;
         this.window = null;
-        this.beatleGroup = new THREE.Group();
+        this.beatleGroup = null;
         this.jar = new THREE.Group();
+
+        // shadows
+        this.mapSize = 4096
     }
 
+    /**
+     * this function must be called for each group to enable shadows for each mesh
+     */
+    applyShadow(child) {
+        if (child instanceof THREE.Mesh) {
+            // Enable shadows for each mesh within the group
+            child.castShadow = true; // for casting shadows
+            child.receiveShadow = true; // for receiving shadows
+          }
+    }
     /**
      * builds the box mesh with material assigned
      */
@@ -87,6 +94,8 @@ class MyContents  {
      */
     buildTable() {
         this.table = new MyTable(this.app, 4, 2.5, 0.2, 2, 0.2);
+        this.table.traverse(this.applyShadow);
+
         this.app.scene.add(this.table)
 
     }
@@ -102,6 +111,11 @@ class MyContents  {
         this.planeMesh = new THREE.Mesh( plane, this.planeMaterial );
         this.planeMesh.rotation.x = -Math.PI / 2;
         this.planeMesh.position.y = -0;
+
+        // shadows
+        this.planeMesh.receiveShadow = true
+        this.planeMesh.castShadow = true
+
         this.app.scene.add( this.planeMesh );
 
         // defining materials for walls
@@ -115,6 +129,9 @@ class MyContents  {
         this.frontWallMesh = new THREE.Mesh( plane, wallsMaterial );
         this.frontWallMesh.position.y = wallHeight / 2
         this.frontWallMesh.position.z = -5
+        //shadows
+        this.frontWallMesh.receiveShadow = true;
+        this.frontWallMesh.castShadow = true;
         
         this.rightWallMesh = new THREE.Mesh(plane, wallsMaterial)
         this.rightWallMesh.position.x = -5
@@ -145,31 +162,46 @@ class MyContents  {
         this.cake = new MyCake(this.app, 0.5, 0.5, 0, 11 * Math.PI / 6, - Math.PI/2, 2 * Math.PI / 6, 0.25, -0.125, 0.21650);
         this.app.scene.add(this.cake);
         this.cake.position.y = 2.3
+        // shadows
+        this.cake.traverse(this.applyShadow)
     }
-
+    /**
+     * builds cake slice
+     */
     buildCakeSlice(){
         this.cakeSlice = new MyCake(this.app, 0.5, 0.5, 0, Math.PI / 6, - Math.PI / 2, 4 * Math.PI / 6, 0.25, 0.125, 0.21650)
         this.app.scene.add(this.cakeSlice);
         this.cakeSlice.position.y = 2.3
         this.cakeSlice.position.x = 1.45
         this.cakeSlice.position.z = -0.25
-    }
+        // shadows
+        this.cakeSlice.traverse(this.applyShadow)
 
+    }
+    /**
+     * builds the plates
+     */
     buildPlate() {
         let plateCylinder = new THREE.CylinderGeometry(0.2, 0.2, 1, 36);
         let colorWhite = new THREE.MeshBasicMaterial({colorWhite: 0xffffff});
         this.plate = new THREE.Mesh( plateCylinder, colorWhite);
         this.plate.scale.set(3.2, 0, 3.2);
         this.plate.position.y = 2.11;
+        // shadows
+        this.plate.receiveShadow = true
         this.app.scene.add( this.plate );
 
         this.plate1 = new THREE.Mesh( plateCylinder, colorWhite);
         this.plate1.scale.set(1.8, 0, 1.8);
         this.plate1.position.x = 1.5;
         this.plate1.position.y = 2.11;
+        // shadows
+        this.plate1.receiveShadow = true
         this.app.scene.add( this.plate1 );
     }
-
+    /**
+     * builds the glass
+     */
     buildGlass() {
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
         let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e});
@@ -178,20 +210,33 @@ class MyContents  {
         this.glass.position.z = -0.5;
         this.glass.position.x = 1;
         this.glass.scale.set(0.05, 0.08, 0.05);
+        //shadows
+        this.glass.receiveShadow = true;
+        this.glass.castShadow = true;
         this.app.scene.add(this.glass);
     }
 
+    /**
+     * builds candle
+     */
     buildCandle() {
         let cylinder = new THREE.CylinderGeometry(0.03, 0.03, 0.4, 36);
         let candleMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
         this.candle = new THREE.Mesh( cylinder, candleMaterial);
         this.candle.position.y = 2.6;
+        //shadows
+        this.candle.receiveShadow = true;
+        this.candle.castShadow = true;
+
         this.app.scene.add( this.candle );
 
         let cone = new THREE.ConeGeometry(0.03, 0.06, 20);
         let coneMaterial = new THREE.MeshBasicMaterial({color: 0xffa500});
         this.flame = new THREE.Mesh( cone, coneMaterial );
         this.flame.position.y = 2.83;
+        //shadows
+        this.flame.receiveShadow = true;
+        this.flame.castShadow = true;
         this.app.scene.add( this.flame );
 
         this.pointLight = new THREE.PointLight(0xffa500, 20, 1, Math.PI/10, 10, 2);
@@ -200,6 +245,9 @@ class MyContents  {
         this.app.scene.add(this.pointLight)
     }
 
+    /**
+     * builds bottle
+     */
     buildBottle() {
         let cylinder = new THREE.CylinderGeometry(0.2, 0.2, 0.7, 36);
         let bottleMaterial = new THREE.MeshBasicMaterial({color: 0xadd8e6});
@@ -224,8 +272,23 @@ class MyContents  {
         this.neck.position.y = 2.75;
         this.app.scene.add(this.neck);
     }
+    /**
+     * Builds a window / board
+     */
+    buildWindow(width, height, frameTexture, imgTexutre, x, y, z, rotY = 0) {
+        const window = new MyWindow(this.app, width, height, frameTexture, imgTexutre);
+        window.rotation.y = rotY
+        window.position.y = y
+        window.position.x = x
+        window.position.z = z
+        window.traverse(this.applyShadow)
+        this.app.scene.add(window)
+    }
 
-    buildWindow() {
+    /**
+     * builds all the boards and windows
+     */
+    buildWindows() {
 
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('textures/wood.jpg');
@@ -233,61 +296,10 @@ class MyContents  {
         const picture1 = textureLoader.load('textures/picture1.jpg');
         const student = textureLoader.load('textures/student.jpeg')
 
-        this.window1 = new MyWindow(this.app, 2, 2, texture, picture1);
-        this.window1.position.y = 4
-        this.window1.position.x = -2
-        this.window1.position.z = -5
-        this.app.scene.add(this.window1)
-
-        this.window2 = new MyWindow(this.app, 2, 2, texture, student);
-        this.window2.position.y = 4
-        this.window2.position.x = 2
-        this.window2.position.z = -5
-        this.app.scene.add(this.window2)
-
-        let material = new THREE.MeshPhongMaterial({ 
-            color: "#ffffff", 
-            specular: "#000000",
-            emissive: "#000000",
-            shininess: 90
-        })
-
-        const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
-        const rectangle = new THREE.Mesh( geometry, material ); 
-        rectangle.scale.set(0.1, 1, 0.1)
-        rectangle.position.x = -4.8
-        rectangle.position.y = 4
-        rectangle.position.z = 0
-        this.app.scene.add( rectangle );
-
-        const retangleHorizontal = new THREE.Mesh(geometry, material);
-        retangleHorizontal.rotation.x = Math.PI / 2
-        retangleHorizontal.position.x = -4.8
-        retangleHorizontal.position.y = 4
-        retangleHorizontal.position.z = 0
-        retangleHorizontal.scale.set(0.1, 1.3, 0.1)
-        this.app.scene.add(retangleHorizontal)
-
-
-        this.window3 = new MyWindow(this.app, 4, 3, null, texture1);
-        this.window3.rotation.y = Math.PI / 2
-        this.window3.position.y = 4
-        this.window3.position.x = -4.9
-        this.window3.position.z = 0
-        this.app.scene.add(this.window3)
-
-        /*
-        const rectLight = new THREE.DirectionalLight( 0xffffff, 2 );
-        rectLight.position.set( -4.9, 4, 0);
-        this.app.scene.add( rectLight )
-        */
-
-        this.window4 = new MyWindow(this.app, 5, 3, texture, null);
-        this.window4.position.y = 4
-        this.window4.position.x = 0
-        this.window4.position.z = 5
-        this.window4.rotation.y = Math.PI
-        this.app.scene.add(this.window4)
+        this.buildWindow(2, 2, texture, picture1, -2, 4, -5) // board with space image
+        this.buildWindow(2, 2, texture, student, 2, 4, -5)  // board with student image
+        this.buildWindow(4, 3, null, texture1, -4.9, 4, 0, Math.PI / 2) // builds window - eiffel tower view
+        this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beatle 
 
         RectAreaLightUniformsLib.init()
         const rectLight = new THREE.RectAreaLight( 0xffffff, 10, 3.9, 2.5 );
@@ -297,6 +309,9 @@ class MyContents  {
         this.app.scene.add( rectLight )
     }
 
+    /**
+     * builds floor lamp
+     */
     buildLamp() {
         const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
         const material = new MeshBasicMaterial({color: 0x000000})
@@ -305,6 +320,9 @@ class MyContents  {
         rectangle.position.x = 4
         rectangle.position.y = 1.9
         rectangle.position.z = 4
+        //shadows
+        rectangle.receiveShadow = true;
+        rectangle.castShadow = true;
         this.app.scene.add( rectangle );
 
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
@@ -315,14 +333,19 @@ class MyContents  {
         this.glass.position.x = 4;
         this.glass.scale.set(0.3, 0.3, 0.3);
         this.glass.rotation.z = Math.PI;
+        //shadows
+        this.glass.receiveShadow = true;
+        this.glass.castShadow = true;
         this.app.scene.add(this.glass);
     }
 
+    /**
+     * builds the dark little "shelfs" above boards
+     */
     buildBoardLightSupport() {
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#000000", 
         specular: "#000000", emissive: "#000000", shininess: 50 })
 
-        // Create a Cube Mesh with basic material
         let box = new THREE.BoxGeometry(3, 0.25, 0.25);
         const boxMesh = new THREE.Mesh( box, boxMaterial );
         this.app.scene.add(boxMesh)
@@ -330,88 +353,46 @@ class MyContents  {
         boxMesh.position.z = -5 + (0.25 / 2)
         boxMesh.position.x = -2
 
+        //shadows
+        boxMesh.receiveShadow = true;
+        boxMesh.castShadow = true;
+
         const boxMesh2 = new THREE.Mesh( box, boxMaterial );
         this.app.scene.add(boxMesh2)
         boxMesh2.position.y = 5.2
         boxMesh2.position.z = -5 + (0.25 / 2)
         boxMesh2.position.x = 2
-    }
-    
-    drawBezier(points) {
-        let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
-    
-        // sample a number of points on the curve
-        let sampledPoints = curve.getPoints( 16 );
-    
-        this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
-        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, linewidth: 50.0} )
 
-        this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
-        this.beatleGroup.add(this.lineObj)
+        //shadows
+        boxMesh2.receiveShadow = true;
+        boxMesh2.castShadow = true;
     }
 
-    initBeatle() {
-        // roda 1
-        let points = [
-            new THREE.Vector3( 0.0, 0.0, 0.0  ), // starting point
-            new THREE.Vector3( 0.0,  4.0, 0.0 ), // control point
-            new THREE.Vector3(  6.0, 4.0, 0.0 ),  // control point
-            new THREE.Vector3(  6.0, 0.0, 0.0 ),  // ending point
-        ]
+    /**
+     * draw the beatle at one of the boards
+     */
+    buildBeatle() {
         
-        this.drawBezier(points)
-
-        //roda 2
-        points = [
-            new THREE.Vector3( 10.0, 0.0, 0.0  ), // starting point
-            new THREE.Vector3( 10.0,  4.0, 0.0 ), // control point
-            new THREE.Vector3(  16.0, 4.0, 0.0 ),  // control point
-            new THREE.Vector3(  16.0, 0.0, 0.0 ),  // ending point
-        ]
-
-        this.drawBezier(points)
-
-        // capô
-        
-        points = [
-            new THREE.Vector3( 12.0, 4.0, 0.0  ), // starting point
-            new THREE.Vector3( 12.0,  4.0, 0.0 ), // control point
-            new THREE.Vector3(  16.0, 4.0, 0.0 ),  // control point
-            new THREE.Vector3(  16.0, 0.0, 0.0 ),  // ending point
-        ]
-
-        this.drawBezier([points[0], points[1], points[2], points[3]])
-
-        // frente
-        let x = 2.5
-        points = [
-            new THREE.Vector3( 8.0, 8.0, 0.0  ), // starting point
-            new THREE.Vector3( 8.0 + x,  8.0, 0.0 ), // control point
-            new THREE.Vector3(  12.0, 4.0 + x, 0.0 ),  // control point
-            new THREE.Vector3(  12.0, 4.0, 0.0 ),  // ending point
-        ]
-
-        this.drawBezier(points)
-        
-        //trás
-        x = 4.5
-        points = [
-            new THREE.Vector3( 8.0, 8.0, 0.0  ), // starting point
-            new THREE.Vector3( 8.0 - x,  8.0, 0.0 ), // control point
-            new THREE.Vector3(  0.0, x, 0.0 ),  // control point
-            new THREE.Vector3(  0.0, 0.0, 0.0 ),  // ending point
-        ]
-
-        this.drawBezier(points)
+        this.beatleGroup = new MyBeatle(this.app)
 
         this.beatleGroup.scale.set(0.2, 0.2, 0.2)
         this.app.scene.add(this.beatleGroup)
         this.beatleGroup.position.z = 4.8
         this.beatleGroup.position.y = 3.2
         this.beatleGroup.position.x = -1.5
+        //this.beatleGroup.traverse(this.applyShadow)
+        
     }
 
-    createNurbsSurfaces() {  
+    /**
+     * 
+     * @param {controlPoints of the nurb} controlPoints 
+     * @param {order in U} orderU 
+     * @param {order in V} orderV 
+     * @param {Surface texture} texture 
+     * @returns mesh - the created nurb surface
+     */
+    createNurbSurface(controlPoints, orderU, orderV, texture) {
         // are there any meshes to remove?
         if (this.meshes !== null) {
             // traverse mesh array
@@ -421,15 +402,28 @@ class MyContents  {
             }
             this.meshes = [] // empty the array  
         }
-        // declare local variables
-
-        let controlPoints = [];
+  
         let surfaceData;
         let mesh;
-        let orderU = 2
-        let orderV = 2
+
+        const material = new THREE.MeshLambertMaterial( { map: texture,
+            side: THREE.DoubleSide,
+         } );
         
-        controlPoints = [   // U = 0
+        surfaceData = this.builder.build(controlPoints,
+                      orderU, orderV, this.samplesU,
+                      this.samplesV, material)  
+
+        mesh = new THREE.Mesh( surfaceData, material );
+        return mesh
+    }
+
+    /**
+     * builds a jar
+     */
+    buildJar() {  
+        
+        let controlPoints = [   // U = 0
             [ // V = 0..1;
                 [ -1.5, -1.5, 0.0, 1 ],
                 [-0.5, 0, 0, 1 ],
@@ -455,15 +449,7 @@ class MyContents  {
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
 
-        const jarMaterial = new THREE.MeshLambertMaterial( { map: map,
-            side: THREE.DoubleSide,
-         } );
-        
-        surfaceData = this.builder.build(controlPoints,
-                      orderU, orderV, this.samplesU,
-                      this.samplesV, jarMaterial)  
-
-        mesh = new THREE.Mesh( surfaceData, jarMaterial );
+        const mesh = this.createNurbSurface(controlPoints, 2, 2, map);
 
         let othermesh = mesh.clone()
         othermesh.rotation.y = Math.PI
@@ -476,6 +462,8 @@ class MyContents  {
         this.jar.scale.set(0.3, 0.3, 0.3)
         this.jar.position.set(-1.3,2.5,0.6)
         this.jar.rotation.y = Math.PI / 7
+
+        this.jar.traverse(this.applyShadow)
         }
 
         buildFlower(){
@@ -545,55 +533,35 @@ class MyContents  {
         this.app.scene.add( this.lineObj );
         }
 
-        createNurbsSurfaces2() {  
-            // are there any meshes to remove?
-    
-            if (this.meshes !== null) {
-                // traverse mesh array
-    
-                for (let i=0; i<this.meshes.length; i++) {
-                    // remove all meshes from the scene
-                    this.app.scene.remove(this.meshes[i])
-                }
-                this.meshes = [] // empty the array  
-            }
-    
-            // declare local variables
-            let controlPoints;
-            let surfaceData;
-            let mesh;
-            let orderU = 2
-            let orderV = 1
-    
-            // build nurb #1
-    
-            controlPoints =
+    /**
+     * build the newspaper
+     */
+    buildNewspaper() {  
+        let controlPoints =
             [   // U = 0
-            [ // V = 0..1;
-                [ -1.5, -1.5, 0.0, 1 ],
-                [ -1.5,  1.5, 0.0, 1 ]
-            ],
-        // U = 1
-            [ // V = 0..1
-                [ 0, -1.5, 3.0, 1 ],
-                [ 0,  1.5, 3.0, 1 ]
-            ],
-        // U = 2
-            [ // V = 0..1
-                [ 1.5, -1.5, 0.0, 1 ],
-                [ 1.5,  1.5, 0.0, 1 ]
-            ]
-    ]    
+                [ // V = 0..1;
+                    [ -1.5, -1.5, 0.0, 1 ],
+                    [ -1.5,  1.5, 0.0, 1 ]
+                ],
+            // U = 1
+                [ // V = 0..1
+                    [ 0, -1.5, 3.0, 1 ],
+                    [ 0,  1.5, 3.0, 1 ]
+                ],
+            // U = 2
+                [ // V = 0..1
+                    [ 1.5, -1.5, 0.0, 1 ],
+                    [ 1.5,  1.5, 0.0, 1 ]
+                ]
+            ]    
+        const map = new THREE.TextureLoader().load( 'textures/newspaper.jpg' );
 
-        const journalMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff,
-            side: THREE.DoubleSide,
-         } );
-        
-         surfaceData = this.builder.build(controlPoints,
-            orderU, orderV, this.samplesU,
-            this.samplesV, journalMaterial)  
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = THREE.SRGBColorSpace;
 
-        mesh = new THREE.Mesh( surfaceData, journalMaterial );
+
+        let mesh = this.createNurbSurface(controlPoints, 2, 1, map)
 
         mesh.rotation.x = Math.PI / 2
         mesh.rotation.y = 0
@@ -601,25 +569,9 @@ class MyContents  {
 
         mesh.scale.set( 0.08, 0.15, 0.1 )
         mesh.position.set( 1.7, 2.25, 0.8 )
+        mesh.traverse(this.applyShadow)
         this.app.scene.add( mesh )
-        this.meshes.push (mesh)
-
-    /*
-            surfaceData = this.builder.build(controlPoints,
-                          orderU, orderV, this.samplesU,
-                          this.samplesV, this.material)  
-    
-            mesh = new THREE.Mesh( surfaceData, this.material );
-    
-            mesh.rotation.x = Math.PI / 2
-            mesh.rotation.y = 0
-            mesh.rotation.z = 0
-    
-            mesh.scale.set( 0.08, 0.15, 0.1 )
-            mesh.position.set( 1.7, 2.27, 0.8 )
-            this.app.scene.add( mesh )
-            this.meshes.push (mesh)
-            */
+        
     }
 
     buildSpiral(){
@@ -654,50 +606,33 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        // add a point light on top of the model
         const pointLight = new THREE.PointLight( 0xffffff, 500, 0 );
         pointLight.position.set( 0, 20, 0 );
+        // shadows
+        pointLight.castShadow = true;
+        pointLight.shadow.mapSize.width = this.mapSize;
+        pointLight.shadow.mapSize.height = this.mapSize;
+        pointLight.shadow.camera.near = 0.5;
+        pointLight.shadow.camera.far = 100;
         this.app.scene.add( pointLight );
 
         // add a point light helper for the previous point light
         const sphereSize = 0.5;
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
-
-        this.spotLight = new THREE.SpotLight(0xffffff, 60, 1, (Math.PI / 180), 10, 0)
-        this.spotLight.position.set(0, 4, 0)
-
-        this.target = new THREE.Object3D();
-        this.target.position.set(0, 1, 0); // Set the target coordinates
-        this.app.scene.add(this.target);
-
-        this.spotLight.target = this.target;
-        this.app.scene.add(this.spotLight)
-
+        //------------------- cake light --------------------------------------------
         this.cakeLight = new THREE.SpotLight(0xffffff, 150, 1, Math.PI/12, 10, 0)
         this.cakeLight.position.set(0, 2.3, 0);
-        
-        this.cakeLight.target = this.target;
+        // SHADOWS
+        this.cakeLight.castShadow = true;
+        this.cakeLight.shadow.mapSize.width = this.mapSize
+        this.cakeLight.shadow.mapSize.height = this.mapSize
+        this.cakeLight.shadow.camera.near = 0.5;
+        this.cakeLight.shadow.camera.far = 100;
+        this.cakeLight.shadow.camera.fov = 30;
+        this.cakeLight.shadow.camera.aspect = 1;
         this.app.scene.add(this.cakeLight)
-
-        /*
-        //window light
-        RectAreaLightUniformsLib.init()
-        // Create a RectAreaLight
-        const lightColor = 0xffffff; // Color of the light
-        const lightIntensity = 50; // Intensity of the light
-        const lightWidth = 5; // Width of the light
-        const lightHeight = 5; // Height of the light
-        this.rectAreaLight = new THREE.RectAreaLight(lightColor, lightIntensity, lightWidth, lightHeight);
-
-        // Set the position of the RectAreaLight
-        this.rectAreaLight.position.set(0, 2.3, 0);
-
-        // Add the RectAreaLight to the scene
-        this.app.scene.add(this.rectAreaLight);
-        */
-
-        // lamp
+        // ------------------ floor lamp light ------------------------------------
         this.pointLightLamp = new THREE.SpotLight(0xe1c16e, 100, 6, Math.PI/3, 1, 1);
         this.pointLightLamp.position.set(4, 4, 4);
 
@@ -706,22 +641,35 @@ class MyContents  {
         this.app.scene.add(this.targetLamp);
 
         this.pointLightLamp.target = this.targetLamp;
-        this.app.scene.add(this.pointLightLamp)
+        // SHADOWS
+        this.pointLightLamp.castShadow = true;
+        this.pointLightLamp.shadow.mapSize.width = this.mapSize
+        this.pointLightLamp.shadow.mapSize.height = this.mapSize
+        this.pointLightLamp.shadow.camera.near = 0.5;
+        this.pointLightLamp.shadow.camera.far = 100;
+        this.pointLightLamp.shadow.camera.fov = 30;
+        this.pointLightLamp.shadow.camera.aspect = 1;
 
-        // cake slice light
+        this.app.scene.add(this.pointLightLamp)
+        //-------------------- cake slice spotlight ------------------------
         this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 1.5, Math.PI/6, 1, 1);
         this.sliceLight.position.set(1.3, 3, -1);
-
         this.targetSlice = new THREE.Object3D();
         this.targetSlice.position.set(2,2,2);
-        //this.app.scene.add(this.targetSlice)
-        
-        this.sliceLight.target = this.targetSlice
+        this.app.scene.add(this.targetSlice)
+        this.sliceLight.target = this.targetSlice;
+        // SHADOWS
+        this.sliceLight.castShadow = true;
+        this.sliceLight.shadow.mapSize.width = this.mapSize
+        this.sliceLight.shadow.mapSize.height = this.mapSize
+        this.sliceLight.shadow.camera.near = 0.5;
+        this.sliceLight.shadow.camera.far = 100;
+        this.sliceLight.shadow.camera.fov = 30;
+        this.sliceLight.shadow.camera.aspect = 1;
+
         this.app.scene.add(this.sliceLight)
+        //---------------------- boards' lights --------------------------------
 
-        this.helper = new THREE.SpotLightHelper(this.sliceLight)
-
-        // boards' lights
         const bl1 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl1.position.set(1,5.6,-4.6)
 
@@ -729,11 +677,9 @@ class MyContents  {
         blTarget.position.set(2,0,-5)
 
         bl1.target = blTarget
+        this.app.scene.add(blTarget)
         this.app.scene.add(bl1)
-
-        this.bl1helper = new THREE.SpotLightHelper(bl1)
-        //this.app.scene.add(this.bl1helper)
-
+        
         const bl2 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl2.position.set(2,5.6,-4.6)
 
@@ -753,10 +699,8 @@ class MyContents  {
         blTarget2.position.set(-2,0,-5)
 
         bl4.target = blTarget2
+        this.app.scene.add(blTarget2)
         this.app.scene.add(bl4)
-
-        const bl4helper = new THREE.SpotLightHelper(bl4)
-        //this.app.scene.add(bl4helper)
 
         const bl5 = new THREE.SpotLight(0xADD8E6, 20, 2.5, Math.PI/6, 1, 1);
         bl5.position.set(-2,5.6,-4.6)
@@ -770,16 +714,25 @@ class MyContents  {
         bl6.target = blTarget2
         this.app.scene.add(bl6)
 
-        // add a spotlight above scene simulating a chandelier
+        // --------------------------- ceiling lamp (invisible) ----------------------------
         const bl7 = new THREE.SpotLight(0xe1c16e, 60, 100, Math.PI/3, 1, 2);
         bl7.position.set(0, 7, 0)
-    
+        // SHADOWS
+        bl7.castShadow = true;
+        bl7.shadow.mapSize.width = this.mapSize
+        bl7.shadow.mapSize.height = this.mapSize
+        bl7.shadow.camera.near = 0.5;
+        bl7.shadow.camera.far = 100;
+        bl7.shadow.camera.fov = 30;
+        bl7.shadow.camera.aspect = 1;
         this.app.scene.add(bl7)
+       
 
-        // add an ambient light
+        //--------------------------- ambient light --------------------------------
         const ambientLight = new THREE.AmbientLight( 0x555555 );
         this.app.scene.add( ambientLight );
 
+        // ------------------------- building objects -------------------------------
         this.buildBox()
         this.buildWalls()
         this.buildPlate()
@@ -789,12 +742,12 @@ class MyContents  {
         this.buildBottle()
         this.buildGlass()
         this.buildCakeSlice()
-        this.buildWindow()
+        this.buildWindows()
         this.buildLamp()
         this.buildBoardLightSupport()
-        this.initBeatle()
-        this.createNurbsSurfaces()
-        this.createNurbsSurfaces2()
+        this.buildBeatle()
+        this.buildJar()
+        this.buildNewspaper()
         this.buildFlower()
         this.buildSpiral()
     }
