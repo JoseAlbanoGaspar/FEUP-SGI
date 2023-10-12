@@ -142,7 +142,9 @@ class MyContents  {
         this.app.scene.add(this.cake);
         this.cake.position.y = 2.3
     }
-
+    /**
+     * builds cake slice
+     */
     buildCakeSlice(){
         this.cakeSlice = new MyCake(this.app, 0.5, 0.5, 0, Math.PI / 6, - Math.PI / 2, 4 * Math.PI / 6, 0.25, 0.125, 0.21650)
         this.app.scene.add(this.cakeSlice);
@@ -150,7 +152,9 @@ class MyContents  {
         this.cakeSlice.position.x = 1.45
         this.cakeSlice.position.z = -0.25
     }
-
+    /**
+     * builds the plates
+     */
     buildPlate() {
         let plateCylinder = new THREE.CylinderGeometry(0.2, 0.2, 1, 36);
         let colorWhite = new THREE.MeshBasicMaterial({colorWhite: 0xffffff});
@@ -165,7 +169,9 @@ class MyContents  {
         this.plate1.position.y = 2.11;
         this.app.scene.add( this.plate1 );
     }
-
+    /**
+     * builds the glass
+     */
     buildGlass() {
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
         let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e});
@@ -177,6 +183,9 @@ class MyContents  {
         this.app.scene.add(this.glass);
     }
 
+    /**
+     * builds candle
+     */
     buildCandle() {
         let cylinder = new THREE.CylinderGeometry(0.03, 0.03, 0.4, 36);
         let candleMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
@@ -196,6 +205,9 @@ class MyContents  {
         this.app.scene.add(this.pointLight)
     }
 
+    /**
+     * builds bottle
+     */
     buildBottle() {
         let cylinder = new THREE.CylinderGeometry(0.2, 0.2, 0.7, 36);
         let bottleMaterial = new THREE.MeshBasicMaterial({color: 0xadd8e6});
@@ -220,8 +232,22 @@ class MyContents  {
         this.neck.position.y = 2.75;
         this.app.scene.add(this.neck);
     }
+    /**
+     * Builds a window / board
+     */
+    buildWindow(width, height, frameTexture, imgTexutre, x, y, z, rotY = 0) {
+        const window = new MyWindow(this.app, width, height, frameTexture, imgTexutre);
+        window.rotation.y = rotY
+        window.position.y = y
+        window.position.x = x
+        window.position.z = z
+        this.app.scene.add(window)
+    }
 
-    buildWindow() {
+    /**
+     * builds all the boards and windows
+     */
+    buildWindows() {
 
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('textures/wood.jpg');
@@ -229,61 +255,10 @@ class MyContents  {
         const picture1 = textureLoader.load('textures/picture1.jpg');
         const student = textureLoader.load('textures/student.jpeg')
 
-        this.window1 = new MyWindow(this.app, 2, 2, texture, picture1);
-        this.window1.position.y = 4
-        this.window1.position.x = -2
-        this.window1.position.z = -5
-        this.app.scene.add(this.window1)
-
-        this.window2 = new MyWindow(this.app, 2, 2, texture, student);
-        this.window2.position.y = 4
-        this.window2.position.x = 2
-        this.window2.position.z = -5
-        this.app.scene.add(this.window2)
-
-        let material = new THREE.MeshPhongMaterial({ 
-            color: "#ffffff", 
-            specular: "#000000",
-            emissive: "#000000",
-            shininess: 90
-        })
-
-        const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
-        const rectangle = new THREE.Mesh( geometry, material ); 
-        rectangle.scale.set(0.1, 1, 0.1)
-        rectangle.position.x = -4.8
-        rectangle.position.y = 4
-        rectangle.position.z = 0
-        this.app.scene.add( rectangle );
-
-        const retangleHorizontal = new THREE.Mesh(geometry, material);
-        retangleHorizontal.rotation.x = Math.PI / 2
-        retangleHorizontal.position.x = -4.8
-        retangleHorizontal.position.y = 4
-        retangleHorizontal.position.z = 0
-        retangleHorizontal.scale.set(0.1, 1.3, 0.1)
-        this.app.scene.add(retangleHorizontal)
-
-
-        this.window3 = new MyWindow(this.app, 4, 3, null, texture1);
-        this.window3.rotation.y = Math.PI / 2
-        this.window3.position.y = 4
-        this.window3.position.x = -4.9
-        this.window3.position.z = 0
-        this.app.scene.add(this.window3)
-
-        /*
-        const rectLight = new THREE.DirectionalLight( 0xffffff, 2 );
-        rectLight.position.set( -4.9, 4, 0);
-        this.app.scene.add( rectLight )
-        */
-
-        this.window4 = new MyWindow(this.app, 5, 3, texture, null);
-        this.window4.position.y = 4
-        this.window4.position.x = 0
-        this.window4.position.z = 5
-        this.window4.rotation.y = Math.PI
-        this.app.scene.add(this.window4)
+        this.buildWindow(2, 2, texture, picture1, -2, 4, -5) // board with space image
+        this.buildWindow(2, 2, texture, student, 2, 4, -5)  // board with student image
+        this.buildWindow(4, 3, null, texture1, -4.9, 4, 0, Math.PI / 2) // builds window - eiffel tower view
+        this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beatle 
 
         RectAreaLightUniformsLib.init()
         const rectLight = new THREE.RectAreaLight( 0xffffff, 10, 3.9, 2.5 );
@@ -332,7 +307,7 @@ class MyContents  {
         boxMesh2.position.x = 2
     }
 
-    initBeatle() {
+    buildBeatle() {
         
         this.beatleGroup = new MyBeatle(this.app)
 
@@ -654,10 +629,10 @@ class MyContents  {
         this.buildBottle()
         this.buildGlass()
         this.buildCakeSlice()
-        this.buildWindow()
+        this.buildWindows()
         this.buildLamp()
         this.buildBoardLightSupport()
-        this.initBeatle()
+        this.buildBeatle()
         this.buildJar()
         this.buildNewspaper()
         this.buildFlower()
