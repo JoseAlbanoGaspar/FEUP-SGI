@@ -50,9 +50,6 @@ class MyContents  {
 
         // journal
         this.builder2 = new MyNurbsBuilder()
-        this.meshes = []
-        this.samplesU = 16         // maximum defined in MyGuiInterface
-        this.samplesV = 16         // maximum defined in MyGuiInterface
 
         // plane material
         this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
@@ -321,7 +318,6 @@ class MyContents  {
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#000000", 
         specular: "#000000", emissive: "#000000", shininess: 50 })
 
-        // Create a Cube Mesh with basic material
         let box = new THREE.BoxGeometry(3, 0.25, 0.25);
         const boxMesh = new THREE.Mesh( box, boxMaterial );
         this.app.scene.add(boxMesh)
@@ -347,7 +343,7 @@ class MyContents  {
         this.beatleGroup.position.x = -1.5
     }
 
-    createNurbsSurfaces() {  
+    createNurbSurface(controlPoints, orderU, orderV, texture) {
         // are there any meshes to remove?
         if (this.meshes !== null) {
             // traverse mesh array
@@ -357,15 +353,25 @@ class MyContents  {
             }
             this.meshes = [] // empty the array  
         }
-        // declare local variables
-
-        let controlPoints = [];
+  
         let surfaceData;
         let mesh;
-        let orderU = 2
-        let orderV = 2
+
+        const material = new THREE.MeshLambertMaterial( { map: texture,
+            side: THREE.DoubleSide,
+         } );
         
-        controlPoints = [   // U = 0
+        surfaceData = this.builder.build(controlPoints,
+                      orderU, orderV, this.samplesU,
+                      this.samplesV, material)  
+
+        mesh = new THREE.Mesh( surfaceData, material );
+        return mesh
+    }
+
+    buildJar() {  
+        
+        let controlPoints = [   // U = 0
             [ // V = 0..1;
                 [ -1.5, -1.5, 0.0, 1 ],
                 [-0.5, 0, 0, 1 ],
@@ -391,15 +397,7 @@ class MyContents  {
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
 
-        const jarMaterial = new THREE.MeshLambertMaterial( { map: map,
-            side: THREE.DoubleSide,
-         } );
-        
-        surfaceData = this.builder.build(controlPoints,
-                      orderU, orderV, this.samplesU,
-                      this.samplesV, jarMaterial)  
-
-        mesh = new THREE.Mesh( surfaceData, jarMaterial );
+        const mesh = this.createNurbSurface(controlPoints, 2, 2, map);
 
         let othermesh = mesh.clone()
         othermesh.rotation.y = Math.PI
@@ -472,55 +470,32 @@ class MyContents  {
         this.app.scene.add( this.lineObj );
         }
 
-        createNurbsSurfaces2() {  
-            // are there any meshes to remove?
-    
-            if (this.meshes !== null) {
-                // traverse mesh array
-    
-                for (let i=0; i<this.meshes.length; i++) {
-                    // remove all meshes from the scene
-                    this.app.scene.remove(this.meshes[i])
-                }
-                this.meshes = [] // empty the array  
-            }
-    
-            // declare local variables
-            let controlPoints;
-            let surfaceData;
-            let mesh;
-            let orderU = 2
-            let orderV = 1
-    
-            // build nurb #1
-    
-            controlPoints =
+        buildNewspaper() {  
+        let controlPoints =
             [   // U = 0
-            [ // V = 0..1;
-                [ -1.5, -1.5, 0.0, 1 ],
-                [ -1.5,  1.5, 0.0, 1 ]
-            ],
-        // U = 1
-            [ // V = 0..1
-                [ 0, -1.5, 3.0, 1 ],
-                [ 0,  1.5, 3.0, 1 ]
-            ],
-        // U = 2
-            [ // V = 0..1
-                [ 1.5, -1.5, 0.0, 1 ],
-                [ 1.5,  1.5, 0.0, 1 ]
-            ]
-    ]    
+                [ // V = 0..1;
+                    [ -1.5, -1.5, 0.0, 1 ],
+                    [ -1.5,  1.5, 0.0, 1 ]
+                ],
+            // U = 1
+                [ // V = 0..1
+                    [ 0, -1.5, 3.0, 1 ],
+                    [ 0,  1.5, 3.0, 1 ]
+                ],
+            // U = 2
+                [ // V = 0..1
+                    [ 1.5, -1.5, 0.0, 1 ],
+                    [ 1.5,  1.5, 0.0, 1 ]
+                ]
+            ]    
+        const map = new THREE.TextureLoader().load( 'textures/newspaper.jpg' );
 
-        const journalMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff,
-            side: THREE.DoubleSide,
-         } );
-        
-         surfaceData = this.builder.build(controlPoints,
-            orderU, orderV, this.samplesU,
-            this.samplesV, journalMaterial)  
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = THREE.SRGBColorSpace;
 
-        mesh = new THREE.Mesh( surfaceData, journalMaterial );
+
+        let mesh = this.createNurbSurface(controlPoints, 2, 1, map)
 
         mesh.rotation.x = Math.PI / 2
         mesh.rotation.y = 0
@@ -530,23 +505,6 @@ class MyContents  {
         mesh.position.set( 1.7, 2.25, 0.8 )
         this.app.scene.add( mesh )
         this.meshes.push (mesh)
-
-    /*
-            surfaceData = this.builder.build(controlPoints,
-                          orderU, orderV, this.samplesU,
-                          this.samplesV, this.material)  
-    
-            mesh = new THREE.Mesh( surfaceData, this.material );
-    
-            mesh.rotation.x = Math.PI / 2
-            mesh.rotation.y = 0
-            mesh.rotation.z = 0
-    
-            mesh.scale.set( 0.08, 0.15, 0.1 )
-            mesh.position.set( 1.7, 2.27, 0.8 )
-            this.app.scene.add( mesh )
-            this.meshes.push (mesh)
-            */
     }
 
     /**
@@ -700,8 +658,8 @@ class MyContents  {
         this.buildLamp()
         this.buildBoardLightSupport()
         this.initBeatle()
-        this.createNurbsSurfaces()
-        this.createNurbsSurfaces2()
+        this.buildJar()
+        this.buildNewspaper()
         this.buildFlower()
     }
     
