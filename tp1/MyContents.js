@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Mesh, MeshBasicMaterial, RectAreaLight, Triangle } from 'three';
+import { DoubleSide, Mesh, MeshBasicMaterial, RectAreaLight, Triangle, TriangleFanDrawMode } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
@@ -7,6 +7,7 @@ import { MyWindow } from './MyWindow.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
+import { MyFlower } from './MyFlower.js';
 
 /**
  *  This class contains the contents of out application
@@ -478,50 +479,58 @@ class MyContents  {
         }
 
         buildFlower(){
+           
+            this.flower = new MyFlower(this.app);
+            this.flower.scale.set(0.2,0.2,0.2)
+            this.flower.position.set(-1.5, 3.5, 0.5)
+
+            this.flower1 = new MyFlower(this.app);
+            this.flower1.rotation.y = Math.PI/3
+            this.flower1.scale.set(0.2,0.2,0.2)
+            this.flower1.position.set(-1.5, 3.5, 0.5)
+
+            this.flower2 = new MyFlower(this.app);
+            this.flower2.rotation.y = 2*Math.PI/3
+            this.flower2.scale.set(0.2,0.2,0.2)
+            this.flower2.position.set(-1.5, 3.5, 0.5)
+
+            this.flower3 = new MyFlower(this.app);
+            this.flower3.rotation.y = Math.PI
+            this.flower3.scale.set(0.2,0.2,0.2)
+            this.flower3.position.set(-1.5, 3.5, 0.5)
+
+            this.flower4 = new MyFlower(this.app);
+            this.flower4.rotation.y = -Math.PI/3
+            this.flower4.scale.set(0.2,0.2,0.2)
+            this.flower4.position.set(-1.5, 3.5, 0.5)
+
+            this.flower5 = new MyFlower(this.app);
+            this.flower5.rotation.y = -2*Math.PI/3
+            this.flower5.scale.set(0.2,0.2,0.2)
+            this.flower5.position.set(-1.5, 3.5, 0.5)
+        
+            this.app.scene.add(this.flower)
+            this.app.scene.add(this.flower1)
+            this.app.scene.add(this.flower2)
+            this.app.scene.add(this.flower3)
+            this.app.scene.add(this.flower4)
+            this.app.scene.add(this.flower5)
+
             const geometry = new THREE.CircleGeometry( 0.5, 40 ); 
             const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
             const circle = new THREE.Mesh( geometry, material );
             circle.rotation.x = -Math.PI / 2;
             circle.scale.set(0.3, 0.3, 0.3);
-            circle.position.set(4, 6.01, 2);
+            circle.position.set(-1.5, 3.55, 0.5)
             this.app.scene.add(circle);
 
-           const material2 = new THREE.MeshBasicMaterial( {color: 0xff00ff} );
-           const petala = new THREE.BoxGeometry(0.5, 0.5, 0.001);
-           const petala_mesh = new Mesh(petala, material2);
-           petala_mesh.rotation.x = -Math.PI/2;
-           petala_mesh.scale.set(0.5, 0.5, 0.5)
-           petala_mesh.position.set(4, 6, 2.24);
-           this.app.scene.add(petala_mesh)
-
-           const petala_mesh2 = new Mesh(petala, material2);
-           petala_mesh2.rotation.x = -Math.PI/2;
-           petala_mesh2.scale.set(0.5, 0.5, 0.5)
-           petala_mesh2.position.set(4, 6, 1.76);
-           this.app.scene.add(petala_mesh2)
-
-           const petala_mesh3 = new Mesh(petala, material2);
-           petala_mesh3.rotation.x = -Math.PI/2;
-           petala_mesh3.scale.set(0.5, 0.5, 0.5)
-           petala_mesh3.position.set(3.8, 6, 2);
-           this.app.scene.add(petala_mesh3)
-
-           const petala_mesh4 = new Mesh(petala, material2);
-           petala_mesh4.rotation.x = -Math.PI/2;
-           petala_mesh4.scale.set(0.5, 0.5, 0.5)
-           petala_mesh4.position.set(4.2, 6, 2);
-           this.app.scene.add(petala_mesh4);
-
-           
+    
         let points = [
             new THREE.Vector3( -0.6, -0.6, 0.0 ), // starting point
             new THREE.Vector3( -0.6,  0.2, 0.0 ), // control point
             new THREE.Vector3(  0.6, -0.6, 0.0 ),  // control point
             new THREE.Vector3(  0.2, 0.6, .0 ),  // ending point
         ]
-    
-        //let position = new THREE.Vector3(-4,0,0)4
-        //this.drawHull(position, points);
     
         let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
     
@@ -531,7 +540,8 @@ class MyContents  {
         this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
         this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } )
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
-        this.lineObj.position.set(3.8,5.4,2);
+        this.lineObj.rotation.y = Math.PI/2
+        this.lineObj.position.set(-1.2, 2.9, 0.8);
         this.app.scene.add( this.lineObj );
         }
 
@@ -610,6 +620,26 @@ class MyContents  {
             this.app.scene.add( mesh )
             this.meshes.push (mesh)
             */
+    }
+
+    buildSpiral(){
+        const spiralPoints = [];
+        
+        for (let i = 0; i < 6 * 200; i++) {
+            const t = i / 200;
+            const x = 0.2 * Math.cos(t * 2 * Math.PI);
+            const y = 0.2 * Math.sin(t * 2 * Math.PI);
+            const z = t * 0.2;
+            spiralPoints.push(new THREE.Vector3(x, y, z));
+        }
+
+        const spiralMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 100 });
+        const spiralGeometry = new THREE.BufferGeometry().setFromPoints(spiralPoints);
+
+        this.mesh = new THREE.Line(spiralGeometry, spiralMaterial);
+        this.mesh.rotation.x = -Math.PI / 2
+        this.mesh.position.set(1, 2.1, -1)
+        this.app.scene.add(this.mesh)
     }
 
     /**
@@ -766,6 +796,7 @@ class MyContents  {
         this.createNurbsSurfaces()
         this.createNurbsSurfaces2()
         this.buildFlower()
+        this.buildSpiral()
     }
     
     /**
