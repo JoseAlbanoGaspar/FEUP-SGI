@@ -40,16 +40,12 @@ class MyContents  {
         texture.wrapT = THREE.RepeatWrapping; // Repeat the texture in the vertical direction (V)
         texture.repeat.set(2, 2);
 
-        // jar related
+        // nurbs related
         
         this.builder = new MyNurbsBuilder()
         this.meshes = []
         this.samplesU = 8         // maximum defined in MyGuiInterface
         this.samplesV = 8        // maximum defined in MyGuiInterface
-        
-
-        // journal
-        this.builder2 = new MyNurbsBuilder()
 
         // plane material
         this.planeMaterial = new THREE.MeshPhongMaterial({ map:texture, color: "#a28e81", 
