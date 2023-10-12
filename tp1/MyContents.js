@@ -1,10 +1,9 @@
 import * as THREE from 'three';
-import { Mesh, MeshBasicMaterial, RectAreaLight, Triangle } from 'three';
+import { Mesh, MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
 import { MyWindow } from './MyWindow.js';
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyBeatle } from './MyBeatle.js';
