@@ -465,6 +465,9 @@ class MyContents  {
         this.jar.traverse(this.applyShadow)
         }
 
+        
+        
+
         buildFlower(){
            
             this.flower = new MyFlower(this.app);
