@@ -606,7 +606,7 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        const pointLight = new THREE.PointLight( 0xffffff, 500, 0 );
+        const pointLight = new THREE.PointLight( 0xffffff, 100, 0 );
         pointLight.position.set( 0, 20, 0 );
         // shadows
         pointLight.castShadow = true;
@@ -621,8 +621,12 @@ class MyContents  {
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
         //------------------- cake light --------------------------------------------
-        this.cakeLight = new THREE.SpotLight(0xffffff, 150, 1, Math.PI/12, 10, 0)
-        this.cakeLight.position.set(0, 2.3, 0);
+        this.cakeLight = new THREE.SpotLight(0xffffff, 5, 10, Math.PI/6, 0.2, 2)
+        this.cakeLight.position.set(1, 4, 0.5);
+        this.cakeTarget = new THREE.Object3D()
+        this.cakeTarget.position.set(0,2.3,0)
+        this.app.scene.add(this.cakeTarget)
+        this.cakeLight.target = this.cakeTarget
         // SHADOWS
         this.cakeLight.castShadow = true;
         this.cakeLight.shadow.mapSize.width = this.mapSize
@@ -652,7 +656,7 @@ class MyContents  {
 
         this.app.scene.add(this.pointLightLamp)
         //-------------------- cake slice spotlight ------------------------
-        this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 1.5, Math.PI/6, 1, 1);
+        this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 3, Math.PI/6, 1, 1);
         this.sliceLight.position.set(1.3, 3, -1);
         this.targetSlice = new THREE.Object3D();
         this.targetSlice.position.set(2,2,2);
