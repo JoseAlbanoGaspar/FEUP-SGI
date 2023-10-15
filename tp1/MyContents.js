@@ -547,7 +547,7 @@ class MyContents  {
         this.meshes.push (mesh)
 
         this.jar.scale.set(0.3, 0.3, 0.3)
-        this.jar.position.set(-1.3,2.5,0.6)
+        this.jar.position.set(-1.2,2.5,0.6)
         this.jar.rotation.y = Math.PI / 7
 
         this.jar.traverse(this.applyShadow)
@@ -557,32 +557,38 @@ class MyContents  {
            
             this.flower = new MyFlower(this.app);
             this.flower.scale.set(0.1,0.1,0.1)
-            this.flower.position.set(-1.3, 3.45, 0.1)
+            this.flower.position.set(-1.1, 3.45, 0.1)
+            this.flower.traverse(this.applyShadow)
 
             this.flower1 = new MyFlower(this.app);
             this.flower1.rotation.y = Math.PI/3
             this.flower1.scale.set(0.1,0.1,0.1)
-            this.flower1.position.set(-1.3, 3.45, 0.1)
+            this.flower1.position.set(-1.1, 3.45, 0.1)
+            this.flower1.traverse(this.applyShadow)
 
             this.flower2 = new MyFlower(this.app);
             this.flower2.rotation.y = 2*Math.PI/3
             this.flower2.scale.set(0.1,0.1,0.1)
-            this.flower2.position.set(-1.3, 3.45, 0.1)
+            this.flower2.position.set(-1.1, 3.45, 0.1)
+            this.flower2.traverse(this.applyShadow)
 
             this.flower3 = new MyFlower(this.app);
             this.flower3.rotation.y = Math.PI
             this.flower3.scale.set(0.1,0.1,0.1)
-            this.flower3.position.set(-1.3, 3.45, 0.1)
+            this.flower3.position.set(-1.1, 3.45, 0.1)
+            this.flower3.traverse(this.applyShadow)
 
             this.flower4 = new MyFlower(this.app);
             this.flower4.rotation.y = -Math.PI/3
             this.flower4.scale.set(0.1,0.1,0.1)
-            this.flower4.position.set(-1.3, 3.45, 0.1)
+            this.flower4.position.set(-1.1, 3.45, 0.1)
+            this.flower4.traverse(this.applyShadow)
 
             this.flower5 = new MyFlower(this.app);
             this.flower5.rotation.y = -2*Math.PI/3
             this.flower5.scale.set(0.1,0.1,0.1)
-            this.flower5.position.set(-1.3, 3.45, 0.1)
+            this.flower5.position.set(-1.1, 3.45, 0.1)
+            this.flower5.traverse(this.applyShadow)
         
             this.app.scene.add(this.flower)
             this.app.scene.add(this.flower1)
@@ -596,12 +602,12 @@ class MyContents  {
             const circle = new THREE.Mesh( geometry, material );
             circle.rotation.x = -Math.PI / 2;
             circle.scale.set(0.2, 0.2, 0.2);
-            circle.position.set(-1.3, 3.46, 0.1)
+            circle.position.set(-1.1, 3.46, 0.1)
             this.app.scene.add(circle);
 
         let points = [
             new THREE.Vector3( -0.6, -0.6, 0.0 ), // starting point
-            new THREE.Vector3( -0.6,  0.2, 0.0 ), // control point
+            new THREE.Vector3( -0.6,  0.4, 0.0 ), // control point
             new THREE.Vector3(  0.6, -0.6, 0.0 ),  // control point
             new THREE.Vector3(  0.2, 0.6, .0 ),  // ending point
         ]
@@ -611,8 +617,9 @@ class MyContents  {
         this.lineMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } )
         const tubeGeometry1 = new THREE.TubeGeometry(curve, 500, 0.04, 5, false);
         this.lineObj = new THREE.Mesh(tubeGeometry1, this.lineMaterial);
+        this.lineObj.traverse(this.applyShadow)
         this.lineObj.rotation.y = Math.PI/2
-        this.lineObj.position.set(-1.3, 3.08, 0.2);
+        this.lineObj.position.set(-1.1, 3.08, 0.2);
         this.lineObj.scale.set(0.6, 0.6, 0.6)
         this.app.scene.add( this.lineObj );
     }
@@ -624,18 +631,18 @@ class MyContents  {
         let controlPoints =
             [   // U = 0
                 [ // V = 0..1;
-                    [ -2, -1.5, 0.0, 1 ],
-                    [ -2,  1.5, 0.0, 1 ]
+                    [ -1, -1.5, 0.0, 1 ],
+                    [ -1,  1.5, 0.0, 1 ]
                 ],
             // U = 1
                 [ // V = 0..1
-                    [ 0, -1.5, 3.0, 1 ],
-                    [ 0,  1.5, 3.0, 1 ]
+                    [ 0, -1.5, -1.5, 1 ],
+                    [ 0,  1.5, -1.5, 1 ]
                 ],
             // U = 2
                 [ // V = 0..1
-                    [ 2, -1.5, 0.0, 1 ],
-                    [ 2,  1.5, 0.0, 1 ]
+                    [ 1, -1.5, 0.0, 1 ],
+                    [ 1,  1.5, 0.0, 1 ]
                 ]
             ]    
         const map = new THREE.TextureLoader().load( 'textures/newspaper.jpg' );
@@ -650,8 +657,8 @@ class MyContents  {
         mesh.rotation.y = 0
         mesh.rotation.z = 0
 
-        mesh.scale.set( 0.1, 0.15, 0.1 )
-        mesh.position.set( 1, 2.25, 0.8 )
+        mesh.scale.set( 0.15, 0.15, 0.15 )
+        mesh.position.set( 0.6, 2.1, 0.8 )
         mesh.traverse(this.applyShadow)
         this.app.scene.add( mesh )
 
@@ -660,24 +667,38 @@ class MyContents  {
         mesh1.rotation.y = 0
         mesh1.rotation.z = 0
 
-        mesh1.scale.set( 0.1, 0.15, 0.1 )
-        mesh1.position.set( 1.01, 2.25, 0.8 )
+        mesh1.scale.set( 0.15, 0.15, 0.15 )
+        mesh1.position.set( 0.9, 2.1, 0.8 )
         mesh1.traverse(this.applyShadow)
         this.app.scene.add( mesh1 )
 
         let mesh2 = this.createNurbSurface(controlPoints, 2, 1, map)
         mesh2.rotation.x = Math.PI / 2
-        mesh2.scale.set( 0.1, 0.15, 0.1 )
-        mesh2.position.set( 1.02, 2.25, 0.8 )
+        mesh2.scale.set( 0.15, 0.15, 0.15 )
+        mesh2.position.set( 0.6, 2.11, 0.8 )
         mesh2.traverse(this.applyShadow)
         this.app.scene.add( mesh2 )
 
         let mesh3 = this.createNurbSurface(controlPoints, 2, 1, map)
         mesh3.rotation.x = Math.PI / 2
-        mesh3.scale.set( 0.1, 0.15, 0.1 )
-        mesh3.position.set( 1.03, 2.25, 0.8 )
+        mesh3.scale.set( 0.15, 0.15, 0.15 )
+        mesh3.position.set( 0.9, 2.11, 0.8 )
         mesh3.traverse(this.applyShadow)
         this.app.scene.add( mesh3 )
+
+        let mesh4 = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh4.rotation.x = Math.PI / 2
+        mesh4.scale.set( 0.15, 0.15, 0.15 )
+        mesh4.position.set( 0.6, 2.12, 0.8 )
+        mesh4.traverse(this.applyShadow)
+        this.app.scene.add( mesh4 )
+
+        let mesh5 = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh5.rotation.x = Math.PI / 2
+        mesh5.scale.set( 0.15, 0.15, 0.15 )
+        mesh5.position.set( 0.9, 2.12, 0.8 )
+        mesh5.traverse(this.applyShadow)
+        this.app.scene.add( mesh5 )
     }
 
     buildSpiral(){
