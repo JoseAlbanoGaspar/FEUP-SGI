@@ -553,9 +553,6 @@ class MyContents  {
         this.jar.traverse(this.applyShadow)
         }
 
-        
-        
-
         buildFlower(){
            
             this.flower = new MyFlower(this.app);
@@ -615,10 +612,9 @@ class MyContents  {
         const tubeGeometry1 = new THREE.TubeGeometry(curve, 500, 0.04, 5, false);
         this.lineObj = new THREE.Mesh(tubeGeometry1, this.lineMaterial);
         this.lineObj.rotation.y = Math.PI/2
-        this.lineObj.position.set(-1.3, 3.1, 0.2);
+        this.lineObj.position.set(-1.3, 3.08, 0.2);
         this.lineObj.scale.set(0.6, 0.6, 0.6)
         this.app.scene.add( this.lineObj );
-        
     }
 
     /**
@@ -655,7 +651,7 @@ class MyContents  {
         mesh.rotation.z = 0
 
         mesh.scale.set( 0.1, 0.15, 0.1 )
-        mesh.position.set( 1.7, 2.25, 0.8 )
+        mesh.position.set( 1, 2.25, 0.8 )
         mesh.traverse(this.applyShadow)
         this.app.scene.add( mesh )
 
@@ -665,21 +661,21 @@ class MyContents  {
         mesh1.rotation.z = 0
 
         mesh1.scale.set( 0.1, 0.15, 0.1 )
-        mesh1.position.set( 1.69, 2.25, 0.8 )
+        mesh1.position.set( 1.01, 2.25, 0.8 )
         mesh1.traverse(this.applyShadow)
         this.app.scene.add( mesh1 )
 
         let mesh2 = this.createNurbSurface(controlPoints, 2, 1, map)
         mesh2.rotation.x = Math.PI / 2
         mesh2.scale.set( 0.1, 0.15, 0.1 )
-        mesh2.position.set( 1.68, 2.25, 0.8 )
+        mesh2.position.set( 1.02, 2.25, 0.8 )
         mesh2.traverse(this.applyShadow)
         this.app.scene.add( mesh2 )
 
         let mesh3 = this.createNurbSurface(controlPoints, 2, 1, map)
         mesh3.rotation.x = Math.PI / 2
         mesh3.scale.set( 0.1, 0.15, 0.1 )
-        mesh3.position.set( 1.67, 2.25, 0.8 )
+        mesh3.position.set( 1.03, 2.25, 0.8 )
         mesh3.traverse(this.applyShadow)
         this.app.scene.add( mesh3 )
     }
