@@ -58,6 +58,7 @@ class MyContents  {
         this.window = null;
         this.beatleGroup = null;
         this.jar = new THREE.Group();
+        this.nurbBottle = new THREE.Group()
 
         // shadows
         this.mapSize = 4096
@@ -271,6 +272,94 @@ class MyContents  {
         this.neck.position.y = 2.75;
         this.app.scene.add(this.neck);
     }
+
+    buildNurbBottle() {
+        let controlPoints = [   // U = 0
+            [ // V = 0..1
+                [0.6, -1.2, 0, 1],
+                [0.6, 0, 0, 1],
+                [0.6, 0.7, 0, 1],
+                [0.5, 0.75, 0, 1],
+                [0.3, 0.8, 0, 1],
+                [0.2, 1, 0, 1],
+                [0.2, 1.5, 0, 1]
+            ],
+            // U = 1
+            [ // V = 0..1
+                [0.6, -1.2, 0.6, 1],
+                [0.6, 0, 0.6, 1],
+                [0.6, 0.7, 0.6, 1],
+                [0.5, 0.75, 0.5, 1],
+                [0.3, 0.8, 0.3, 1],
+                [0.2, 1, 0.2, 1],
+                [0.2, 1.5, 0.2, 1]
+            ],
+            // U = 2
+            [ // V = 0..1
+                [0, -1.2, 0.6, 1],
+                [0, 0, 0.6, 1],
+                [0, 0.7, 0.6, 1],
+                [0, 0.75, 0.5, 1],
+                [0, 0.8, 0.3, 1],
+                [0, 1, 0.2, 1],
+                [0, 1.5, 0.2, 1]
+            ]
+        ]
+
+        const map = new THREE.TextureLoader().load( 'textures/bottle.jpg' );
+
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = THREE.SRGBColorSpace;
+
+        const mesh = this.createNurbSurface(controlPoints, 2, 6, map, 0.8);
+
+        mesh.material.opacity = 0.5
+        const mesh2 = mesh.clone()
+        mesh2.rotation.y = Math.PI / 2
+        
+        const mesh3 = mesh.clone()
+        mesh3.rotation.y = Math.PI 
+        
+        const mesh4 = mesh.clone()
+        mesh4.rotation.y = 3* Math.PI / 2
+
+        this.nurbBottle.add(mesh)
+        this.nurbBottle.add(mesh2)
+        this.nurbBottle.add(mesh3)
+        this.nurbBottle.add(mesh4)
+
+        // building water
+        const radiusTop = 0.59;          // Radius at the top
+        const radiusBottom = 0.59;       // Radius at the bottom
+        const height = 0.9;             // Height of the cylinder
+        const radialSegments = 32;    // Number of radial segments for smoothness
+
+        const cylinderGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
+
+        // Create a blueish material to simulate water
+        const cylinderMaterial = new THREE.MeshPhongMaterial({
+            color: 0x0066FF,  // Blueish color
+            emissive: 0x0033FF,
+            emissiveIntensity: 10,
+            opacity: 0.7
+        });
+        
+        // Create the cylinder mesh
+        const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        cylinderMesh.position.set(0,-0.75, 0)
+
+        this.nurbBottle.add(cylinderMesh)
+        this.app.scene.add(this.nurbBottle)
+
+        this.nurbBottle.scale.set(0.2, 0.2, 0.2)
+        this.nurbBottle.position.y = 2.3;
+        this.nurbBottle.position.z = -0.6;
+        this.nurbBottle.position.x = -1;
+
+        this.nurbBottle.traverse(this.applyShadow)
+        
+    }
     /**
      * Builds a window / board
      */
@@ -389,7 +478,7 @@ class MyContents  {
      * @param {Surface texture} texture 
      * @returns mesh - the created nurb surface
      */
-    createNurbSurface(controlPoints, orderU, orderV, texture) {
+    createNurbSurface(controlPoints, orderU, orderV, texture, opacity = 1) {
         // are there any meshes to remove?
         if (this.meshes !== null) {
             // traverse mesh array
@@ -405,6 +494,8 @@ class MyContents  {
 
         const material = new THREE.MeshLambertMaterial( { map: texture,
             side: THREE.DoubleSide,
+            transparent: true,
+            opacity: opacity
          } );
         
         surfaceData = this.builder.build(controlPoints,
@@ -461,6 +552,9 @@ class MyContents  {
 
         this.jar.traverse(this.applyShadow)
         }
+
+        
+        
 
         buildFlower(){
            
@@ -624,7 +718,7 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        const pointLight = new THREE.PointLight( 0xffffff, 500, 0 );
+        const pointLight = new THREE.PointLight( 0xffffff, 100, 0 );
         pointLight.position.set( 0, 20, 0 );
         // shadows
         pointLight.castShadow = true;
@@ -639,8 +733,12 @@ class MyContents  {
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
         //------------------- cake light --------------------------------------------
-        this.cakeLight = new THREE.SpotLight(0xffffff, 150, 1, Math.PI/12, 10, 0)
-        this.cakeLight.position.set(0, 2.3, 0);
+        this.cakeLight = new THREE.SpotLight(0xffffff, 7, 10, Math.PI/6, 0.2, 2)
+        this.cakeLight.position.set(1, 4, 0.5);
+        this.cakeTarget = new THREE.Object3D()
+        this.cakeTarget.position.set(0,2.3,0)
+        this.app.scene.add(this.cakeTarget)
+        this.cakeLight.target = this.cakeTarget
         // SHADOWS
         this.cakeLight.castShadow = true;
         this.cakeLight.shadow.mapSize.width = this.mapSize
@@ -670,7 +768,7 @@ class MyContents  {
 
         this.app.scene.add(this.pointLightLamp)
         //-------------------- cake slice spotlight ------------------------
-        this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 1.5, Math.PI/6, 1, 1);
+        this.sliceLight = new THREE.SpotLight(0xe1c16e, 20, 3, Math.PI/6, 1, 1);
         this.sliceLight.position.set(1.3, 3, -1);
         this.targetSlice = new THREE.Object3D();
         this.targetSlice.position.set(2,2,2);
@@ -757,7 +855,7 @@ class MyContents  {
         this.buildTable()
         this.buildCake()
         this.buildCandle()
-        this.buildBottle()
+        //this.buildBottle()
         this.buildGlass()
         this.buildCakeSlice()
         this.buildWindows()
@@ -768,6 +866,7 @@ class MyContents  {
         this.buildNewspaper()
         this.buildFlower()
         this.buildSpiral()
+        this.buildNurbBottle()
     }
     
     /**

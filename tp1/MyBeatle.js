@@ -18,7 +18,7 @@ class MyBeatle extends THREE.Object3D {
         let sampledPoints = curve.getPoints( 16 );
     
         this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
-        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, linewidth: 50.0} )
+        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x7fb5b5, linewidth: 50.0} )
 
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
         this.add(this.lineObj)
