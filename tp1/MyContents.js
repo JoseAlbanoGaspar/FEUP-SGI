@@ -371,7 +371,6 @@ class MyContents  {
      * draw the beatle at one of the boards
      */
     buildBeatle() {
-        
         this.beatleGroup = new MyBeatle(this.app)
 
         this.beatleGroup.scale.set(0.2, 0.2, 0.2)
@@ -380,7 +379,6 @@ class MyContents  {
         this.beatleGroup.position.y = 3.2
         this.beatleGroup.position.x = -1.5
         //this.beatleGroup.traverse(this.applyShadow)
-        
     }
 
     /**
@@ -421,7 +419,6 @@ class MyContents  {
      * builds a jar
      */
     buildJar() {  
-        
         let controlPoints = [   // U = 0
             [ // V = 0..1;
                 [ -1.5, -1.5, 0.0, 1 ],
@@ -469,32 +466,32 @@ class MyContents  {
            
             this.flower = new MyFlower(this.app);
             this.flower.scale.set(0.1,0.1,0.1)
-            this.flower.position.set(-1.4, 3.5, 0)
+            this.flower.position.set(-1.3, 3.45, 0.1)
 
             this.flower1 = new MyFlower(this.app);
             this.flower1.rotation.y = Math.PI/3
             this.flower1.scale.set(0.1,0.1,0.1)
-            this.flower1.position.set(-1.4, 3.5, 0)
+            this.flower1.position.set(-1.3, 3.45, 0.1)
 
             this.flower2 = new MyFlower(this.app);
             this.flower2.rotation.y = 2*Math.PI/3
             this.flower2.scale.set(0.1,0.1,0.1)
-            this.flower2.position.set(-1.4, 3.5, 0)
+            this.flower2.position.set(-1.3, 3.45, 0.1)
 
             this.flower3 = new MyFlower(this.app);
             this.flower3.rotation.y = Math.PI
             this.flower3.scale.set(0.1,0.1,0.1)
-            this.flower3.position.set(-1.4, 3.5, 0)
+            this.flower3.position.set(-1.3, 3.45, 0.1)
 
             this.flower4 = new MyFlower(this.app);
             this.flower4.rotation.y = -Math.PI/3
             this.flower4.scale.set(0.1,0.1,0.1)
-            this.flower4.position.set(-1.4, 3.5, 0)
+            this.flower4.position.set(-1.3, 3.45, 0.1)
 
             this.flower5 = new MyFlower(this.app);
             this.flower5.rotation.y = -2*Math.PI/3
             this.flower5.scale.set(0.1,0.1,0.1)
-            this.flower5.position.set(-1.4, 3.5, 0)
+            this.flower5.position.set(-1.3, 3.45, 0.1)
         
             this.app.scene.add(this.flower)
             this.app.scene.add(this.flower1)
@@ -508,10 +505,9 @@ class MyContents  {
             const circle = new THREE.Mesh( geometry, material );
             circle.rotation.x = -Math.PI / 2;
             circle.scale.set(0.2, 0.2, 0.2);
-            circle.position.set(-1.4, 3.52, 0)
+            circle.position.set(-1.3, 3.46, 0.1)
             this.app.scene.add(circle);
 
-    
         let points = [
             new THREE.Vector3( -0.6, -0.6, 0.0 ), // starting point
             new THREE.Vector3( -0.6,  0.2, 0.0 ), // control point
@@ -521,17 +517,15 @@ class MyContents  {
     
         let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
     
-        // sample a number of points on the curve
-        let sampledPoints = curve.getPoints( 24 );
-    
-        this.curveGeometry = new THREE.BufferGeometry().setFromPoints( sampledPoints )
-        this.lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } )
-        this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
+        this.lineMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } )
+        const tubeGeometry1 = new THREE.TubeGeometry(curve, 500, 0.04, 5, false);
+        this.lineObj = new THREE.Mesh(tubeGeometry1, this.lineMaterial);
         this.lineObj.rotation.y = Math.PI/2
         this.lineObj.position.set(-1.3, 3.1, 0.2);
         this.lineObj.scale.set(0.6, 0.6, 0.6)
         this.app.scene.add( this.lineObj );
-        }
+        
+    }
 
     /**
      * build the newspaper
@@ -540,8 +534,8 @@ class MyContents  {
         let controlPoints =
             [   // U = 0
                 [ // V = 0..1;
-                    [ -1.5, -1.5, 0.0, 1 ],
-                    [ -1.5,  1.5, 0.0, 1 ]
+                    [ -2, -1.5, 0.0, 1 ],
+                    [ -2,  1.5, 0.0, 1 ]
                 ],
             // U = 1
                 [ // V = 0..1
@@ -550,8 +544,8 @@ class MyContents  {
                 ],
             // U = 2
                 [ // V = 0..1
-                    [ 1.5, -1.5, 0.0, 1 ],
-                    [ 1.5,  1.5, 0.0, 1 ]
+                    [ 2, -1.5, 0.0, 1 ],
+                    [ 2,  1.5, 0.0, 1 ]
                 ]
             ]    
         const map = new THREE.TextureLoader().load( 'textures/newspaper.jpg' );
@@ -560,24 +554,46 @@ class MyContents  {
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
 
-
         let mesh = this.createNurbSurface(controlPoints, 2, 1, map)
 
         mesh.rotation.x = Math.PI / 2
         mesh.rotation.y = 0
         mesh.rotation.z = 0
 
-        mesh.scale.set( 0.08, 0.15, 0.1 )
+        mesh.scale.set( 0.1, 0.15, 0.1 )
         mesh.position.set( 1.7, 2.25, 0.8 )
         mesh.traverse(this.applyShadow)
         this.app.scene.add( mesh )
-        
+
+        let mesh1 = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh1.rotation.x = Math.PI / 2
+        mesh1.rotation.y = 0
+        mesh1.rotation.z = 0
+
+        mesh1.scale.set( 0.1, 0.15, 0.1 )
+        mesh1.position.set( 1.69, 2.25, 0.8 )
+        mesh1.traverse(this.applyShadow)
+        this.app.scene.add( mesh1 )
+
+        let mesh2 = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh2.rotation.x = Math.PI / 2
+        mesh2.scale.set( 0.1, 0.15, 0.1 )
+        mesh2.position.set( 1.68, 2.25, 0.8 )
+        mesh2.traverse(this.applyShadow)
+        this.app.scene.add( mesh2 )
+
+        let mesh3 = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh3.rotation.x = Math.PI / 2
+        mesh3.scale.set( 0.1, 0.15, 0.1 )
+        mesh3.position.set( 1.67, 2.25, 0.8 )
+        mesh3.traverse(this.applyShadow)
+        this.app.scene.add( mesh3 )
     }
 
     buildSpiral(){
         const spiralPoints = [];
         
-        for (let i = 0; i < 5 * 200; i++) {
+        for (let i = 0; i < 5 * 150; i++) {
             const t = i / 200;
             const x = 0.2 * Math.cos(t * 2 * Math.PI);
             const y = 0.2 * Math.sin(t * 2 * Math.PI);
@@ -585,20 +601,22 @@ class MyContents  {
             spiralPoints.push(new THREE.Vector3(x, y, z));
         }
 
-        const spiralMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 100 });
-        const spiralGeometry = new THREE.BufferGeometry().setFromPoints(spiralPoints);
+        const spiralMaterial = new THREE.MeshPhongMaterial({ color: 0xb5b8b1});
 
-        this.mesh = new THREE.Line(spiralGeometry, spiralMaterial);
-        this.mesh.position.set(0.8, 2.3, -1)
-        this.mesh.rotation.y = Math.PI / 2
-        this.app.scene.add(this.mesh)
+        const curve = new THREE.CatmullRomCurve3(spiralPoints, false, 'centripetal');
+        const tubeGeometry = new THREE.TubeGeometry(curve, 500, 0.04, 5, false);
+        const spring = new THREE.Mesh(tubeGeometry, spiralMaterial);
+        spring.traverse(this.applyShadow)
+        spring.position.set(0.8, 2.3, -0.95)
+        spring.rotation.y = Math.PI / 2
+        this.app.scene.add(spring)
     }
+
 
     /**
      * initializes the contents
      */
     init() {
-       
         // create once 
         if (this.axis === null) {
             // create and attach the axis to the scene
