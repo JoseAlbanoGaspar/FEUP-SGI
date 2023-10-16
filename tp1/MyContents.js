@@ -58,7 +58,8 @@ class MyContents  {
         this.window = null;
         this.beetleGroup = null;
         this.jar = new THREE.Group();
-        this.nurbBottle = new THREE.Group()
+        this.nurbBottle = new THREE.Group();
+        this.newspaper = new THREE.Group();
 
         // shadows
         this.mapSize = 4096
@@ -233,33 +234,8 @@ class MyContents  {
     }
 
     /**
-     * builds bottle
+     * builds the bottle of water
      */
-    buildBottle() {
-        let cylinder = new THREE.CylinderGeometry(0.2, 0.2, 0.7, 36);
-        let bottleMaterial = new THREE.MeshBasicMaterial({color: 0xadd8e6});
-        this.bottle = new THREE.Mesh( cylinder, bottleMaterial);
-        this.bottle.position.y = 2.3;
-        this.bottle.position.z = -0.6;
-        this.bottle.position.x = -1;
-        this.app.scene.add(this.bottle);
-
-        let tampaMaterial = new THREE.MeshBasicMaterial({color: 0x0000ff});
-        this.tampa = new THREE.Mesh(cylinder, tampaMaterial);
-        this.tampa.position.y = 2.86;
-        this.tampa.position.x = -1;
-        this.tampa.position.z = -0.6;
-        this.tampa.scale.set(0.3, 0.08, 0.3);
-        this.app.scene.add(this.tampa);
-
-        let parte = new THREE.CylinderGeometry(0.05, 0.2, 0.2, 36);
-        this.neck = new THREE.Mesh(parte, bottleMaterial);
-        this.neck.position.x = -1;
-        this.neck.position.z = -0.6;
-        this.neck.position.y = 2.75;
-        this.app.scene.add(this.neck);
-    }
-
     buildNurbBottle() {
         let controlPoints = [   // U = 0
             [ // V = 0..1
@@ -550,6 +526,22 @@ class MyContents  {
     }
 
     /**
+     * 
+     * @param {array}  controlPoints - points for curve
+     * @param {THREE.texture} map - texture
+     * @param {number} x - position x 
+     * @param {number} y - position y
+     * @param {number} z - position z
+     */
+    createNewspaperSheet(controlPoints, map, x, y, z) {
+        let mesh = this.createNurbSurface(controlPoints, 2, 1, map)
+        mesh.rotation.x = Math.PI / 2
+        mesh.scale.set( 0.15, 0.15, 0.15 )
+        mesh.position.set( x, y, z )
+        this.newspaper.add(mesh)
+    }
+
+    /**
      * build the newspaper
      */
     buildNewspaper() {  
@@ -576,56 +568,19 @@ class MyContents  {
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
 
-        let mesh = this.createNurbSurface(controlPoints, 2, 1, map)
+        this.createNewspaperSheet(controlPoints, map, 0.6, 2.1, 0.8)
+        this.createNewspaperSheet(controlPoints, map, 0.9, 2.1, 0.8)
+        this.createNewspaperSheet(controlPoints, map, 0.6, 2.11, 0.8)
+        this.createNewspaperSheet(controlPoints, map, 0.9, 2.11, 0.8)
+        this.createNewspaperSheet(controlPoints, map, 0.6, 2.12, 0.8)
+        this.createNewspaperSheet(controlPoints, map, 0.9, 2.11, 0.8)
 
-        mesh.rotation.x = Math.PI / 2
-        mesh.rotation.y = 0
-        mesh.rotation.z = 0
-
-        mesh.scale.set( 0.15, 0.15, 0.15 )
-        mesh.position.set( 0.6, 2.1, 0.8 )
-        mesh.traverse(this.applyShadow)
-        this.app.scene.add( mesh )
-
-        let mesh1 = this.createNurbSurface(controlPoints, 2, 1, map)
-        mesh1.rotation.x = Math.PI / 2
-        mesh1.rotation.y = 0
-        mesh1.rotation.z = 0
-
-        mesh1.scale.set( 0.15, 0.15, 0.15 )
-        mesh1.position.set( 0.9, 2.1, 0.8 )
-        mesh1.traverse(this.applyShadow)
-        this.app.scene.add( mesh1 )
-
-        let mesh2 = this.createNurbSurface(controlPoints, 2, 1, map)
-        mesh2.rotation.x = Math.PI / 2
-        mesh2.scale.set( 0.15, 0.15, 0.15 )
-        mesh2.position.set( 0.6, 2.11, 0.8 )
-        mesh2.traverse(this.applyShadow)
-        this.app.scene.add( mesh2 )
-
-        let mesh3 = this.createNurbSurface(controlPoints, 2, 1, map)
-        mesh3.rotation.x = Math.PI / 2
-        mesh3.scale.set( 0.15, 0.15, 0.15 )
-        mesh3.position.set( 0.9, 2.11, 0.8 )
-        mesh3.traverse(this.applyShadow)
-        this.app.scene.add( mesh3 )
-
-        let mesh4 = this.createNurbSurface(controlPoints, 2, 1, map)
-        mesh4.rotation.x = Math.PI / 2
-        mesh4.scale.set( 0.15, 0.15, 0.15 )
-        mesh4.position.set( 0.6, 2.12, 0.8 )
-        mesh4.traverse(this.applyShadow)
-        this.app.scene.add( mesh4 )
-
-        let mesh5 = this.createNurbSurface(controlPoints, 2, 1, map)
-        mesh5.rotation.x = Math.PI / 2
-        mesh5.scale.set( 0.15, 0.15, 0.15 )
-        mesh5.position.set( 0.9, 2.12, 0.8 )
-        mesh5.traverse(this.applyShadow)
-        this.app.scene.add( mesh5 )
+        this.newspaper.traverse(this.applyShadow)
+        this.app.scene.add(this.newspaper)
     }
-
+    /**
+     * build the spring
+     */
     buildSpiral(){
         const spiralPoints = [];
         
