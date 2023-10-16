@@ -6,7 +6,7 @@ import { MyTable } from './MyTable.js';
 import { MyWindow } from './MyWindow.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
-import { MyBeatle } from './MyBeatle.js';
+import { MyBeetle } from './MyBeetle.js';
 import { MyCompleteFlower } from './MCompleteFlower.js';
 
 /**
@@ -56,7 +56,7 @@ class MyContents  {
         this.cake = null;
         this.cakeSlice = null;
         this.window = null;
-        this.beatleGroup = null;
+        this.beetleGroup = null;
         this.jar = new THREE.Group();
         this.nurbBottle = new THREE.Group()
 
@@ -387,7 +387,7 @@ class MyContents  {
         this.buildWindow(2, 2, texture, picture1, -2, 4, -5) // board with space image
         this.buildWindow(2, 2, texture, student, 2, 4, -5)  // board with student image
         this.buildWindow(4, 3, null, texture1, -4.9, 4, 0, Math.PI / 2) // builds window - eiffel tower view
-        this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beatle 
+        this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beetle 
 
         RectAreaLightUniformsLib.init()
         const rectLight = new THREE.RectAreaLight( 0xffffff, 10, 3.9, 2.5 );
@@ -457,17 +457,17 @@ class MyContents  {
     }
 
     /**
-     * draw the beatle at one of the boards
+     * draw the beetle at one of the boards
      */
-    buildBeatle() {
-        this.beatleGroup = new MyBeatle(this.app)
+    buildBeetle() {
+        this.beetleGroup = new MyBeetle(this.app)
 
-        this.beatleGroup.scale.set(0.2, 0.2, 0.2)
-        this.app.scene.add(this.beatleGroup)
-        this.beatleGroup.position.z = 4.8
-        this.beatleGroup.position.y = 3.2
-        this.beatleGroup.position.x = -1.5
-        //this.beatleGroup.traverse(this.applyShadow)
+        this.beetleGroup.scale.set(0.2, 0.2, 0.2)
+        this.app.scene.add(this.beetleGroup)
+        this.beetleGroup.position.z = 4.8
+        this.beetleGroup.position.y = 3.2
+        this.beetleGroup.position.x = -1.5
+        //this.beetleGroup.traverse(this.applyShadow)
     }
 
     /**
@@ -816,7 +816,7 @@ class MyContents  {
         this.buildWindows()
         this.buildLamp()
         this.buildBoardLightSupport()
-        this.buildBeatle()
+        this.buildBeetle()
         this.buildJar()
         this.buildNewspaper()
         this.buildFlower()

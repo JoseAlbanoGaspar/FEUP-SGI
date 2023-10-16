@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-class MyBeatle extends THREE.Object3D {
+class MyBeetle extends THREE.Object3D {
 
     constructor(app) {
         super();
@@ -7,7 +7,7 @@ class MyBeatle extends THREE.Object3D {
         this.type = 'Group';
         
 
-        this.initBeatle()
+        this.initBeetle()
 
     }
 
@@ -24,7 +24,7 @@ class MyBeatle extends THREE.Object3D {
         this.add(this.lineObj)
     }
 
-    initBeatle() {
+    initBeetle() {
         // roda 1
         let points = [
             new THREE.Vector3( 0.0, 0.0, 0.0  ), // starting point
@@ -80,6 +80,6 @@ class MyBeatle extends THREE.Object3D {
     }
 }
 
-MyBeatle.prototype.isGroup = true;
+MyBeetle.prototype.isGroup = true;
 
-export { MyBeatle };
+export { MyBeetle };
