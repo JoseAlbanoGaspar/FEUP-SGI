@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { MyApp } from './MyApp.js';
 
 class MyWindow extends THREE.Object3D {
     /**
