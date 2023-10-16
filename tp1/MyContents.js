@@ -121,10 +121,58 @@ class MyContents  {
         this.frontWallMesh.receiveShadow = true;
         this.frontWallMesh.castShadow = true;
         
-        this.rightWallMesh = new THREE.Mesh(plane, wallsMaterial)
+
+
+        // Create the outer rectangle shape
+        const outerShape = new THREE.Shape();
+        outerShape.moveTo(-3.5, -5);
+        outerShape.lineTo(3.5, -5);
+        outerShape.lineTo(3.5, 5);
+        outerShape.lineTo(-3.5, 5);
+        outerShape.lineTo(-3.5, -5);
+
+        // Create the inner square hole shape
+        const holeShape = new THREE.Shape();
+        holeShape.moveTo(-1, -2);
+        holeShape.lineTo(2, -2);
+        holeShape.lineTo(2, 2);
+        holeShape.lineTo(-1, 2);
+        holeShape.lineTo(-1, -2);
+
+        // Add the inner square hole to the outer rectangle as a hole
+        outerShape.holes.push(holeShape);
+
+        // Create geometry using the shape
+        const geometry = new THREE.ShapeGeometry(outerShape);
+
+        // Create a mesh using the geometry and material
+        
+        this.rightWallMesh = new THREE.Mesh(geometry, wallsMaterial);
+
+        //shadows
+        this.rightWallMesh.receiveShadow = true;
+        this.rightWallMesh.castShadow = true;
+
+        
+        this.backrightWall = this.rightWallMesh.clone()
+
         this.rightWallMesh.position.x = -5
         this.rightWallMesh.position.y = wallHeight / 2
         this.rightWallMesh.rotation.y = Math.PI / 2
+        this.rightWallMesh.rotation.z = Math.PI / 2
+
+        
+
+        
+        this.backrightWall.position.x = -5.1
+        this.backrightWall.position.y = wallHeight / 2
+        this.backrightWall.rotation.y = 3 * Math.PI / 2
+        this.backrightWall.rotation.z = Math.PI /2
+
+
+
+
+
         
         this.backWallMesh = new THREE.Mesh(plane, wallsMaterial)
         this.backWallMesh.position.y = wallHeight / 2
@@ -138,6 +186,7 @@ class MyContents  {
         
         this.app.scene.add( this.frontWallMesh );
         this.app.scene.add( this.rightWallMesh );
+        this.app.scene.add(this.backrightWall)
         this.app.scene.add( this.backWallMesh );
         this.app.scene.add( this.leftWallMesh );
 
@@ -326,13 +375,13 @@ class MyContents  {
     /**
      * Builds a window / board
      */
-    buildWindow(width, height, frameTexture, imgTexutre, x, y, z, rotY = 0) {
+    buildWindow(width, height, frameTexture, imgTexutre, x, y, z, rotY = 0, shadow = true) {
         const window = new MyWindow(this.app, width, height, frameTexture, imgTexutre);
         window.rotation.y = rotY
         window.position.y = y
         window.position.x = x
         window.position.z = z
-        window.traverse(this.applyShadow)
+        if (shadow) window.traverse(this.applyShadow)
         this.app.scene.add(window)
     }
 
@@ -349,11 +398,11 @@ class MyContents  {
 
         this.buildWindow(2, 2, texture, picture1, -2, 4, -5) // board with space image
         this.buildWindow(2, 2, texture, student, 2, 4, -5)  // board with student image
-        this.buildWindow(4, 3, null, texture1, -4.9, 4, 0, Math.PI / 2) // builds window - eiffel tower view
+        this.buildWindow(4, 3, null, texture1, -5, 4, 0, Math.PI / 2, false) // builds window - eiffel tower view
         this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beetle 
 
         RectAreaLightUniformsLib.init()
-        const rectLight = new THREE.RectAreaLight( 0xffffff, 10, 3.9, 2.5 );
+        const rectLight = new THREE.RectAreaLight( 0xf1ebc8, 10, 3.9, 2.5 );
         rectLight.position.set( -4.9, 5.5, 0);
         rectLight.rotation.y = -Math.PI / 2;
         rectLight.lookAt(1, 1, 0)
@@ -630,7 +679,7 @@ class MyContents  {
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
         //------------------- cake light --------------------------------------------
-        this.cakeLight = new THREE.SpotLight(0xffffff, 7, 10, Math.PI/6, 0.2, 2)
+        this.cakeLight = new THREE.SpotLight(0xffffff, 9, 10, Math.PI/6, 0.2, 2)
         this.cakeLight.position.set(1, 4, 0.5);
         this.cakeTarget = new THREE.Object3D()
         this.cakeTarget.position.set(0,2.3,0)
@@ -740,7 +789,16 @@ class MyContents  {
         bl7.shadow.camera.aspect = 1;
         this.app.scene.add(bl7)
        
+        // -------------------------- window light ---------------------------------
+        // Create a directional light
+        const directionalLight = new THREE.DirectionalLight(0xf1ebc8, 3);
+        directionalLight.position.set(-20, 13, 0); // You can adjust the position of the light
+        directionalLight.castShadow = true;
+        this.app.scene.add(directionalLight);
 
+        // Create a directional light helper
+        const lightHelper = new THREE.DirectionalLightHelper(directionalLight, 1);
+        this.app.scene.add(lightHelper);
         //--------------------------- ambient light --------------------------------
         const ambientLight = new THREE.AmbientLight( 0x555555 );
         this.app.scene.add( ambientLight );
