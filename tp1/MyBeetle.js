@@ -8,7 +8,10 @@ class MyBeetle extends THREE.Object3D {
         
         this.initBeetle()
     }
-
+    /**
+     * 
+     * @param {array} points - points to compute the bezier curve 
+     */
     drawBezier(points) {
         let curve = new THREE.CubicBezierCurve3( points[0], points[1], points[2], points[3])
     
@@ -21,7 +24,9 @@ class MyBeetle extends THREE.Object3D {
         this.lineObj = new THREE.Line( this.curveGeometry, this.lineMaterial )
         this.add(this.lineObj)
     }
-
+    /**
+     * draws lines in a "beetle" format
+     */
     initBeetle() {
         // roda 1
         let points = [

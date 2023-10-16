@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Mesh, MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
@@ -454,6 +454,12 @@ class MyContents  {
         retangleHorizontal.position.set(-4.9, 4, 0);
         retangleHorizontal.scale.set(0.1, 1.3, 0.1)
         this.app.scene.add(retangleHorizontal)
+
+        // shadows
+        rectangle.castShadow = true
+        rectangle.receiveShadow = true
+        retangleHorizontal.castShadow = true
+        retangleHorizontal.receiveShadow = true
 
     }
 
