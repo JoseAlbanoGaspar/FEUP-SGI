@@ -240,8 +240,9 @@ class MyContents  {
      * builds the glass
      */
     buildGlass() {
+        const texture = new THREE.TextureLoader().load('textures/bottle.jpg')
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
-        let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e});
+        let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e, map: texture});
         this.glass = new THREE.Mesh( dif_cylinder, color_glass);
         this.glass.position.y = 2.2;
         this.glass.position.z = -0.5;
