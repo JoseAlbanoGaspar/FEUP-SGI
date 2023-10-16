@@ -1,7 +1,15 @@
 import * as THREE from 'three';
 
 class MyTable extends THREE.Object3D {
-
+    /**
+     * 
+     * @param {MyApp} app 
+     * @param {number} width 
+     * @param {number} heightTop 
+     * @param {number} depth 
+     * @param {number} heightLegs 
+     * @param {number} radiusLegs 
+     */
     constructor(app, width, heightTop, depth, heightLegs, radiusLegs ) {
         super();
         this.app = app;

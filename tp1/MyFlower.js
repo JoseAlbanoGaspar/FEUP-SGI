@@ -2,7 +2,10 @@ import * as THREE from 'three';
 import { MyPetal } from './MyPetal.js';
 
 class MyFlower extends THREE.Object3D {
-
+    /**
+     * 
+     * @param {MyApp} app 
+     */
     constructor(app ) {
         super();
         this.app = app;

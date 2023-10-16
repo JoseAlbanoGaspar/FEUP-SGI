@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Mesh, MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial } from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCake } from './MyCake.js';
 import { MyTable } from './MyTable.js';
@@ -455,6 +455,12 @@ class MyContents  {
         retangleHorizontal.scale.set(0.1, 1.3, 0.1)
         this.app.scene.add(retangleHorizontal)
 
+        // shadows
+        rectangle.castShadow = true
+        rectangle.receiveShadow = true
+        retangleHorizontal.castShadow = true
+        retangleHorizontal.receiveShadow = true
+
     }
 
     /**
@@ -841,9 +847,6 @@ class MyContents  {
         directionalLight.castShadow = true;
         this.app.scene.add(directionalLight);
 
-        // Create a directional light helper
-        const lightHelper = new THREE.DirectionalLightHelper(directionalLight, 1);
-        this.app.scene.add(lightHelper);
         //--------------------------- ambient light --------------------------------
         const ambientLight = new THREE.AmbientLight( 0x555555 );
         this.app.scene.add( ambientLight );
