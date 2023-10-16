@@ -60,6 +60,7 @@ class MyContents  {
         this.jar = new THREE.Group();
         this.nurbBottle = new THREE.Group();
         this.newspaper = new THREE.Group();
+        this.glass = new THREE.Group();
 
         // shadows
         this.mapSize = 4096
@@ -160,19 +161,11 @@ class MyContents  {
         this.rightWallMesh.position.y = wallHeight / 2
         this.rightWallMesh.rotation.y = Math.PI / 2
         this.rightWallMesh.rotation.z = Math.PI / 2
-
-        
-
-        
+       
         this.backrightWall.position.x = -5.1
         this.backrightWall.position.y = wallHeight / 2
         this.backrightWall.rotation.y = 3 * Math.PI / 2
         this.backrightWall.rotation.z = Math.PI /2
-
-
-
-
-
         
         this.backWallMesh = new THREE.Mesh(plane, wallsMaterial)
         this.backWallMesh.position.y = wallHeight / 2
@@ -240,7 +233,7 @@ class MyContents  {
      * builds the glass
      */
     buildGlass() {
-        const texture = new THREE.TextureLoader().load('textures/bottle.jpg')
+       /* const texture = new THREE.TextureLoader().load('textures/bottle.jpg')
         let dif_cylinder = new THREE.CylinderGeometry(2.46, 1.34, 4, 36);
         let color_glass = new THREE.MeshBasicMaterial({color: 0x084d6e, map: texture});
         this.glass = new THREE.Mesh( dif_cylinder, color_glass);
@@ -251,7 +244,69 @@ class MyContents  {
         //shadows
         this.glass.receiveShadow = true;
         this.glass.castShadow = true;
-        this.app.scene.add(this.glass);
+        this.app.scene.add(this.glass);*/
+
+        let controlPoints = [
+            // U = 0
+            [ // V = 0..1
+              [0.4, 0, 0, 1],
+              [0.05, 0.2, 0, 1],
+              [0.05, 2, 0, 1],
+              [0.15, 2.2, 0, 1],
+              [0.4, 2.7, 0, 1],
+              [0.5, 3.2, 0, 1],
+              [0.55, 4, 0, 1]
+            ],
+            // U = 1
+            [ // V = 0..1
+              [0.4 * Math.cos(0.4), 0, 0.4 * Math.sin(0.4), 1],
+              [0.05 * Math.cos(0.05), 0.2, 0.05 * Math.sin(0.05), 1],
+              [0.05 * Math.cos(0.05), 2, 0.05 * Math.sin(0.05), 1],
+              [0.15 * Math.cos(0.15), 2.2, 0.15 * Math.sin(0.15), 1],
+              [0.40 * Math.cos(0.4), 2.7, 0.40 * Math.sin(0.4), 1],
+              [0.50 * Math.cos(0.5), 3.2, 0.50 * Math.sin(0.5), 1],
+              [0.55 * Math.cos(0.55), 4, 0.55 * Math.sin(0.55), 1]
+            ],
+            // U = 2
+            [ // V = 0..1
+              [0, 0, 0.4, 1],
+              [0, 0.2, 0.05, 1],
+              [0, 2, 0.05, 1],
+              [0, 2.2, 0.15, 1],
+              [0, 2.7, 0.4, 1],
+              [0, 3.2, 0.5, 1],
+              [0, 4, 0.55, 1]
+            ]
+          ];
+          
+        const map = new THREE.TextureLoader().load( 'textures/bottle.jpg' );
+
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = THREE.SRGBColorSpace;
+
+        const mesh = this.createNurbSurface(controlPoints, 2, 6, map, 0.8);
+
+        const mesh2 = mesh.clone()
+        mesh2.rotation.y = Math.PI / 2
+
+        const mesh3 = mesh.clone()
+        mesh3.rotation.y = Math.PI 
+
+        const mesh4 = mesh.clone()
+        mesh4.rotation.y = 3* Math.PI / 2
+
+        this.glass.add(...[mesh, mesh2, mesh3, mesh4])
+        this.app.scene.add(this.glass)
+        
+        this.glass.scale.set(0.25, 0.1, 0.25);
+        this.glass.position.y = 2.1;
+        this.glass.position.z = -0.8;
+        this.glass.position.x = -0.65;
+
+        this.glass.traverse(this.applyShadow)
+
+
     }
 
     /**
@@ -365,8 +420,8 @@ class MyContents  {
         this.nurbBottle.add(cylinderMesh)
         this.app.scene.add(this.nurbBottle)
 
-        this.nurbBottle.scale.set(0.2, 0.2, 0.2)
-        this.nurbBottle.position.y = 2.3;
+        this.nurbBottle.scale.set(0.3, 0.3, 0.3)
+        this.nurbBottle.position.y = 2.4;
         this.nurbBottle.position.z = -0.6;
         this.nurbBottle.position.x = -1;
 
@@ -492,16 +547,7 @@ class MyContents  {
      * @returns mesh - the created nurb surface
      */
     createNurbSurface(controlPoints, orderU, orderV, texture, opacity = 1) {
-        // are there any meshes to remove?
-        if (this.meshes !== null) {
-            // traverse mesh array
-            for (let i=0; i<this.meshes.length; i++) {
-                // remove all meshes from the scene
-                 this.app.scene.remove(this.meshes[i])
-            }
-            this.meshes = [] // empty the array  
-        }
-  
+        
         let surfaceData;
         let mesh;
 
