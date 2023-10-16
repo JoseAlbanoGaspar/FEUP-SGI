@@ -74,20 +74,7 @@ class MyContents  {
             child.receiveShadow = true; // for receiving shadows
           }
     }
-    /**
-     * builds the box mesh with material assigned
-     */
-    buildBox() {    
-        let boxMaterial = new THREE.MeshPhongMaterial({ color: "#ffff77", 
-        specular: "#000000", emissive: "#000000", shininess: 90 })
-
-        // Create a Cube Mesh with basic material
-        let box = new THREE.BoxGeometry(  this.boxMeshSize,  this.boxMeshSize,  this.boxMeshSize );
-        this.boxMesh = new THREE.Mesh( box, boxMaterial );
-        
-        this.boxMesh.rotation.x = -Math.PI / 2;
-        this.boxMesh.position.y = this.boxDisplacement.y;
-    }
+    
     
     /**
      * builds the table
@@ -804,13 +791,11 @@ class MyContents  {
         this.app.scene.add( ambientLight );
 
         // ------------------------- building objects -------------------------------
-        this.buildBox()
         this.buildWalls()
         this.buildPlate()
         this.buildTable()
         this.buildCake()
         this.buildCandle()
-        //this.buildBottle()
         this.buildGlass()
         this.buildCakeSlice()
         this.buildWindows()
@@ -823,61 +808,7 @@ class MyContents  {
         this.buildSpiral()
         this.buildNurbBottle()
     }
-    
-    /**
-     * updates the diffuse plane color and the material
-     * @param {THREE.Color} value 
-     */
-    updateDiffusePlaneColor(value) {
-        this.diffusePlaneColor = value
-        this.planeMaterial.color.set(this.diffusePlaneColor)
-    }
-    /**
-     * updates the specular plane color and the material
-     * @param {THREE.Color} value 
-     */
-    updateSpecularPlaneColor(value) {
-        this.specularPlaneColor = value
-        this.planeMaterial.specular.set(this.specularPlaneColor)
-    }
-    /**
-     * updates the plane shininess and the material
-     * @param {number} value 
-     */
-    updatePlaneShininess(value) {
-        this.planeShininess = value
-        this.planeMaterial.shininess = this.planeShininess
-    }
-    
-    /**
-     * rebuilds the box mesh if required
-     * this method is called from the gui interface
-     */
-    rebuildBox() {
-        // remove boxMesh if exists
-        if (this.boxMesh !== undefined && this.boxMesh !== null) {  
-            this.app.scene.remove(this.boxMesh)
-        }
-        this.buildBox();
-        this.lastBoxEnabled = null
-    }
-    
-    /**
-     * updates the box mesh if required
-     * this method is called from the render method of the app
-     * updates are trigered by boxEnabled property changes
-     */
-    updateBoxIfRequired() {
-        if (this.boxEnabled !== this.lastBoxEnabled) {
-            this.lastBoxEnabled = this.boxEnabled
-            if (this.boxEnabled) {
-                this.app.scene.add(this.boxMesh)
-            }
-            else {
-                this.app.scene.remove(this.boxMesh)
-            }
-        }
-    }
+
 
     /**
      * updates the contents
@@ -885,13 +816,7 @@ class MyContents  {
      * 
      */
     update() {
-        // check if box mesh needs to be updated
-        this.updateBoxIfRequired()
-
-        // sets the box mesh position based on the displacement vector
-        this.boxMesh.position.x = this.boxDisplacement.x
-        this.boxMesh.position.y = this.boxDisplacement.y
-        this.boxMesh.position.z = this.boxDisplacement.z
+       
     }
 
 }
