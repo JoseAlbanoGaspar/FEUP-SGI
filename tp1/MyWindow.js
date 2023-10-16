@@ -1,7 +1,14 @@
 import * as THREE from 'three';
 
 class MyWindow extends THREE.Object3D {
-
+    /**
+     * 
+     * @param {MyApp} app 
+     * @param {number} width 
+     * @param {number} height 
+     * @param {THREE.Texture} main_texture 
+     * @param {THREE.Texture} img_texture 
+     */
     constructor(app, width, height, main_texture, img_texture) {
         super();
         this.app = app;
