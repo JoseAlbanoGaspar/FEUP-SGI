@@ -7,7 +7,7 @@ import { MyWindow } from './MyWindow.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyBeetle } from './MyBeetle.js';
-import { MyCompleteFlower } from './MCompleteFlower.js';
+import { MyFlower } from './MyFlower.js';
 
 /**
  *  This class contains the contents of out application
@@ -121,8 +121,6 @@ class MyContents  {
         //shadows
         this.frontWallMesh.receiveShadow = true;
         this.frontWallMesh.castShadow = true;
-        
-
 
         // Create the outer rectangle shape
         const outerShape = new THREE.Shape();
@@ -294,7 +292,6 @@ class MyContents  {
 
         this.glass.traverse(this.applyShadow)
 
-
     }
 
     /**
@@ -433,11 +430,10 @@ class MyContents  {
      * builds all the boards and windows
      */
     buildWindows() {
-
         const textureLoader = new THREE.TextureLoader();
         const texture = textureLoader.load('textures/wood.jpg');
         const texture1 = textureLoader.load('textures/view.png');
-        const picture1 = textureLoader.load('textures/picture1.jpg');
+        const picture1 = textureLoader.load('textures/student2.jpg');
         const student = textureLoader.load('textures/student.jpeg')
 
         this.buildWindow(2, 2, texture, picture1, -2, 4, -5) // board with space image
@@ -445,12 +441,20 @@ class MyContents  {
         this.buildWindow(4, 3, null, texture1, -5, 4, 0, Math.PI / 2, false) // builds window - eiffel tower view
         this.buildWindow(5, 3, texture, null, 0, 4, 5, Math.PI)  // board with the beetle 
 
-        RectAreaLightUniformsLib.init()
-        const rectLight = new THREE.RectAreaLight( 0xf1ebc8, 10, 3.9, 2.5 );
-        rectLight.position.set( -4.9, 5.5, 0);
-        rectLight.rotation.y = -Math.PI / 2;
-        rectLight.lookAt(1, 1, 0)
-        this.app.scene.add( rectLight )
+        let material = new THREE.MeshStandardMaterial({  color: "#ffffff", specular: "#000000", emissive: "#000000", shininess: 90})
+
+        const geometry = new THREE.BoxGeometry( 0.5, 3, 0.5 ); 
+        const rectangle = new THREE.Mesh( geometry, material ); 
+        rectangle.scale.set(0.1, 1, 0.1)
+        rectangle.position.set(-4.9, 4, 0);
+        this.app.scene.add( rectangle );
+
+        const retangleHorizontal = new THREE.Mesh(geometry, material);
+        retangleHorizontal.rotation.x = Math.PI / 2
+        retangleHorizontal.position.set(-4.9, 4, 0);
+        retangleHorizontal.scale.set(0.1, 1.3, 0.1)
+        this.app.scene.add(retangleHorizontal)
+
     }
 
     /**
@@ -517,7 +521,6 @@ class MyContents  {
      */
     buildBeetle() {
         this.beetleGroup = new MyBeetle(this.app)
-
         this.beetleGroup.scale.set(0.2, 0.2, 0.2)
         this.app.scene.add(this.beetleGroup)
         this.beetleGroup.position.z = 4.8
@@ -535,7 +538,6 @@ class MyContents  {
      * @returns mesh - the created nurb surface
      */
     createNurbSurface(controlPoints, orderU, orderV, texture, opacity = 1) {
-        
         let surfaceData;
         let mesh;
 
@@ -584,7 +586,6 @@ class MyContents  {
         map.colorSpace = THREE.SRGBColorSpace;
 
         const mesh = this.createNurbSurface(controlPoints, 2, 2, map);
-
         let othermesh = mesh.clone()
         othermesh.rotation.y = Math.PI
 
@@ -604,7 +605,7 @@ class MyContents  {
      * build the flower
      */
     buildFlower(){
-        this.flower = new MyCompleteFlower(this.app);
+        this.flower = new MyFlower(this.app);
         this.flower.traverse(this.applyShadow)
         this.app.scene.add(this.flower)
     }
@@ -662,6 +663,7 @@ class MyContents  {
         this.newspaper.traverse(this.applyShadow)
         this.app.scene.add(this.newspaper)
     }
+
     /**
      * build the spring
      */
@@ -825,6 +827,14 @@ class MyContents  {
         this.app.scene.add(bl7)
        
         // -------------------------- window light ---------------------------------
+        // Create a ReactAreaLight
+        RectAreaLightUniformsLib.init()
+        const rectLight = new THREE.RectAreaLight( 0xf1ebc8, 10, 3.9, 2.5 );
+        rectLight.position.set( -4.9, 5.5, 0);
+        rectLight.rotation.y = -Math.PI / 2;
+        rectLight.lookAt(1, 1, 0)
+        this.app.scene.add( rectLight )
+
         // Create a directional light
         const directionalLight = new THREE.DirectionalLight(0xf1ebc8, 3);
         directionalLight.position.set(-20, 13, 0); // You can adjust the position of the light
@@ -856,7 +866,6 @@ class MyContents  {
         this.buildSpiral()
         this.buildNurbBottle()
     }
-
 
     /**
      * updates the contents
