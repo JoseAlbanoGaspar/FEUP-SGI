@@ -86,12 +86,13 @@ class MyContents  {
     addMaterials(data){
         console.log("materials")
         console.log(data.materials)
+        console.log(data.textures)
 
         for (const name in data.materials){
             const material = data.materials[name]
             if (material.type === 'material') {
                 const color = material.color
-                const shading = material.shading
+                //const shading = material.shading
                 const emissive = material.emissive
                 const shininess = material.shininess
                 const specular = material.specular
@@ -100,18 +101,16 @@ class MyContents  {
                     emissive: emissive, shininess: shininess})
 
                 if (material.textureref !== null) {
-                    const texture = material.textureref
-                    const texlength_s = material.texlength_s
-                    const texlength_t = material.texlength_t
+                    const texture = data.textures[material.textureref].filepath
+                    console.log(texture)
 
-                    const textureMaterial = new THREE.TextureLoader.load(texture)
-                    texture.scale.set(texlength_s, texlength_t)
-
-                    materialObject.map(textureMaterial)
+                    const textureMaterial = new THREE.TextureLoader().load(texture)
+                    materialObject.map = textureMaterial
                 }    
                 
-                //confirmar se existe
-                this.app.buildMaterial(materialObject)
+                const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+                const cube = new THREE.Mesh( geometry, materialObject ); 
+                this.app.scene.add( cube );
                 
             }
         }
@@ -137,7 +136,7 @@ class MyContents  {
     onSceneLoaded(data) {
         console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
-        
+
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials
