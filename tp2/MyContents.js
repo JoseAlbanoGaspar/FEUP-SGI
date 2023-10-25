@@ -83,6 +83,40 @@ class MyContents  {
           
     }
 
+    addMaterials(data){
+        console.log("materials")
+        console.log(data.materials)
+
+        for (const name in data.materials){
+            const material = data.materials[name]
+            if (material.type === 'material') {
+                const color = material.color
+                const shading = material.shading
+                const emissive = material.emissive
+                const shininess = material.shininess
+                const specular = material.specular
+
+                const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
+                    emissive: emissive, shininess: shininess})
+
+                if (material.textureref !== null) {
+                    const texture = material.textureref
+                    const texlength_s = material.texlength_s
+                    const texlength_t = material.texlength_t
+
+                    const textureMaterial = new THREE.TextureLoader.load(texture)
+                    texture.scale.set(texlength_s, texlength_t)
+
+                    materialObject.map(textureMaterial)
+                }    
+                
+                //confirmar se existe
+                this.app.buildMaterial(materialObject)
+                
+            }
+        }
+    }
+
     /**
      * initializes the contents
      */
@@ -106,6 +140,7 @@ class MyContents  {
         
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
+        this.addMaterials(data); //add materials
     }
 
     output(obj, indent = 0) {
