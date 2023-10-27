@@ -17,6 +17,7 @@ class MyContents  {
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/demo/demo.xml");	
         this.activeCameraName = null
+        this.textureDictionary = new Map()
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -85,35 +86,39 @@ class MyContents  {
 
     addMaterials(data){
         console.log("materials")
-        console.log(data.materials)
-        console.log(data.textures)
+        //console.log(data.materials)
+        //console.log(data.textures)
 
+        let i = 0, j = 0
         for (const name in data.materials){
             const material = data.materials[name]
-            if (material.type === 'material') {
-                const color = material.color
-                //const shading = material.shading
-                const emissive = material.emissive
-                const shininess = material.shininess
-                const specular = material.specular
+           
+            const color = material.color
+            //const shading = material.shading
+            const emissive = material.emissive
+            const shininess = material.shininess
+            const specular = material.specular
 
-                const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
-                    emissive: emissive, shininess: shininess})
+            const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
+                emissive: emissive, shininess: shininess})
 
-                if (material.textureref !== null) {
-                    const texture = data.textures[material.textureref].filepath
-                    console.log(texture)
+            if (material.textureref !== null) {
+                const texture = data.textures[material.textureref].filepath
+                console.log(texture)
 
-                    const textureMaterial = new THREE.TextureLoader().load(texture)
-                    materialObject.map = textureMaterial
-                }    
-                
-                const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-                const cube = new THREE.Mesh( geometry, materialObject ); 
-                this.app.scene.add( cube );
-                
-            }
+                const textureMaterial = new THREE.TextureLoader().load(texture)
+                materialObject.map = textureMaterial
+            }    
+            
+            this.textureDictionary.set(name, materialObject)
+            const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+            const cube = new THREE.Mesh( geometry, this.textureDictionary.get(name)); 
+            cube.position.set(i, j, j);
+            this.app.scene.add( cube );
+            i = i+1
         }
+
+        console.log(textureDictionary)
     }
 
     /**
@@ -140,6 +145,7 @@ class MyContents  {
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials
+        this.addPrimitives(data); //add primitives
     }
 
     output(obj, indent = 0) {
