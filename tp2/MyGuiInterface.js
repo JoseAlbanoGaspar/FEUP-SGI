@@ -36,7 +36,6 @@ class MyGuiInterface  {
 
         this.cameraFolder.children = []
         this.createCameraDropdown();
-        console.log(this.cameraFolder.children)
         const old_display = this.cameraFolder.domElement.lastChild.firstChild
         old_display.parentNode.removeChild(old_display)
 

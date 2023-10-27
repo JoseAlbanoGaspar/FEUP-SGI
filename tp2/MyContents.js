@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
+import { MySceneData } from './parser/MySceneData.js';
+import MyPrimitiveCreator from './MyPrimitiveCreator.js';
 /**
  *  This class contains the contents of out application
  */
@@ -17,7 +19,8 @@ class MyContents  {
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/demo/demo.xml");	
         this.activeCameraName = null
-        this.textureDictionary = new Map()
+        this.materials = new Map()
+        this.primitiveCreator = new MyPrimitiveCreator(app)
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -50,7 +53,6 @@ class MyContents  {
 
     addCameras(data) {
         console.log('camera')
-        console.log(data.cameras)
 
         this.activeCameraName = data.activeCameraName
 
@@ -86,8 +88,6 @@ class MyContents  {
 
     addMaterials(data){
         console.log("materials")
-        //console.log(data.materials)
-        //console.log(data.textures)
 
         let i = 0, j = 0
         for (const name in data.materials){
@@ -104,23 +104,85 @@ class MyContents  {
 
             if (material.textureref !== null) {
                 const texture = data.textures[material.textureref].filepath
-                console.log(texture)
-
                 const textureMaterial = new THREE.TextureLoader().load(texture)
                 materialObject.map = textureMaterial
             }    
             
-            this.textureDictionary.set(name, materialObject)
+            this.materials.set(name, materialObject)
             const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-            const cube = new THREE.Mesh( geometry, this.textureDictionary.get(name)); 
+            const cube = new THREE.Mesh( geometry, this.materials.get(name)); 
             cube.position.set(i, j, j);
-            this.app.scene.add( cube );
+            //this.app.scene.add( cube );
             i = i+1
         }
 
-        console.log(textureDictionary)
     }
 
+    /**
+     * 
+     * @param {MySceneData} data 
+     * The entry point of the graph traversal
+     * In the end of this function the nodes are completely generated
+     */
+    addNodes(data) {
+        let node = data.nodes[data.rootId]
+        let defaultMaterial = (node.materialIds.length !== 0) ? node.materialIds[0] : null
+        this.visit(node, this.materials.get(defaultMaterial))
+    }
+
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     * @param {THREE.Material} activeMaterial 
+     * 
+     * This traverse all the nodes of the graph
+     * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
+     */
+    visit(node, activeMaterial) {
+        if (node.type === "primitive") { // deal with primitives
+            this.dealWithPrimitives(node, activeMaterial)
+        }
+        else if (node.type === "node") {
+            // update material if declared
+            activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
+            //deal with node
+            // ...
+            for (const child in node.children) {
+                //console.log(node.children[child])
+                this.visit(node.children[child], activeMaterial)
+            }
+        } 
+    }
+
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     * @param {THREE.Material} activeMaterial 
+     * 
+     * This function based on the primitive subtype, draws it 
+     */
+    dealWithPrimitives(node, activeMaterial) {
+        if (node.subtype === "rectangle") {
+            this.primitiveCreator.drawRectangle(node, activeMaterial)
+        }
+        else if (node.subtype === "triangle") {
+            this.primitiveCreator.drawTriangle(node, activeMaterial)
+        }
+        else if (node.subtype === "box") {
+            this.primitiveCreator.drawBox(node, activeMaterial) 
+        }   
+        else if (node.subtype === "cylinder") {
+            this.primitiveCreator.drawCylinder(node, activeMaterial) 
+        }
+        else if (node.subtype === "sphere") {
+            this.primitiveCreator.drawSphere(node, activeMaterial)
+        }
+        else if (node.subtype === "nurbs") {
+            this.primitiveCreator.drawNurbs(node, activeMaterial) 
+        }
+    }
+
+   
     /**
      * initializes the contents
      */
@@ -145,7 +207,7 @@ class MyContents  {
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials
-        this.addPrimitives(data); //add primitives
+        this.addNodes(data); //traverse nodes
     }
 
     output(obj, indent = 0) {
