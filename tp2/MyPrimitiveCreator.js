@@ -7,9 +7,6 @@ class MyPrimitiveCreator {
 
         // nurbs related
         this.builder = new MyNurbsBuilder()
-        this.meshes = []
-        this.samplesU = 8         // maximum defined in MyGuiInterface
-        this.samplesV = 8        // maximum defined in MyGuiInterface
     }
 
     /**
@@ -17,18 +14,40 @@ class MyPrimitiveCreator {
      * @param {Array} controlPoints 
      * @param {number} orderU 
      * @param {number} orderV 
+     * @param {number} samplesU 
+     * @param {number} samplesV
      * @param {THREE.material} material
      * @returns {THREE.Mesh} - the created nurb surface
      * note: private method
      */
-    #createNurbSurface(controlPoints, orderU, orderV, activeMaterial) {        
+    #createNurbSurface(controlPoints, orderU, orderV, samplesU, samplesV, activeMaterial) { 
+
         let surfaceData = this.builder.build(controlPoints,
-                      orderU, orderV, this.samplesU,
-                      this.samplesV, activeMaterial)  
+                      orderU, orderV, samplesU,
+                      samplesV, activeMaterial)  
 
         let mesh = new THREE.Mesh( surfaceData, activeMaterial );
         return mesh
     }
+
+    #transformControlPoints(controlPoints, orderU, orderV) {
+        if ((orderU + 1) * (orderV + 1) !== controlPoints.length) {
+            throw new Error('Invalid input: The product of orderU and orderV must match the array length.');
+        }
+
+        const resultArray = [];
+        let idx = 0
+        for (let u = 0; u < orderU + 1; u++) {
+            let slice = []
+            for (let v = 0; v < orderV + 1; v++) {
+                slice.push([controlPoints[idx].xx / 1, controlPoints[idx].yy / 1, controlPoints[idx].zz/ 1, 1 / 1 ])
+                idx++
+            }
+            resultArray.push(slice)
+        }
+
+        return resultArray
+      }
     
      /**
      * 
@@ -143,8 +162,9 @@ class MyPrimitiveCreator {
      */
     drawNurbs(node, activeMaterial) {
         let nodeInfo = node.representations[0]
-        console.log(nodeInfo)
-
+        let controlPoints = this.#transformControlPoints(nodeInfo.controlpoints, nodeInfo.degree_u, nodeInfo.degree_v)
+        const mesh = this.#createNurbSurface(controlPoints, nodeInfo.degree_u, nodeInfo.degree_v, nodeInfo.parts_u, nodeInfo.parts_v, activeMaterial);
+        this.app.scene.add(mesh)
     }
 
 
