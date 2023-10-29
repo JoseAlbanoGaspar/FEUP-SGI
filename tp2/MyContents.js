@@ -3,6 +3,7 @@ import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MySceneData } from './parser/MySceneData.js';
 import MyPrimitiveCreator from './MyPrimitiveCreator.js';
+import MyLightsCreator from './MyLightsCreator.js';
 /**
  *  This class contains the contents of out application
  */
@@ -21,6 +22,7 @@ class MyContents  {
         this.activeCameraName = null
         this.materials = new Map()
         this.primitiveCreator = new MyPrimitiveCreator(app)
+        this.lightsCreator = new MyLightsCreator(app)
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -32,8 +34,8 @@ class MyContents  {
     }
 
     addGlobals(data) {
-        console.log("Adding Globals...")
-        console.log(data)
+        //console.log("Adding Globals...")
+        //console.log(data)
         // dealing with ambient 
         const ambientData = data.options.ambient
         const ambientLightColor = this.convertRGBtoTHREEColor(ambientData)
@@ -52,7 +54,7 @@ class MyContents  {
     }
 
     addCameras(data) {
-        console.log('camera')
+        //console.log('camera')
 
         this.activeCameraName = data.activeCameraName
 
@@ -83,11 +85,10 @@ class MyContents  {
                 }
             }
           }
-          
     }
 
     addMaterials(data){
-        console.log("materials")
+        //console.log("materials")
 
         let i = 0, j = 0
         for (const name in data.materials){
@@ -115,7 +116,6 @@ class MyContents  {
             //this.app.scene.add( cube );
             i = i+1
         }
-
     }
 
     /**
@@ -139,9 +139,22 @@ class MyContents  {
      * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
      */
     visit(node, activeMaterial) {
+        console.log(node.type)
         if (node.type === "primitive") { // deal with primitives
             this.dealWithPrimitives(node, activeMaterial)
         }
+        else if (node.type === "pointlight") {
+            this.lightsCreator.createPointLight(node)
+        }
+
+        else if (node.type === "spotlight") {
+            this.lightsCreator.createSpotLight(node)
+        }
+
+        else if (node.type === "directionallight") {
+            this.lightsCreator.createDirectionalLight(node)
+        }
+
         else if (node.type === "node") {
             // update material if declared
             activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
@@ -182,6 +195,60 @@ class MyContents  {
         }
     }
 
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     */
+    dealWithLights(node) {
+        console.log("pointlight")
+        let castshadow = node.castshadow
+        let color = node.color
+        let decay = node.decay
+        let distance = node.distance
+        let intensity = node.intensity
+        let position = node.position
+
+        if (node.type === "pointlight") {
+            const light = new THREE.PointLight(color, intensity, distance, decay)
+            light.position.set(position)
+            light.castShadow = node.castshadow
+            this.app.scene.add(light)
+
+            const sphereSize = 1;
+            const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
+            this.app.scene.add( pointLightHelper );
+            return light
+        }
+
+        else if (node.type === "spotlight") {
+            let angle = node.angle
+            let penumbra = node.penumbra
+            const light = new THREE.SpotLight(color, intensity, distance, angle, penumbra, decay)
+
+            let target = new THREE.Object3D()
+            target.position.set(node.target)
+
+            light.target = target
+            this.app.scene.add(light)
+
+            const sphereSize = 1;
+            const pointLightHelper = new THREE.SpotLightHelper( light, sphereSize );
+            this.app.scene.add( pointLightHelper );
+            return light
+        }
+
+        else if (node.type === "directionallight") {
+            const light = new THREE.DirectionalLight(color, intensity)
+            light.position.set(position)
+            this.app.scene.add(light)
+
+            const sphereSize = 1;
+            const pointLightHelper = new THREE.DirectionalLightHelper( light, sphereSize );
+            this.app.scene.add( pointLightHelper );
+            return light
+        }
+
+    }
    
     /**
      * initializes the contents
@@ -201,7 +268,7 @@ class MyContents  {
      * @param {MySceneData} data the entire scene data object
      */
     onSceneLoaded(data) {
-        console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
+        //console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
 
         this.addGlobals(data); // add globals
