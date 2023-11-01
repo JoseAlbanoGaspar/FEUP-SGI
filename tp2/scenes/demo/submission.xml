@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+
+<yaf>
+
+    <globals background="1 0 0 0" ambient="ff ff ff"/>
+
+    <cameras initial="c1">
+        <perspective id="c1"
+            angle="30"
+            near="0.1"
+            far="1000"
+            location="20 15 10"
+            target="0 0 0" />
+
+        <orthogonal id="c2" 
+            near="0.1" 
+            far="1000" 
+            location="20 15 15" 
+            target="0 15 0" 
+            left="0" 
+            right="5" 
+            bottom="0" 
+            top="-5"/>    
+    </camera>
+
+</yaf>
