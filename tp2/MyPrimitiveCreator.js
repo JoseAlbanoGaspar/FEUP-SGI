@@ -32,7 +32,7 @@ class MyPrimitiveCreator {
 
     #transformControlPoints(controlPoints, orderU, orderV) {
         if ((orderU + 1) * (orderV + 1) !== controlPoints.length) {
-            throw new Error('Invalid input: The product of orderU and orderV must match the array length.');
+            throw new Error('Invalid input: The product of orderU + 1 and orderV + 1 must match the number of control points.');
         }
 
         const resultArray = [];
@@ -117,11 +117,11 @@ class MyPrimitiveCreator {
         let nodeInfo = node.representations[0]
         const geometry = new THREE.CylinderGeometry(
                 nodeInfo.top,
-                nodeInfo.bottom,
+                nodeInfo.base,
                 nodeInfo.height,
                 nodeInfo.slices,
                 nodeInfo.stacks,
-                nodeInfo.capsclose,
+                !nodeInfo.capsclose,
                 nodeInfo.thetastart,
                 nodeInfo.thetalength
         )
@@ -164,7 +164,8 @@ class MyPrimitiveCreator {
         let nodeInfo = node.representations[0]
         let controlPoints = this.#transformControlPoints(nodeInfo.controlpoints, nodeInfo.degree_u, nodeInfo.degree_v)
         const mesh = this.#createNurbSurface(controlPoints, nodeInfo.degree_u, nodeInfo.degree_v, nodeInfo.parts_u, nodeInfo.parts_v, activeMaterial);
-        this.app.scene.add(mesh)
+        //this.app.scene.add(mesh)
+        return mesh
     }
 
 

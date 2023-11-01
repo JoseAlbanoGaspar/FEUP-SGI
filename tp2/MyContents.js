@@ -127,7 +127,8 @@ class MyContents  {
     addNodes(data) {
         let node = data.nodes[data.rootId]
         let defaultMaterial = (node.materialIds.length !== 0) ? node.materialIds[0] : null
-        this.visit(node, this.materials.get(defaultMaterial))
+        let sceneGroup = this.visit(node, this.materials.get(defaultMaterial))
+        this.app.scene.add(sceneGroup)
     }
 
     /**
@@ -139,32 +140,26 @@ class MyContents  {
      * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
      */
     visit(node, activeMaterial) {
-        console.log(node.type)
+        let group = new THREE.Group()
         if (node.type === "primitive") { // deal with primitives
-            this.dealWithPrimitives(node, activeMaterial)
+            group.add(this.dealWithPrimitives(node, activeMaterial))
         }
-        else if (node.type === "pointlight") {
-            this.lightsCreator.createPointLight(node)
-        }
-
-        else if (node.type === "spotlight") {
-            this.lightsCreator.createSpotLight(node)
-        }
-
-        else if (node.type === "directionallight") {
-            this.lightsCreator.createDirectionalLight(node)
+        else if (node.type === "pointlight" || node.type === "spotlight" || node.type === "directionallight") {
+            group.add(this.dealWithLights(node))
         }
 
         else if (node.type === "node") {
             // update material if declared
             activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
             //deal with node
-            // ...
+            this.applyTransformations(group, node.transformations)
             for (const child in node.children) {
                 //console.log(node.children[child])
-                this.visit(node.children[child], activeMaterial)
+                group.add(this.visit(node.children[child], activeMaterial))
             }
         } 
+
+        return group
     }
 
     /**
@@ -176,78 +171,68 @@ class MyContents  {
      */
     dealWithPrimitives(node, activeMaterial) {
         if (node.subtype === "rectangle") {
-            this.primitiveCreator.drawRectangle(node, activeMaterial)
+           return this.primitiveCreator.drawRectangle(node, activeMaterial)
         }
         else if (node.subtype === "triangle") {
-            this.primitiveCreator.drawTriangle(node, activeMaterial)
+           return this.primitiveCreator.drawTriangle(node, activeMaterial)
         }
         else if (node.subtype === "box") {
-            this.primitiveCreator.drawBox(node, activeMaterial) 
+           return this.primitiveCreator.drawBox(node, activeMaterial) 
         }   
         else if (node.subtype === "cylinder") {
-            this.primitiveCreator.drawCylinder(node, activeMaterial) 
+           return this.primitiveCreator.drawCylinder(node, activeMaterial) 
         }
         else if (node.subtype === "sphere") {
-            this.primitiveCreator.drawSphere(node, activeMaterial)
+           return this.primitiveCreator.drawSphere(node, activeMaterial)
         }
         else if (node.subtype === "nurbs") {
-            this.primitiveCreator.drawNurbs(node, activeMaterial) 
+           return this.primitiveCreator.drawNurbs(node, activeMaterial) 
         }
     }
 
     /**
      * 
      * @param {MySceneData.node} node 
+     * This function creates the lights of the scene
      */
     dealWithLights(node) {
-        console.log("pointlight")
-        let castshadow = node.castshadow
-        let color = node.color
-        let decay = node.decay
-        let distance = node.distance
-        let intensity = node.intensity
-        let position = node.position
-
         if (node.type === "pointlight") {
-            const light = new THREE.PointLight(color, intensity, distance, decay)
-            light.position.set(position)
-            light.castShadow = node.castshadow
-            this.app.scene.add(light)
-
-            const sphereSize = 1;
-            const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
-            this.app.scene.add( pointLightHelper );
-            return light
+            return this.lightsCreator.createPointLight(node)
         }
-
         else if (node.type === "spotlight") {
-            let angle = node.angle
-            let penumbra = node.penumbra
-            const light = new THREE.SpotLight(color, intensity, distance, angle, penumbra, decay)
-
-            let target = new THREE.Object3D()
-            target.position.set(node.target)
-
-            light.target = target
-            this.app.scene.add(light)
-
-            const sphereSize = 1;
-            const pointLightHelper = new THREE.SpotLightHelper( light, sphereSize );
-            this.app.scene.add( pointLightHelper );
-            return light
+            return this.lightsCreator.createSpotLight(node)
         }
-
         else if (node.type === "directionallight") {
-            const light = new THREE.DirectionalLight(color, intensity)
-            light.position.set(position)
-            this.app.scene.add(light)
-
-            const sphereSize = 1;
-            const pointLightHelper = new THREE.DirectionalLightHelper( light, sphereSize );
-            this.app.scene.add( pointLightHelper );
-            return light
+            return this.lightsCreator.createDirectionalLight(node)
         }
+    }
 
+    /**
+     * 
+     * @param {THREE.Group} group 
+     * @param {Array} transformations
+     */
+    applyTransformations(group, transformations) {
+        for (const idx in transformations) {
+            const transform = transformations[idx]
+            if (transform.type === 'T') {
+                const coords = transform.translate
+                group.translateX(coords[0])
+                group.translateY(coords[1])
+                group.translateZ(coords[2])
+            }
+            else if (transform.type === 'R') {
+                const coords = transform.rotation
+
+                group.rotation.x = coords[0] * (Math.PI / 180)
+                group.rotation.y = coords[1] * (Math.PI / 180)
+                group.rotation.z = coords[2] * (Math.PI / 180)
+            }
+            else { // 'S'
+                const coords = transform.scale
+                group.scale.set(coords[0], coords[1], coords[2])
+            }
+        }
     }
    
     /**
