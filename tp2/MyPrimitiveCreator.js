@@ -61,6 +61,9 @@ class MyPrimitiveCreator {
         const width = Math.abs(nodeInfo.xy2[0] - nodeInfo.xy1[0])
         const height = Math.abs(nodeInfo.xy2[1] - nodeInfo.xy1[1])
         const geometry = new THREE.PlaneGeometry( width, height, nodeInfo.parts_x, nodeInfo.parts_y )
+
+        geometry.translate( (nodeInfo.xy2[0] + nodeInfo.xy1[0]) / 2, (nodeInfo.xy2[1] + nodeInfo.xy1[1]) / 2, 0  )
+
         const rectangle = new THREE.Mesh(geometry, activeMaterial)
         //this.app.scene.add(rectangle)
         return rectangle

@@ -18,7 +18,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");	
+		this.reader.open("scenes/T06G11/scene.xml");	
         this.activeCameraName = null
         this.materials = new Map()
         this.primitiveCreator = new MyPrimitiveCreator(app)
@@ -212,8 +212,8 @@ class MyContents  {
      * @param {THREE.Group} group 
      * @param {Array} transformations
      */
-    applyTransformations(group, transformations) {
-        for (const idx in transformations) {
+    applyTransformations(object, data) {
+        /*for (const idx in transformations) {
             const transform = transformations[idx]
             if (transform.type === 'T') {
                 const coords = transform.translate
@@ -232,7 +232,24 @@ class MyContents  {
                 const coords = transform.scale
                 group.scale.set(coords[0], coords[1], coords[2])
             }
+        }*/
+        for(let i = 0; i < data.length; i++){
+            const transf = data[i];
+            if(transf.type == "T")
+                object.position.set(object.position.x + transf.translate[0], object.position.y + transf.translate[1], object.position.z + transf.translate[2]);
+            else if(transf.type == "R")
+                object.rotation.set(
+                    object.rotation.x + THREE.MathUtils.degToRad(transf.rotation[0]),
+                    object.rotation.y + THREE.MathUtils.degToRad(transf.rotation[1]),
+                    object.rotation.z + THREE.MathUtils.degToRad(transf.rotation[2])
+                );
+            else if(transf.type == "S")
+                object.scale.set(object.scale.x * transf.scale[0], object.scale.y * transf.scale[1], object.scale.z * transf.scale[2]);
         }
+
+        object.updateMatrix()
+
+        return object;
     }
    
     /**
@@ -255,7 +272,7 @@ class MyContents  {
     onSceneLoaded(data) {
         //console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
-
+        console.log(data)
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials
