@@ -18,7 +18,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/T06G11/scene.xml");	
+		this.reader.open("scenes/T03G05/scene.xml");	
         this.activeCameraName = null
         this.materials = new Map()
         this.primitiveCreator = new MyPrimitiveCreator(app)
@@ -104,7 +104,7 @@ class MyContents  {
                 emissive: emissive, shininess: shininess})
 
             if (material.textureref !== null) {
-                const texture = data.textures[material.textureref].filepath
+                const texture = data.textures[material.textureref]?.filepath
                 const textureMaterial = new THREE.TextureLoader().load(texture)
                 materialObject.map = textureMaterial
             }    
