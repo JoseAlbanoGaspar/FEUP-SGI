@@ -17,27 +17,27 @@ class MyLightsCreator {
 
         const sphereSize = 1;
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-        this.app.scene.add( pointLightHelper );
+        //this.app.scene.add( pointLightHelper );
         return pointLight
     }
 
     createSpotLight(node) {
-        const spotLight = new THREE.SpotLight(node.color, node.intensity, node.distance, node.angle, node.penumbra, node.decay)
+        const spotLight = new THREE.SpotLight(node.color, node.intensity, node.distance, THREE.MathUtils.degToRad(node.angle), node.penumbra, node.decay)
         spotLight.position.set(node.position[0], node.position[1], node.position[2])
         
         // shadows
         spotLight.castShadow = node.castShadow
         spotLight.receiveShadow = node.receiveShadow
 
-        let target = new THREE.Object3D()
-        target.position.set(node.target)
+        let target = new THREE.Object3D()       
+        target.position.set(node.target[0], node.target[1], node.target[2])
 
         spotLight.target = target
         //this.app.scene.add(spotLight)
 
         const sphereSize = 1;
         const spotLightHelper = new THREE.SpotLightHelper( spotLight, sphereSize );
-        this.app.scene.add( spotLightHelper );
+        //this.app.scene.add( spotLightHelper );
 
         return spotLight
     }
@@ -54,7 +54,7 @@ class MyLightsCreator {
 
         const sphereSize = 1;
         const directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, sphereSize );
-        this.app.scene.add( directionalLightHelper );
+        //this.app.scene.add( directionalLightHelper );
         return directionalLight
     }
 
