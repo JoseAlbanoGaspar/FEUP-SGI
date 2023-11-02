@@ -18,7 +18,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");	
+		this.reader.open("scenes/demo/submission.xml");	
         this.activeCameraName = null
         this.materials = new Map()
         this.primitiveCreator = new MyPrimitiveCreator(app)
@@ -103,7 +103,7 @@ class MyContents  {
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
                 emissive: emissive, shininess: shininess})
 
-            if (material.textureref !== null) {
+            if (material.textureref !== "") {
                 const texture = data.textures[material.textureref].filepath
                 const textureMaterial = new THREE.TextureLoader().load(texture)
                 materialObject.map = textureMaterial
