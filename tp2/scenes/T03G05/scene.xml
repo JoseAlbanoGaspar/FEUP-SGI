@@ -28,13 +28,13 @@
 
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
-        <texture id="leftWallTex" filepath="scenes/T03G05/textures/wallPaper.jpg" />
-		<texture id="rightWallTex" filepath="scenes/T03G05/textures/wallPaper.jpg" />
-		<texture id="floorTex" filepath="scenes/T03G05/textures/floor.jpg" />
-		<texture id="tableTex" filepath="scenes/T03G05/textures/table.png" />
-        <texture id="stuffedTex" filepath="scenes/T03G05/textures/stuffed.jpg" />
-        <texture id="pinguinTex" filepath="scenes/T03G05/textures/pinguin.jpg" />
-        <texture id="clockTex" filepath="scenes/T03G05/textures/clock.png" />
+        <texture id="leftWallTex" filepath="scenes/demo/textures/wallPaper.jpg" />
+		<texture id="rightWallTex" filepath="scenes/demo/textures/wallPaper.jpg" />
+		<texture id="floorTex" filepath="scenes/demo/textures/floor.jpg" />
+		<texture id="tableTex" filepath="scenes/demo/textures/table.png" />
+        <texture id="stuffedTex" filepath="scenes/demo/textures/stuffed.jpg" />
+        <texture id="pinguinTex" filepath="scenes/demo/textures/pinguin.jpg" />
+        <texture id="clockTex" filepath="scenes/demo/textures/clock.png" />
     </textures> 
 
     <materials> 
@@ -83,7 +83,6 @@
             emissive="0.0 0.0 0.0 0.0" 
 			specular="0 0 0 0" 
             shininess="10" 
-            textureref="" 
             texlength_s="1" 
             texlength_t="1" />
 
@@ -109,8 +108,7 @@
             color="1 1 0 1.0" 
             emissive="0.0 0.0 0.0 0.0" 
 			specular="0 0 0 0" 
-            shininess="10" 
-            textureref="" 
+            shininess="10"
             texlength_s="1" 
             texlength_t="1" />  
 
