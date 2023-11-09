@@ -83,7 +83,6 @@
             emissive="0.0 0.0 0.0 0.0" 
 			specular="0 0 0 0" 
             shininess="10" 
-            textureref="" 
             texlength_s="1" 
             texlength_t="1" />
 
@@ -109,8 +108,7 @@
             color="1 1 0 1.0" 
             emissive="0.0 0.0 0.0 0.0" 
 			specular="0 0 0 0" 
-            shininess="10" 
-            textureref="" 
+            shininess="10"
             texlength_s="1" 
             texlength_t="1" />  
 

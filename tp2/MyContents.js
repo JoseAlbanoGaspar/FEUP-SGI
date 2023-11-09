@@ -103,18 +103,18 @@ class MyContents  {
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
                 emissive: emissive, shininess: shininess})
 
-            if (material.textureref !== "") {
+            if (material.textureref) {
                 const texture = data.textures[material.textureref].filepath
                 const textureMaterial = new THREE.TextureLoader().load(texture)
                 materialObject.map = textureMaterial
             }    
             
             this.materials.set(name, materialObject)
-            const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-            const cube = new THREE.Mesh( geometry, this.materials.get(name)); 
-            cube.position.set(i, j, j);
+            //const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+            //const cube = new THREE.Mesh( geometry, this.materials.get(name)); 
+            //cube.position.set(i, j, j);
             //this.app.scene.add( cube );
-            i = i+1
+            //i = i+1
         }
     }
 
