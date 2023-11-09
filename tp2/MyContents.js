@@ -18,7 +18,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/submission.xml");	
+		this.reader.open("scenes/T06G11/scene.xml");	
         this.activeCameraName = null
         this.materials = new Map()
         this.primitiveCreator = new MyPrimitiveCreator(app)
