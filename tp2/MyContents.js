@@ -4,6 +4,7 @@ import { MyFileReader } from './parser/MyFileReader.js';
 import { MySceneData } from './parser/MySceneData.js';
 import MyPrimitiveCreator from './MyPrimitiveCreator.js';
 import MyLightsCreator from './MyLightsCreator.js';
+
 /**
  *  This class contains the contents of out application
  */
@@ -16,13 +17,12 @@ class MyContents  {
     constructor(app) {
         this.app = app
         this.axis = null
-
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/submission.xml");	
-        this.activeCameraName = null
         this.materials = new Map()
+        this.activeCameraName = null
         this.primitiveCreator = new MyPrimitiveCreator(app)
         this.lightsCreator = new MyLightsCreator(app)
+		this.reader.open("scenes/demo/demo.xml");
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -34,8 +34,6 @@ class MyContents  {
     }
 
     addGlobals(data) {
-        //console.log("Adding Globals...")
-        //console.log(data)
         // dealing with ambient 
         const ambientData = data.options.ambient
         const ambientLightColor = this.convertRGBtoTHREEColor(ambientData)
@@ -51,11 +49,16 @@ class MyContents  {
         // dealing with fog
         if (data.fog)
             this.app.scene.fog = new THREE.Fog( this.convertRGBtoTHREEColor(data.fog.color), data.fog.near, data.fog.far );
+
+        console.log(data.skyboxes.default)
+        
+        if (data.skyboxes.default) {
+            const skybox = this.primitiveCreator.drawSkybox(data.skyboxes.default)
+            this.app.scene.add(skybox)
+        }
     }
 
     addCameras(data) {
-        //console.log('camera')
-
         this.activeCameraName = data.activeCameraName
 
         for (const cameraKey in data.cameras) {
@@ -89,8 +92,6 @@ class MyContents  {
 
     addMaterials(data){
         //console.log("materials")
-
-        let i = 0, j = 0
         for (const name in data.materials){
             const material = data.materials[name]
            
@@ -108,7 +109,7 @@ class MyContents  {
                 const textureMaterial = new THREE.TextureLoader().load(texture)
                 materialObject.map = textureMaterial
             }    
-            
+            console.log()
             this.materials.set(name, materialObject)
             //const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
             //const cube = new THREE.Mesh( geometry, this.materials.get(name)); 

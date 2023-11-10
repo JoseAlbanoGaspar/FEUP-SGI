@@ -3,7 +3,7 @@
 
 	<!-- Credits of the original file go to Group 1, class 1 of course LAIG school year 2013/2014, FEUP, University of Porto -->
 	
-    <globals background="0 0 0 1" ambient="0 0 0 1" /> 
+    <globals background="0 0 0 1" ambient="55 55 55 1" /> 
 
     <fog color="1.0 1.0 1.0 1.0" near="0.0" far="100.0" />
 
@@ -25,9 +25,7 @@
             bottom="-5" 
             top="-5" /> 
     </cameras> 
-     
-    <skybox size="100 100 100" center="0 0 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="scenes/demo/textures/pine.png" down="scenes/demo/textures/pine.png" left="scenes/demo/textures/pine.png" right="scenes/demo/textures/pine.png" front="scenes/demo/textures/pine.png" back="scenes/demo/textures/pine.png"/>
-    
+
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
         <texture id="leftWallTex" filepath="scenes/demo/textures/scratchedWall.jpg" />
@@ -39,16 +37,6 @@
 		<texture id="tapeSupportTex" filepath="scenes/demo/textures/lamp.png" />
 		<texture id="pineTex" filepath="scenes/demo/textures/pine.png" />
 		<texture id="vaseTex" filepath="scenes/demo/textures/vase.png" />
-        <texture id="demo" filepath="scenes/demo/textures/demo.png" 
-            mipmap0="scenes/demo/textures/demo1024.png"
-            mipmap1="scenes/demo/textures/demo512.png"
-            mipmap2="scenes/demo/textures/demo256.png"
-            mipmap3="scenes/demo/textures/demo128.png"
-            mipmap4="scenes/demo/textures/demo64.png"
-            mipmap5="scenes/demo/textures/demo32.png"
-            mipmap6="scenes/demo/textures/demo16.png"
-            mipmap7="scenes/demo/textures/demo8.png"
-        />
     </textures> 
 
     <materials> 
@@ -70,10 +58,7 @@
             textureref="leftWallTex" 
             texlength_s="15" 
             texlength_t="8" 
-            twosided = "true"
-            bumpref = "demo"
-            bumpscale = "0.5"
-            specularref = "demo" />
+            twosided = "true" />
 		
 		<material id="rightWallApp" 
             emissive="0.0 0.0 0.0 1" 
@@ -146,14 +131,8 @@
     </materials> 
 
     <graph rootid="scene"> 
-        <lod id="demo" near="0" far="1000" > 
-            <noderef id="rectangle2" mindist="5" />
-            <noderef id="rectangle2" mindist="10"/>
-            <noderef id="rectangle2" mindist="100"/>
-            <noderef id="rectangle2" mindist="500"/>
-        </lod>
 		
-		<node id="scene" castshadows = "true" receiveshadows="true"> 
+		<node id="scene"> 
             <children> 
                 <noderef id="leftWall" /> 
 				<noderef id="rightWall" /> 
@@ -224,7 +203,6 @@
                 <primitive>          
                     <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
                 </primitive> 
-                <lodref id="demo" />
             </children> 
         </node>
 		
@@ -444,7 +422,7 @@
             </children> 
         </node>
 		
-		<node id="crimeWeapon" castshadows = "true" receiveshadows="true" >
+		<node id="crimeWeapon">
 			<transforms>
 				<translate value3="7 0.5 8" /> 
 				<scale value3="0.5 0.5 5" />

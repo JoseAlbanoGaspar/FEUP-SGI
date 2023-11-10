@@ -171,6 +171,113 @@ class MyPrimitiveCreator {
         return mesh
     }
 
+    drawSkybox(node) {
+        const center = node.center
+
+        //back plane 
+        const width = node.size[0]
+        const height = node.size[1]
+        const depth = node.size[2]
+        const geometry = new THREE.PlaneGeometry( width, height )
+
+        const materialObject = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.back) {
+            const texture = node.back
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject.map = textureMaterial
+        }
+        const back_plane = new THREE.Mesh(geometry, materialObject)
+
+        back_plane.position.set(0, 0, -node.size[2]/2)
+
+        //front plane
+        const geometry1 = new THREE.PlaneGeometry( width, height )
+
+        const materialObject1 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.front) {
+            const texture = node.front
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject1.map = textureMaterial
+        }
+        const front_plane = new THREE.Mesh(geometry1, materialObject1)
+        front_plane.rotation.y = Math.PI
+        front_plane.position.set(0, 0, node.size[2]/2)
+
+        //left plane
+        const geometry2 = new THREE.PlaneGeometry( depth, height )
+
+        const materialObject2 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.left) {
+            const texture = node.left
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject2.map = textureMaterial
+        }
+        const left_plane = new THREE.Mesh(geometry2, materialObject2)
+        left_plane.rotation.y = Math.PI /2
+        left_plane.position.set(-node.size[2]/2, 0, 0)
+
+        //right plane
+        const geometry3 = new THREE.PlaneGeometry( depth, height )
+
+        const materialObject3 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.right) {
+            const texture = node.right
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject3.map = textureMaterial
+        }
+        const right_plane = new THREE.Mesh(geometry3, materialObject3)
+        right_plane.rotation.y = 3*Math.PI /2
+        right_plane.position.set(node.size[2]/2, 0, 0)
+
+        //top plane
+        const geometry4 = new THREE.PlaneGeometry( width, depth )
+
+        const materialObject4 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.top) {
+            const texture = node.right
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject4.map = textureMaterial
+        }
+        const top_plane = new THREE.Mesh(geometry4, materialObject4)
+        top_plane.rotation.x = Math.PI/2
+        top_plane.position.set(0, node.size[1]/2, 0)
+
+        //bottom plane
+        const geometry5 = new THREE.PlaneGeometry( width, depth )
+
+        const materialObjec5 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+            emissive: node.emissive})
+
+        if (node.bottom) {
+            const texture = node.bottom
+            const textureMaterial = new THREE.TextureLoader().load(texture)
+            materialObject5.map = textureMaterial
+        }
+        const bottom_plane = new THREE.Mesh(geometry5, materialObject4)
+        bottom_plane.rotation.x = 3*Math.PI/2
+        bottom_plane.position.set(0, -node.size[1]/2, 0)
+
+        let group = new THREE.Group()
+        group.add(back_plane)
+        group.add(front_plane)
+        group.add(left_plane)
+        group.add(right_plane)
+        group.add(top_plane)
+        group.add(bottom_plane)
+        
+        return group
+    }
+
 
 }
   
