@@ -90,6 +90,25 @@ class MyContents  {
           }
     }
 
+    getFilter(param) {
+        switch (param) {
+            case 'NearestFilter':
+                return THREE.NearestFilter;
+            case 'LinearFilter':
+                return THREE.LinearFilter;
+            case 'NearestMipmapNearestFilter':
+                return THREE.NearestMipmapNearestFilter;
+            case 'LinearMipmapNearestFilter':
+                return THREE.LinearMipmapNearestFilter;
+            case 'NearestMipmapLinearFilter':
+                return THREE.NearestMipmapLinearFilter;
+            case 'LinearMipmapLinearFilter':
+                return THREE.LinearMipmapLinearFilter;
+            default:
+                return THREE.LinearFilter;
+        }
+    }
+
     addMaterials(data){
         //console.log("materials")
         for (const name in data.materials){
@@ -105,11 +124,31 @@ class MyContents  {
                 emissive: emissive, shininess: shininess})
 
             if (material.textureref) {
-                const texture = data.textures[material.textureref].filepath
-                const textureMaterial = new THREE.TextureLoader().load(texture)
+                let textureMaterial
+                if (data.textures[material.textureref].isVideo) {
+                    const id = data.textures[material.textureref].id
+                    const video = document.getElementById(id);
+                    textureMaterial = new THREE.VideoTexture( video );
+                    textureMaterial.minFilter = this.getFilter(data.textures[material.textureref].minfilter)
+                    textureMaterial.magFilter = this.getFilter(data.textures[material.textureref].magfilter)
+                    textureMaterial.anisotropy = data.textures[material.textureref].anisotropy
+                }
+                else {
+                    const texture = data.textures[material.textureref].filepath
+                    textureMaterial = new THREE.TextureLoader().load(texture)                   
+                }
                 materialObject.map = textureMaterial
-            }    
-            console.log()
+                
+            }
+
+            if(material.bumpref) {
+                const bumpTexture = data.textures[material.bumpref].filepath
+                const bumpTextMat = new THREE.TextureLoader().load(bumpTexture)
+                materialObject.bumpMap = bumpTextMat
+                materialObject.bumpScale = material.bumpscale
+            }
+  
+        
             this.materials.set(name, materialObject)
             //const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
             //const cube = new THREE.Mesh( geometry, this.materials.get(name)); 

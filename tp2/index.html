@@ -22,6 +22,13 @@
 <body>
     <div id="canvas"></div>
     <div id="camera"></div>
+    <!--
+      note: id should be the same as texture.id in xml.
+            one video tag per video 
+    -->
+    <video style="display:none" id="rightWallTex" autoplay muted="true" preload="auto" width="640" height="264"> 
+      <source src="videos/oceans.mp4" type="video/mp4">
+    </video>
     <script type="module" src="main.js"></script>
 </body>
 
