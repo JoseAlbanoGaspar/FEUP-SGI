@@ -4,6 +4,7 @@ import { MyFileReader } from './parser/MyFileReader.js';
 import { MySceneData } from './parser/MySceneData.js';
 import MyPrimitiveCreator from './MyPrimitiveCreator.js';
 import MyLightsCreator from './MyLightsCreator.js';
+import MyTextureCreator from './myTextureCreator.js';
 
 /**
  *  This class contains the contents of out application
@@ -22,6 +23,7 @@ class MyContents  {
         this.activeCameraName = null
         this.primitiveCreator = new MyPrimitiveCreator(app)
         this.lightsCreator = new MyLightsCreator(app)
+        this.textureCreator = new MyTextureCreator(app)
 		this.reader.open("scenes/demo/demo.xml");
     }
 
@@ -90,25 +92,11 @@ class MyContents  {
           }
     }
 
-    getFilter(param) {
-        switch (param) {
-            case 'NearestFilter':
-                return THREE.NearestFilter;
-            case 'LinearFilter':
-                return THREE.LinearFilter;
-            case 'NearestMipmapNearestFilter':
-                return THREE.NearestMipmapNearestFilter;
-            case 'LinearMipmapNearestFilter':
-                return THREE.LinearMipmapNearestFilter;
-            case 'NearestMipmapLinearFilter':
-                return THREE.NearestMipmapLinearFilter;
-            case 'LinearMipmapLinearFilter':
-                return THREE.LinearMipmapLinearFilter;
-            default:
-                return THREE.LinearFilter;
-        }
-    }
-
+    /**
+     * 
+     * @param {MySceneData} data 
+     * Add materials to scene
+     */
     addMaterials(data){
         //console.log("materials")
         //console.log(data.textures)
@@ -124,91 +112,32 @@ class MyContents  {
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
                 emissive: emissive, shininess: shininess})
 
-            if (material.textureref) { // dealing with textures
+            if (material.textureref) {
                 let textureMaterial
                 let texture = data.textures[material.textureref]
-                if (texture.isVideo) {  //create video texture
-                    const id = texture.id
-                    const video = document.getElementById(id)
-                    textureMaterial = new THREE.VideoTexture( video )                   
+                if (texture.isVideo) { 
+                    textureMaterial = this.textureCreator.buildVideoTexture(texture)
                 }
-                else { // create normal texture
-                    const texturepath = texture.filepath
-                    textureMaterial = new THREE.TextureLoader().load(texturepath)                  
+                else { 
+                    textureMaterial = this.textureCreator.buildTexture(texture)                  
                 }
                 
-                if(texture.mipmaps) { // mipmaps logic
-                    textureMaterial.generateMipmaps = false
-                    let mipmaps = [
-                        texture?.mipmap0, texture?.mipmap1, texture?.mipmap2, texture?.mipmap3,
-                        texture?.mipmap4, texture?.mipmap5, texture?.mipmap6, texture?.mipmap7,
-                    ]
-
-                    console.log(mipmaps)
-                    for (let level = 0; level < 8; level++ ){
-                        if(mipmaps[level]) { // add mipmaps
-                            this.loadMipmap(textureMaterial, level, mipmaps[level])  
-                        }
-                        else break;
-                    }
+                if(texture.mipmaps) { 
+                    this.textureCreator.buildMipMaps(texture, textureMaterial)             
                 }
-                else { // add default mipmaps if not especified
-                    textureMaterial.minFilter = this.getFilter(data.textures[material.textureref].minfilter)
-                    textureMaterial.magFilter = this.getFilter(data.textures[material.textureref].magfilter)
-                    textureMaterial.anisotropy = data.textures[material.textureref].anisotropy
+                else { 
+                    this.textureCreator.buildDefaultMipMaps(texture, textureMaterial)
                 }
+                textureMaterial.anisotropy = texture.anisotropy
                 materialObject.map = textureMaterial
-
             }
 
             if(material.bumpref) {
-                const bumpTexture = data.textures[material.bumpref].filepath
-                const bumpTextMat = new THREE.TextureLoader().load(bumpTexture)
-                materialObject.bumpMap = bumpTextMat
-                materialObject.bumpScale = material.bumpscale
+                this.textureCreator.buildBumpTexture(data.textures[material.textureref], materialObject, material)
             }       
             this.materials.set(name, materialObject)
         }
     }
-
-    /**
-     * load an image and create a mipmap to be added to a texture at the defined level.
-     * In between, add the image some text and control squares. These items become part of the picture
-     * 
-     * @param {*} parentTexture the texture to which the mipmap is added
-     * @param {*} level the level of the mipmap
-     * @param {*} path the path for the mipmap image
-    // * @param {*} size if size not null inscribe the value in the mipmap. null by default
-    // * @param {*} color a color to be used for demo
-     */
-    loadMipmap(parentTexture, level, path)
-    {
-        // load texture. On loaded call the function to create the mipmap for the specified level 
-        new THREE.TextureLoader().load(path, 
-            function(mipmapTexture)  // onLoad callback
-            {
-                const canvas = document.createElement('canvas')
-                const ctx = canvas.getContext('2d')
-                ctx.scale(1, 1);
-                
-                // const fontSize = 48
-                const img = mipmapTexture.image         
-                canvas.width = img.width;
-                canvas.height = img.height
-
-                // first draw the image
-                ctx.drawImage(img, 0, 0 )
-                             
-                // set the mipmap image in the parent texture in the appropriate level
-                parentTexture.mipmaps[level] = canvas
-            },
-            undefined, // onProgress callback currently not supported
-            function(err) {
-                console.error('Unable to load the image ' + path + ' as mipmap level ' + level + ".", err)
-            }
-        )
-    }
-
 
     /**
      * 

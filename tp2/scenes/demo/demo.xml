@@ -31,9 +31,9 @@
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
         <texture id="leftWallTex" filepath="scenes/demo/textures/scratchedWall.jpg" /> 
-        <!-- <texture id="rightWallTex" filepath="videos/oceans.mp4" isVideo="true" /> -->
+        <texture id="rightWallTex" filepath="videos/oceans.mp4" isVideo="true" />
 		<!--<texture id="rightWallTex" filepath="scenes/demo/textures/bloodyWall.jpg" /> -->
-        <texture id="rightWallTex" filepath="scenes/demo/textures/bloodyWall.jpg" />
+        <!--<texture id="rightWallTex" filepath="scenes/demo/textures/bloodyWall.jpg" /> -->
 		<texture id="floorTex" filepath="scenes/demo/textures/test1.jpg" />
 		<texture id="tableTex" filepath="scenes/demo/textures/table.png" />
 		<texture id="crimeWeaponTex" filepath="scenes/demo/textures/bloodyPrints.jpg" />
