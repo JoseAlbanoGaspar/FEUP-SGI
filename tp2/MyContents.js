@@ -27,6 +27,7 @@ class MyContents  {
 		
         // interface related
         this.lights = new Map()
+        this.ambientLight = null
         
         
         this.reader.open("scenes/demo/demo.xml");
@@ -50,6 +51,7 @@ class MyContents  {
         if (ambientData.isColor) {
             const ambientLight = new THREE.AmbientLight(ambientLightColor);
             this.app.scene.add(ambientLight);
+            this.ambientLight = ambientLight
         }  
           
         // dealing with background

@@ -20,6 +20,7 @@ class MyGuiInterface  {
         this.cameraFolder = null
         this.cameraController = null
         this.lightFolder = null
+        this.globalsFolder = null
     }
 
     /**
@@ -95,6 +96,21 @@ class MyGuiInterface  {
 
             subfolder.close();       
         }
+        this.globalsFolder = this.datgui.addFolder('Globals')
+        let amibentFolder = this.globalsFolder.addFolder('Ambient Light')
+        amibentFolder.addColor({ color: this.app.contents.ambientLight.color.getHex() }, 'color').onChange((color) => {
+            this.app.contents.ambientLight.color.set(color);
+        }).name('Color');
+        amibentFolder.close()
+
+        let fogFolder = this.globalsFolder.addFolder('Fog')
+        fogFolder.add(this.app.scene.fog, 'near', 0.1, 10).name('Near');
+        fogFolder.add(this.app.scene.fog, 'far', 10, 150).name('Far');
+        fogFolder.addColor({ color: this.app.scene.fog.color.getHex() }, 'color').onChange((color) => {
+            this.app.scene.fog.color.set(color);
+        }).name('Color');
+        fogFolder.close()
+
     }
 }
 
