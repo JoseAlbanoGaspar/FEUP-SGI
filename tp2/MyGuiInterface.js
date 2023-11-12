@@ -1,6 +1,8 @@
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { MyApp } from './MyApp.js';
 import { MyContents } from './MyContents.js';
+import * as THREE from 'three';
+
 
 /**
     This class customizes the gui interface for the app
@@ -17,6 +19,7 @@ class MyGuiInterface  {
         this.contents = null
         this.cameraFolder = null
         this.cameraController = null
+        this.lightFolder = null
     }
 
     /**
@@ -42,6 +45,31 @@ class MyGuiInterface  {
     }
 
     /**
+     * 
+     * @param {*} subfolder 
+     * @param {*} light 
+     * 
+     * This function adds light parameters of lights based on the type of light
+     */
+    addLightParameters(subfolder, light) {
+        switch (light.constructor) {
+            case THREE.SpotLight:
+                subfolder.add(light, 'intensity', 0, 100).name('Intensity');
+                subfolder.add(light, 'distance', 0, 200).name('Distance');
+                subfolder.add(light, 'angle', 0, Math.PI / 2).name('Angle');
+                subfolder.add(light, 'penumbra', 0, 1).name('Penumbra');
+                subfolder.add(light, 'decay', 1, 2).name('Decay');                 
+                break;
+            case THREE.DirectionalLight:
+                subfolder.add(light, 'intensity', 0, 2).name('Intensity');
+                break;
+            default: // THREE.PointLight
+                subfolder.add(light, 'intensity', 0, 100).name('Intensity');
+                break;
+        }
+    }
+
+    /**
      * Initialize the gui interface
      */
     init() {
@@ -49,6 +77,24 @@ class MyGuiInterface  {
         this.createCameraDropdown();
         // note that we are using a property from the app 
         this.cameraFolder.open()
+
+        this.lightFolder = this.datgui.addFolder('Lights')
+
+        for (let [key, light] of this.app.contents.lights) {
+            let subfolder = this.lightFolder.addFolder(key + ' - ' + light.type)
+            
+            subfolder.add({ visible: light.visible }, 'visible').name('Enable/Disable').onChange(function (value) {
+                light.visible = value
+            });
+            subfolder.addColor({ color: light.color.getHex() }, 'color').onChange((color) => {
+                light.color.set(color);
+            }).name('Color');
+
+            this.addLightParameters(subfolder, light)
+            
+
+            subfolder.close();       
+        }
     }
 }
 

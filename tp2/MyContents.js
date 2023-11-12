@@ -24,7 +24,14 @@ class MyContents  {
         this.primitiveCreator = new MyPrimitiveCreator(app)
         this.lightsCreator = new MyLightsCreator(app)
         this.textureCreator = new MyTextureCreator(app)
-		this.reader.open("scenes/demo/demo.xml");
+		
+        // interface related
+        this.lights = new Map()
+        
+        
+        this.reader.open("scenes/demo/demo.xml");
+
+        
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -218,13 +225,19 @@ class MyContents  {
      */
     dealWithLights(node) {
         if (node.type === "pointlight") {
-            return this.lightsCreator.createPointLight(node)
+            const light = this.lightsCreator.createPointLight(node)
+            this.lights.set(node.id, light)
+            return light
         }
         else if (node.type === "spotlight") {
-            return this.lightsCreator.createSpotLight(node)
+            const light = this.lightsCreator.createSpotLight(node)
+            this.lights.set(node.id, light)
+            return light 
         }
         else if (node.type === "directionallight") {
-            return this.lightsCreator.createDirectionalLight(node)
+            const light = this.lightsCreator.createDirectionalLight(node)
+            this.lights.set(node.id, light)
+            return light
         }
     }
 
