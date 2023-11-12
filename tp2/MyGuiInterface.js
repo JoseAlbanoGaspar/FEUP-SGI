@@ -111,6 +111,18 @@ class MyGuiInterface  {
         }).name('Color');
         fogFolder.close()
 
+        // Create a folder for wireframe controls
+        const wireframeFolder = this.datgui.addFolder('Wireframe');
+
+        // Add a control to toggle wireframe mode for all objects in the group
+        wireframeFolder.add({ enableWireframe: false }, 'enableWireframe').onChange((value) => {
+            this.app.contents.sceneGroup.traverse(function (child) {
+                if (child.isMesh && child.material && child.material instanceof THREE.MeshPhongMaterial) {
+                    child.material.wireframe = value;
+                }
+            });
+        }).name('Enable Wireframe');
+
     }
 }
 

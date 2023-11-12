@@ -24,6 +24,7 @@ class MyContents  {
         this.primitiveCreator = new MyPrimitiveCreator(app)
         this.lightsCreator = new MyLightsCreator(app)
         this.textureCreator = new MyTextureCreator(app)
+        this.sceneGroup = null
 		
         // interface related
         this.lights = new Map()
@@ -157,8 +158,8 @@ class MyContents  {
     addNodes(data) {
         let node = data.nodes[data.rootId]
         let defaultMaterial = (node.materialIds.length !== 0) ? node.materialIds[0] : null
-        let sceneGroup = this.visit(node, this.materials.get(defaultMaterial))
-        this.app.scene.add(sceneGroup)
+        this.sceneGroup = this.visit(node, this.materials.get(defaultMaterial))
+        this.app.scene.add(this.sceneGroup)
     }
 
     /**
