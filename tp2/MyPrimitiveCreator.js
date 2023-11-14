@@ -180,8 +180,8 @@ class MyPrimitiveCreator {
         const depth = node.size[2]
         const geometry = new THREE.PlaneGeometry( width, height )
 
-        const materialObject = new THREE.MeshPhongMaterial({color: 0xffffff, 
-            emissive: node.emissive})
+        const materialObject = new THREE.MeshBasicMaterial({
+            emissive: node.emissive })
 
         if (node.back) {
             const texture = node.back
@@ -195,7 +195,7 @@ class MyPrimitiveCreator {
         //front plane
         const geometry1 = new THREE.PlaneGeometry( width, height )
 
-        const materialObject1 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+        const materialObject1 = new THREE.MeshBasicMaterial({ 
             emissive: node.emissive})
 
         if (node.front) {
@@ -210,7 +210,7 @@ class MyPrimitiveCreator {
         //left plane
         const geometry2 = new THREE.PlaneGeometry( depth, height )
 
-        const materialObject2 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+        const materialObject2 = new THREE.MeshBasicMaterial({ 
             emissive: node.emissive})
 
         if (node.left) {
@@ -225,7 +225,7 @@ class MyPrimitiveCreator {
         //right plane
         const geometry3 = new THREE.PlaneGeometry( depth, height )
 
-        const materialObject3 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+        const materialObject3 = new THREE.MeshBasicMaterial({
             emissive: node.emissive})
 
         if (node.right) {
@@ -240,11 +240,11 @@ class MyPrimitiveCreator {
         //top plane
         const geometry4 = new THREE.PlaneGeometry( width, depth )
 
-        const materialObject4 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+        const materialObject4 = new THREE.MeshBasicMaterial({ 
             emissive: node.emissive})
 
-        if (node.top) {
-            const texture = node.right
+        if (node.up) {
+            const texture = node.up
             const textureMaterial = new THREE.TextureLoader().load(texture)
             materialObject4.map = textureMaterial
         }
@@ -255,15 +255,15 @@ class MyPrimitiveCreator {
         //bottom plane
         const geometry5 = new THREE.PlaneGeometry( width, depth )
 
-        const materialObjec5 = new THREE.MeshPhongMaterial({color: 0xffffff, 
+        const materialObject5 = new THREE.MeshBasicMaterial({color: 0xffffff, 
             emissive: node.emissive})
 
-        if (node.bottom) {
-            const texture = node.bottom
+        if (node.down) {
+            const texture = node.down
             const textureMaterial = new THREE.TextureLoader().load(texture)
             materialObject5.map = textureMaterial
         }
-        const bottom_plane = new THREE.Mesh(geometry5, materialObject4)
+        const bottom_plane = new THREE.Mesh(geometry5, materialObject5)
         bottom_plane.rotation.x = 3*Math.PI/2
         bottom_plane.position.set(0, -node.size[1]/2, 0)
 
@@ -277,7 +277,6 @@ class MyPrimitiveCreator {
         
         return group
     }
-
 
 }
   
