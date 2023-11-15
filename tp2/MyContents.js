@@ -188,7 +188,21 @@ class MyContents  {
                 //console.log(node.children[child])
                 group.add(this.visit(node.children[child], activeMaterial))
             }
-        } 
+        }
+        
+        else if (node.type === "lod"){
+            const lod = new THREE.LOD()
+            for (let child in node.children){
+                console.log("child: ", child)
+                //type === lodnoderef
+                const groupLod = new THREE.Group()
+                
+                console.log("nodes: ", node.children[child].node)
+                groupLod.add(this.visit(node.children[child].node))
+                lod.addLevel(groupLod, child.mindist)
+            }
+            console.log(lod)
+        }
 
         return group
     }
@@ -279,7 +293,6 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
-    
     }
 
     /**
