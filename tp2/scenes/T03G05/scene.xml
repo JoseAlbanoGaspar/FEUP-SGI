@@ -7,6 +7,17 @@
 
     <fog color="1.0 1.0 1.0 1.0" near="0.0" far="100.0" />
 
+    <skybox size="100 100 100" 
+    center="0 0 0" 
+    emissive="1.0 1.0 1.0 1.0"
+    intensity="1.0"
+    up="scenes/demo/textures/pine.png"
+    down="scenes/demo/textures/pine.png"
+    left="scenes/demo/textures/pine.png"
+    right="scenes/demo/textures/pine.png"
+    front="scenes/demo/textures/pine.png"
+    back="scenes/demo/textures/pine.png"/>
+
     <cameras initial="cam1" > 
         <perspective id="cam1" 
             angle="30" 
@@ -28,13 +39,15 @@
 
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
-        <texture id="leftWallTex" filepath="scenes/demo/textures/wallPaper.jpg" />
-		<texture id="rightWallTex" filepath="scenes/demo/textures/wallPaper.jpg" />
-		<texture id="floorTex" filepath="scenes/demo/textures/floor.jpg" />
-		<texture id="tableTex" filepath="scenes/demo/textures/table.png" />
-        <texture id="stuffedTex" filepath="scenes/demo/textures/stuffed.jpg" />
-        <texture id="pinguinTex" filepath="scenes/demo/textures/pinguin.jpg" />
-        <texture id="clockTex" filepath="scenes/demo/textures/clock.png" />
+        <texture id="leftWallTex" filepath="scenes/T03G05/textures/wallPaper.jpg" />
+		<texture id="rightWallTex" filepath="scenes/T03G05/textures/wallPaper.jpg" />
+		<texture id="floorTex" filepath="scenes/T03G05/textures/floor.jpg" />
+		<texture id="tableTex" filepath="scenes/T03G05/textures/table.png" />
+        <texture id="stuffedTex" filepath="scenes/T03G05/textures/stuffed.jpg" />
+        <texture id="pinguinTex" filepath="scenes/T03G05/textures/pinguin.jpg" />
+        <texture id="clockTex" filepath="scenes/T03G05/textures/clock.png" />
+        <texture id="bumpWall" filepath="scenes/T03G05/textures/bumpWall.jpg"/>
+        <texture id="chairTex" filepath="scenes/T03G05/textures/chair.jpg"/>
     </textures> 
 
     <materials> 
@@ -56,7 +69,10 @@
             textureref="leftWallTex" 
             texlength_s="15" 
             texlength_t="8" 
-            twosided = "true" />
+            twosided = "true"
+            bumpref = "bumpWall"
+            bumpscale = "1"
+            specularref = "bumpWall" />
 		
 		<material id="rightWallApp" 
             emissive="0.0 0.0 0.0 1" 
@@ -119,7 +135,17 @@
             shininess="10" 
             textureref="clockTex" 
             texlength_s="1" 
-            texlength_t="1" />                       
+            texlength_t="1" />   
+
+        <material id="chairApp"
+            color="1 1 1 1.0" 
+            emissive="0.0 0.0 0.0 0.0" 
+			specular="0 0 0 0" 
+            shininess="10"
+            textureref="chairTex"
+            texlength_s="1" 
+            texlength_t="1"
+        />                    
 			
     </materials> 
 
@@ -135,6 +161,7 @@
                 <noderef id="rabbit" />
                 <noderef id="lamp" />
                 <noderef id="clock" />
+                <noderef id="chair" />
 				 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 0.8 1" 
@@ -637,6 +664,120 @@
                     <rectangle xy1="0 0" xy2="15 8" />
                 </primitive>
             </children> 
+        </node>
+
+        <node id="cylinderBase">
+            <children>             
+                <primitive>
+                    <cylinder base="1" top="1" height="3" slices="32" stacks="32" />
+                </primitive>
+            </children> 
+        </node>
+
+        <node id="chairBack1">
+            <transforms>
+                <scale value3="0.06 0.7 0.06"/>
+                <rotate value3="5 0 0"/>
+                <translate value3="0.7 0 0.7"/>
+            </transforms> 
+
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+
+        <node id="chairBack2">
+            <transforms>
+                <scale value3="0.06 0.7 0.06"/>
+                <rotate value3="5 0 0"/>
+                <translate value3="-0.7 0 0.7"/>
+            </transforms> 
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+
+        <node id="chairBack3">
+            <transforms>
+                <scale value3="0.06 0.5 0.06"/>
+                <rotate value3="0 0 90"/>
+                <translate value3="0 0.4 0.74"/>
+            </transforms> 
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+
+        <node id="chairBack4">
+            <transforms>
+                <scale value3="0.06 0.5 0.06"/>
+                <rotate value3="0 0 90"/>
+                <translate value3="0 0.9 0.78"/>
+            </transforms> 
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+
+        <node id="chairBack5">
+            <transforms>
+                <scale value3="0.06 0.5 0.06"/>
+                <rotate value3="0 0 90"/>
+                <translate value3="0 -0.1 0.7"/>
+            </transforms> 
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+
+        <node id="chairBack">
+            <transforms>
+            <translate value3="0 2.1 0"/>
+            </transforms>
+            <children>
+                <noderef id="chairBack1"/>
+                <noderef id="chairBack2"/>
+                <noderef id="chairBack3"/>
+                <noderef id="chairBack4"/>
+                <noderef id="chairBack5"/>
+            </children>
+        </node>
+
+        <node id="chairLegs">
+            <transforms>
+				<scale value3="1.5 2.2 1.5"/>
+            </transforms> 
+
+            <children>
+                <noderef id="leg1"/>
+                <noderef id="leg2"/>
+                <noderef id="leg3"/>
+                <noderef id="leg4"/>
+            </children>
+        </node>
+        
+        <node id="chairSit">
+            <transforms>
+                <translate value3="0 1 0" />
+                <scale value3="1.5 0.2 1.5"/>
+            </transforms> 
+            
+            <children>
+                <noderef id="unitCube"/>
+            </children>
+        </node>
+
+        <node id="chair">
+            <transforms>
+                <scale value3="1 0.7 1"/>
+                <translate value3="10 0.7 10"/>
+            </transforms>
+            <materialref id="chairApp"/>
+            <children>
+                <noderef id="chairBack"/>
+                <noderef id="chairLegs"/>
+                <noderef id="chairSit"/>
+            </children>
         </node>
 		
     </graph> 
