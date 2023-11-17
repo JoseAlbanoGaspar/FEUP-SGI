@@ -135,7 +135,9 @@ class MyContents  {
                 textureMaterial.anisotropy = texture.anisotropy
                 materialObject.map = textureMaterial
             }
-
+            if (material.twosided) {
+                materialObject.side = THREE.DoubleSide
+            }
             if(material.bumpref) {
                 this.textureCreator.buildBumpTexture(data.textures[material.textureref], materialObject, material)
             }       
@@ -271,7 +273,6 @@ class MyContents  {
                 object.scale.set(object.scale.x * transf.scale[0], object.scale.y * transf.scale[1], object.scale.z * transf.scale[2]);
         }
 
-        object.updateMatrix()
 
         return object;
     }
