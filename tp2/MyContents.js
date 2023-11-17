@@ -31,7 +31,7 @@ class MyContents  {
         this.ambientLight = null
         
         
-        this.reader.open("scenes/T03G05/scene.xml");
+        this.reader.open("scenes/demo/demo.xml");
 
         
     }

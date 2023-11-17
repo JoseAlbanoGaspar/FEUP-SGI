@@ -7,37 +7,35 @@ class MyLightsCreator {
     }
 
     createPointLight(node) {
+        console.log(node)
         const pointLight = new THREE.PointLight(node.color, node.intensity, node.distance, node.decay)
         pointLight.position.set(node.position[0], node.position[1], node.position[2])
         
         // shadows
         pointLight.castShadow = node.castshadow
-        pointLight.receiveShadow = node.receiveShadow
-        //this.app.scene.add(pointLight)
+        pointLight.receiveShadow = node.castshadow
+        pointLight.shadow.mapSize.width = node.shadowmapsize ?? 512
+        pointLight.shadow.mapSize.height = node.shadowmapsize ?? 512
 
-        const sphereSize = 1;
-        const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-        //this.app.scene.add( pointLightHelper );
         return pointLight
     }
 
     createSpotLight(node) {
         const spotLight = new THREE.SpotLight(node.color, node.intensity, node.distance, THREE.MathUtils.degToRad(node.angle), node.penumbra, node.decay)
         spotLight.position.set(node.position[0], node.position[1], node.position[2])
-        
+        console.log(node)
         // shadows
-        spotLight.castShadow = node.castShadow
-        spotLight.receiveShadow = node.receiveShadow
+        spotLight.castShadow = node.castshadow
+        spotLight.receiveShadow = node.castshadow
+        spotLight.shadow.mapSize.width = node.shadowmapsize ?? 512
+        spotLight.shadow.mapSize.height = node.shadowmapsize ?? 512
+
 
         let target = new THREE.Object3D()       
         target.position.set(node.target[0], node.target[1], node.target[2])
 
         spotLight.target = target
-        //this.app.scene.add(spotLight)
-
-        const sphereSize = 1;
-        const spotLightHelper = new THREE.SpotLightHelper( spotLight, sphereSize );
-        //this.app.scene.add( spotLightHelper );
+        console.log(spotLight)
 
         return spotLight
     }
@@ -47,14 +45,12 @@ class MyLightsCreator {
         directionalLight.position.set(node.position[0], node.position[1], node.position[2])
 
         // shadows
-        directionalLight.castShadow = node.castShadow
-        directionalLight.receiveShadow = node.receiveShadow
+        directionalLight.castShadow = node.castshadow
+        directionalLight.receiveShadow = node.castshadow
+        directionalLight.shadow.mapSize.width = node.shadowmapsize ?? 512
+        directionalLight.shadow.mapSize.height = node.shadowmapsize ?? 512
 
-        //this.app.scene.add(directionalLight)
 
-        const sphereSize = 1;
-        const directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, sphereSize );
-        //this.app.scene.add( directionalLightHelper );
         return directionalLight
     }
 

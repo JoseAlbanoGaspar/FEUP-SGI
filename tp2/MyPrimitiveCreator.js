@@ -65,6 +65,8 @@ class MyPrimitiveCreator {
         geometry.translate( (nodeInfo.xy2[0] + nodeInfo.xy1[0]) / 2, (nodeInfo.xy2[1] + nodeInfo.xy1[1]) / 2, 0  )
 
         const rectangle = new THREE.Mesh(geometry, activeMaterial)
+        rectangle.receiveShadow = true;
+        rectangle.castShadow = true;
         //this.app.scene.add(rectangle)
         return rectangle
     }
@@ -87,6 +89,8 @@ class MyPrimitiveCreator {
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
         const triangle = new THREE.Mesh(geometry, activeMaterial);
+        triangle.receiveShadow = true;
+        triangle.castShadow = true;
         //this.app.scene.add(triangle)
         return triangle
     }
@@ -105,6 +109,8 @@ class MyPrimitiveCreator {
         const depth = Math.abs(nodeInfo.xyz2[2] - nodeInfo.xyz1[2]);
         const geometry = new THREE.BoxGeometry(width, height, depth, nodeInfo.parts_x, nodeInfo.parts_y, nodeInfo.parts_z);
         const box = new THREE.Mesh(geometry, activeMaterial);
+        box.receiveShadow = true;
+        box.castShadow = true;
         //this.app.scene.add(box)
       return box
     }
@@ -129,6 +135,8 @@ class MyPrimitiveCreator {
                 nodeInfo.thetalength
         )
         const cylinder = new THREE.Mesh(geometry, activeMaterial)
+        cylinder.receiveShadow = true;
+        cylinder.castShadow = true;
         //this.app.scene.add(cylinder)
         return cylinder
 
@@ -153,6 +161,8 @@ class MyPrimitiveCreator {
             nodeInfo.thetalength
         )
         const sphere = new THREE.Mesh(geometry, activeMaterial)  
+        sphere.receiveShadow = true;
+        sphere.castShadow = true;
         return sphere
     }
 
@@ -167,6 +177,8 @@ class MyPrimitiveCreator {
         let nodeInfo = node.representations[0]
         let controlPoints = this.#transformControlPoints(nodeInfo.controlpoints, nodeInfo.degree_u, nodeInfo.degree_v)
         const mesh = this.#createNurbSurface(controlPoints, nodeInfo.degree_u, nodeInfo.degree_v, nodeInfo.parts_u, nodeInfo.parts_v, activeMaterial);
+        mesh.receiveShadow = true;
+        mesh.castShadow = true;
         //this.app.scene.add(mesh)
         return mesh
     }
