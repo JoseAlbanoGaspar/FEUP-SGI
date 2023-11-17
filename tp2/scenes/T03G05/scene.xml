@@ -11,12 +11,12 @@
     center="0 0 0" 
     emissive="1.0 1.0 1.0 1.0"
     intensity="1.0"
-    up="scenes/demo/textures/pine.png"
-    down="scenes/demo/textures/pine.png"
-    left="scenes/demo/textures/pine.png"
-    right="scenes/demo/textures/pine.png"
-    front="scenes/demo/textures/pine.png"
-    back="scenes/demo/textures/pine.png"/>
+    up="scenes/T03G05/textures/stars.jpg"
+    down="scenes/T03G05/textures/stars.jpg"
+    left="scenes/T03G05/textures/space.jpeg"
+    right="scenes/T03G05/textures/space2.jpg"
+    front="scenes/T03G05/textures/space2.jpg"
+    back="scenes/T03G05/textures/space2.jpg"/>
 
     <cameras initial="cam1" > 
         <perspective id="cam1" 
