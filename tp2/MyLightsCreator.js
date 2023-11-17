@@ -6,6 +6,12 @@ class MyLightsCreator {
         this.app = app;    
     }
 
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     * 
+     * This function creates a Point Light
+     */
     createPointLight(node) {
         console.log(node)
         const pointLight = new THREE.PointLight(node.color, node.intensity, node.distance, node.decay)
@@ -20,6 +26,12 @@ class MyLightsCreator {
         return pointLight
     }
 
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     * 
+     * This function creates a Spot Light
+     */
     createSpotLight(node) {
         const spotLight = new THREE.SpotLight(node.color, node.intensity, node.distance, THREE.MathUtils.degToRad(node.angle), node.penumbra, node.decay)
         spotLight.position.set(node.position[0], node.position[1], node.position[2])
@@ -40,6 +52,12 @@ class MyLightsCreator {
         return spotLight
     }
 
+    /**
+     * 
+     * @param {MySceneData.node} node 
+     * 
+     * This function creates a Directional Light 
+     */
     createDirectionalLight(node) {
         const directionalLight = new THREE.DirectionalLight(node.color, node.intensity)
         directionalLight.position.set(node.position[0], node.position[1], node.position[2])

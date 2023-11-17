@@ -129,7 +129,6 @@ class MyTextureCreator {
      * Adds bump texture to a materialObject
      */
     buildBumpTexture(texture, materialObject, material){
-        console.log("texture", texture)
         const bumpTexture = texture.filepath
         const bumpTextMat = new THREE.TextureLoader().load(bumpTexture)
         materialObject.bumpMap = bumpTextMat
