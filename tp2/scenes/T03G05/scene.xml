@@ -44,10 +44,34 @@
 		<texture id="floorTex" filepath="scenes/T03G05/textures/floor.jpg" />
 		<texture id="tableTex" filepath="scenes/T03G05/textures/table.png" />
         <texture id="stuffedTex" filepath="scenes/T03G05/textures/stuffed.jpg" />
-        <texture id="pinguinTex" filepath="scenes/T03G05/textures/pinguin.jpg" />
+        <texture id="pinguinTex" filepath="scenes/T03G05/textures/onepiece.mp4" isVideo="true" />
         <texture id="clockTex" filepath="scenes/T03G05/textures/clock.png" />
         <texture id="bumpWall" filepath="scenes/T03G05/textures/bumpWall.jpg"/>
         <texture id="chairTex" filepath="scenes/T03G05/textures/chair.jpg"/>
+        <texture id="sofaTex" filepath="scenes/T03G05/textures/sofa.jpg"/>
+        <texture id="tableLiteTex" filepath="scenes/T03G05/textures/tablelite.jpg"/>
+        <texture id="boardTex" filepath="scenes/T03G05/textures/board.jpg"/>
+        <texture id="shelfTampTex" filepath="scenes/T03G05/textures/shelf.jpg"/>
+        <texture id="shelfSupportTex" filepath="scenes/T03G05/textures/support.jpg"/>
+        <texture id="jarTex" filepath="scenes/T03G05/textures/jar.jpg" />
+        <texture id="jar2Tex" filepath="scenes/T03G05/textures/jar2.png" />
+        <texture id="marioBlockTex" filepath="scenes/T03G05/textures/dirtMarioBlock.png"/>
+        <texture id="marioItemTex" filepath="scenes/T03G05/textures/marioBlock.jpg"/>
+        <texture id="marioPipeTex" filepath="scenes/T03G05/textures/marioPipe.jpg"/>
+        <texture id="paintTex" filepath="scenes/T03G05/textures/fpessoa.jpg" mipmaps="true"
+            mipmap0="scenes/T03G05/textures/fpessoa.512.jpg"
+            mipmap1="scenes/T03G05/textures/fpessoa.256.jpg"
+            mipmap2="scenes/T03G05/textures/fpessoa.128.jpg"
+            mipmap3="scenes/T03G05/textures/fpessoa.64.jpg"
+            mipmap4="scenes/T03G05/textures/fpessoa.32.jpg"
+            mipmap5="scenes/T03G05/textures/fpessoa.16.jpg"
+            mipmap6="scenes/T03G05/textures/fpessoa.8.jpg"
+        />
+        <texture id="keyboardTex" filepath="scenes/T03G05/textures/keyboard.jpg"/>
+        <texture id="newspaperTex" filepath="scenes/T03G05/textures/newspaper.jpg"/>
+        <texture id="footballTex" filepath="scenes/T03G05/textures/football.jpg"/>
+        <texture id="basketballTex" filepath="scenes/T03G05/textures/basketball.jpg"/>
+        <texture id="tenisballTex" filepath="scenes/T03G05/textures/tenisball.jpg"/>
     </textures> 
 
     <materials> 
@@ -67,9 +91,8 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="leftWallTex" 
-            texlength_s="15" 
-            texlength_t="8" 
-            twosided = "true"
+            texlength_s="1" 
+            texlength_t="1" 
             bumpref = "bumpWall"
             bumpscale = "1"
             specularref = "bumpWall" />
@@ -80,9 +103,9 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="rightWallTex" 
-            texlength_s="15" 
-            texlength_t="8"
-            twosided = "true" />
+            texlength_s="1" 
+            texlength_t="1"
+         />
 		
 		<material id="floorApp" 
             emissive="0.0 0.0 0.0 1" 
@@ -90,8 +113,8 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="floorTex" 
-            texlength_s="15" 
-            texlength_t="15" 
+            texlength_s="1" 
+            texlength_t="1" 
             twosided = "true" />
 
         <material id="tvApp" 
@@ -145,9 +168,196 @@
             textureref="chairTex"
             texlength_s="1" 
             texlength_t="1"
-        />                    
-			
-    </materials> 
+        />    
+
+        <material id="sofaApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="sofaTex" 
+            texlength_s="4" 
+            texlength_t="4" 
+            bumpref = "sofaTex"
+            bumpscale = "1"
+            specularref = "sofaTex"
+        />
+
+        <material id="tableLiteApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="tableLiteTex" 
+            texlength_s="4" 
+            texlength_t="4" 
+            twosided = "true"  
+        />
+
+        <material id="boardApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="boardTex" 
+            texlength_s="4" 
+            texlength_t="4" 
+            twosided = "true"  
+        />
+
+        <material id="boardPieceApp1"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+        />
+
+        <material id="boardPieceApp2"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.1 0.1 0.1 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+        />
+
+        <material id="shelfTampApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="shelfTampTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="shelfSupportApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="shelfSupportTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="jarApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="jarTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="jar2App"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="jar2Tex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="marioBlockApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="marioBlockTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="marioItemApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="marioItemTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="marioPipeApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="marioPipeTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="paintApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="paintTex" 
+            texlength_s="1" 
+            texlength_t="1"
+        />     
+
+        <material id="keyboardApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="keyboardTex" 
+            texlength_s="1" 
+            texlength_t="1"
+        />      
+		
+        <material id="newspaperApp"
+            emissive="0.0 0.0 0.0 1" 
+			color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="newspaperTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"  
+        />
+
+        <material id="footballApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="footballTex" 
+            texlength_s="1" 
+            texlength_t="1"
+        />
+
+        <material id="basketballApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="basketballTex" 
+            texlength_s="1" 
+            texlength_t="1"
+        />
+
+        <material id="tenisballApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="tenisballTex" 
+            texlength_s="1" 
+            texlength_t="1"
+        />  
+        
+        </materials> 
 
     <graph rootid="scene"> 
 		
@@ -162,6 +372,17 @@
                 <noderef id="lamp" />
                 <noderef id="clock" />
                 <noderef id="chair" />
+                <noderef id="sofa"/>
+                <noderef id="sofa2"/>
+                <noderef id="tableLite"/>
+                <noderef id="boardset"/>
+                <noderef id="shelves"/>
+                <noderef id="jars"/>
+                <noderef id="superMario"/>
+                <noderef id="paint"/>
+                <noderef id="keyboard"/>
+                <noderef id="newspaper"/>
+                <noderef id="balls" />
 				 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 0.8 1" 
@@ -779,7 +1000,676 @@
                 <noderef id="chairSit"/>
             </children>
         </node>
-		
+
+        <!-- SOFA related -->
+        <node id="box">
+            <children>
+            <primitive>
+                <box xyz1="0 0 0" xyz2="1 1 1" parts_x="8" parts_y="8" parts_z="8"  />
+            </primitive>
+            </children>
+        </node>
+        <node id="halfCylinder">
+            <children>
+                <primitive>
+                    <cylinder base="0.5" top="0.5" height="1" slices="32" stacks="32" thetastart="3.14" thetalength="3.14"/>
+                </primitive>
+            </children>
+        </node>
+        <node id="sofaBackAux">
+            <transforms>
+                <translate value3="0 0.5 0"/>
+                <rotate value3="0 0 270"/>
+            </transforms>
+            <children>
+                <noderef id="halfCylinder"/>
+            </children>
+        </node>
+        <node id="sofaBack">
+            <transforms>
+                <scale value3="0.5 3 7"/>
+            </transforms>
+            <children>
+                <noderef id="unitCube"/>
+                <noderef id="sofaBackAux"/>
+            </children>
+        </node>
+        
+        <node id="sofaSide">
+            <transforms>
+                <translate value3="0.75 -0.6 3"/>
+                <scale value3="1.9 1.9 1.16"/>
+            </transforms>
+            <children>
+                <noderef id="unitCube"/>
+                <noderef id="sofaBackAux"/>
+            </children>
+        </node>
+
+        <node id="sofaSide2">
+            <transforms>
+                <translate value3="0.75 -0.6 -3"/>
+                <scale value3="2 2 1.6"/>
+            </transforms>
+            <children>
+                <noderef id="unitCube"/>
+                <noderef id="sofaBackAux"/>
+            </children>
+        </node>
+
+        <node id="sofaBottom">
+            <transforms>
+                <translate value3="0.8 -0.5 0"/>
+                <scale value3="1.6 2 6.4"/>
+            </transforms>
+            <children>
+                <noderef id="box"/>
+            </children>
+        </node>
+        <node id="sofa">
+            <materialref id="sofaApp"/>
+            <transforms>
+                <scale value3="1.2 0.8 0.4"/>
+                <translate value3="0.5 1.3 6"/> 
+            </transforms>
+            <children>
+                <noderef id="sofaBack"/>
+                <noderef id="sofaSide"/>
+                <noderef id="sofaSide2"/> 
+                <noderef id="sofaBottom"/>
+
+            </children>
+        </node>
+
+        <node id="sofa2">
+            <materialref id="sofaApp"/>
+            <transforms>
+                <scale value3="1.2 0.8 0.4"/>
+                <rotate value3="0 270 0"/> 
+                <translate value3="5 1.3 0.5"/>
+            </transforms>
+            <children>
+                <noderef id="sofaBack"/>
+                <noderef id="sofaSide"/>
+                <noderef id="sofaSide2"/> 
+                <noderef id="sofaBottom"/>
+
+            </children>
+        </node>
+        <!-- END SOFA related -->
+        <!-- LITTLE TABLE related -->
+        <node id="tlbottom1">
+            <transforms>
+                <rotate value3="90 0 0"/>
+                <scale value3="1 0.2 1"/>
+            </transforms>
+            <children>
+                <noderef id="halfCylinder"/>
+            </children>
+        </node>
+        <node id="tlbottom2">
+            <transforms>
+                <scale value3="1 0.2 1"/>
+            </transforms>
+            <children>
+                <noderef id="halfCylinder"/>
+            </children>
+        </node>
+        <node id="tlbottom">
+            <transforms>
+                <scale value3="1 2 2"/>
+                <rotate value3="0 0 270"/>
+                <translate value3="4.5 0 4.7"/>
+            </transforms>
+            <children>
+                <noderef id="tlbottom1"/>
+                <noderef id="tlbottom2"/>
+            </children>
+        </node>
+        <node id="tlcenter">
+            <materialref id="chairApp"/>
+            <transforms>
+                <translate value3="4.5 1.1 4.7"/>
+                <scale value3="0.2 0.65 0.2"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="tltamp">
+            <transforms>
+                <translate value3="4.5 2.2 4.7"/>
+                <scale value3="1.2 0.1 1.2"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="tableLite">
+            <materialref id="tableLiteApp"/>
+            <children>
+                <noderef id="tlbottom"/>
+                <noderef id="tlcenter"/>
+                <noderef id="tltamp"/>
+            </children>
+        </node>
+        <!-- END LITTLE TABLE related-->
+        <!-- BOARD related -->
+        <node id="board">
+            <materialref id="boardApp"/>
+            <transforms>
+                <translate value3="4.5 2.32 4.7"/>
+                <scale value3="1.4 0.1 1.4"/>
+            </transforms>
+            <children>
+                <noderef id="box"/>
+            </children>
+        </node>
+        <node id="boardpiece">
+            <transforms>
+                <translate value3="3.91 2.39 4.63"/>
+                <scale value3="0.06 0.01 0.06"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="boardpiece1">
+            <transforms>
+                <translate value3="3.91 2.39 4.3"/>
+                <scale value3="0.06 0.01 0.06"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="boardpiece2">
+            <transforms>
+                <translate value3="3.91 2.39 4.95"/>
+                <scale value3="0.06 0.01 0.06"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="boardpiece3">
+            <transforms>
+                <translate value3="3.91 2.39 5.27"/>
+                <scale value3="0.06 0.01 0.06"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="pieceRow1">
+            <materialref id="boardPieceApp1"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="pieceRow2">
+            <transforms>
+                <translate value3="0.34 0 0"/>
+            </transforms>
+            <materialref id="boardPieceApp1"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="pieceRow3">
+            <transforms>
+                <translate value3="0.17 0 -0.17"/>
+            </transforms>
+            <materialref id="boardPieceApp1"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="pieceRow4">
+            <transforms>
+                <translate value3="1.18 0 -0.17"/>
+            </transforms>
+            <materialref id="boardPieceApp2"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="pieceRow5">
+            <transforms>
+                <translate value3="1 0 0"/>
+            </transforms>
+            <materialref id="boardPieceApp2"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="pieceRow6">
+            <transforms>
+                <translate value3="0.84 0 -0.17"/>
+            </transforms>
+            <materialref id="boardPieceApp2"/>
+            <children>
+                <noderef id="boardpiece"/>
+                <noderef id="boardpiece1"/>
+                <noderef id="boardpiece2"/>
+                <noderef id="boardpiece3"/>
+            </children>
+        </node>
+        <node id="boardset">
+            <children>
+                <noderef id="board"/>
+                <noderef id="pieceRow1"/>
+                <noderef id="pieceRow2"/>
+                <noderef id="pieceRow3"/>
+                <noderef id="pieceRow4"/>
+                <noderef id="pieceRow5"/>
+                <noderef id="pieceRow6"/>
+            </children>
+        </node>
+        <!-- END BOARD related -->
+        <!-- SHELF related -->
+        <node id="shelftamp">
+            <materialref id="shelfTampApp"/>
+            <transforms>
+                <scale value3="1.2 0.2 5"/>
+                <translate value3="0.5 5 11"/>
+            </transforms>
+            <children>
+            <noderef id="box"/>
+            </children>
+        </node>
+
+        <node id="supportSphere1">
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="supportSphere2">
+            <transforms>
+                <translate value3="2 0 0"/>
+            </transforms>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="supportSphere3">
+            <transforms>
+                <translate value3="4 0 0"/>
+            </transforms>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="supportSphere4">
+            <transforms>
+                <translate value3="6 0 0"/>                
+            </transforms>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="shelfsupport1">
+            
+            <transforms>
+                <scale  value3="0.15 0.1 0.1"/>
+                <rotate value3="0 0 320"/>
+                <translate value3="0.2 5.8 8.6"/>
+            </transforms>
+            <children>
+                <noderef id="supportSphere1"/>
+                <noderef id="supportSphere2"/>
+                <noderef id="supportSphere3"/>
+                <noderef id="supportSphere4"/>
+            </children>
+        </node>
+        <node id="shelfsupport2">
+            
+            <transforms>
+                <translate value3="0 0 4.8"/>
+            </transforms>
+            <children>
+                <noderef id="shelfsupport1"/>
+            </children>
+        </node>
+        <node id="shelf">
+            <materialref id="shelfSupportApp"/>
+            <children>
+                <noderef id="shelftamp"/>
+                <noderef id="shelfsupport1"/>
+                <noderef id="shelfsupport2"/>
+            </children>
+        </node>
+
+        <node id="shelf1">
+            <transforms>
+                <translate value3="0 -2 0"/>
+            </transforms>
+            <children>
+                <noderef id="shelf"/>
+            </children>
+        </node>
+
+        <node id="shelf2">
+            <transforms>
+                <translate value3="0 -4 0"/>
+            </transforms>
+            <children>
+                <noderef id="shelf"/>
+            </children>
+        </node>
+
+        <node id="shelves">
+            <materialref id="shelfSupportApp"/>
+            <children>
+                <noderef id="shelf"/>
+                <noderef id="shelf1"/>
+                <noderef id="shelf2"/>
+            </children>
+        </node>
+        <!-- END SHELP related -->
+        <!-- JAR related -->
+        <node id="jarHalf">
+            <children>
+                <primitive>
+                    <nurbs degree_u="2" degree_v="2" parts_u="20" parts_v="20" distance="0.0">
+                        <!-- U = 0 -->
+                        <controlpoint xx="-1.5" yy="-1.5" zz="0.0" />
+                        <controlpoint xx="-0.5" yy="0.0" zz="0.0" />
+                        <controlpoint xx="-1.0" yy="1.5" zz="0.0" />
+
+                        <!-- U = 1 -->
+                        <controlpoint xx="0.0" yy="-1.5" zz="2.0" />
+                        <controlpoint xx="0.0" yy="0.0" zz="1.0" />
+                        <controlpoint xx="0.0" yy="1.5" zz="2.0" />
+
+                        <!-- U = 2 -->
+                        <controlpoint xx="1.5" yy="-1.5" zz="0.0" />
+                        <controlpoint xx="0.5" yy="0.0" zz="0.0" />
+                        <controlpoint xx="1.0" yy="1.5" zz="0.0" />
+                    </nurbs>
+                </primitive>
+            </children>
+        </node>
+        <node id="jarHalf1">
+            <transforms>
+                <rotate value3="0 180 0"/>
+            </transforms>
+            <children>
+                <noderef id="jarHalf"/>
+            </children>
+        </node>
+        <node id="jar">
+            <transforms>
+                <scale value3="0.3 0.3 0.3"/>
+                <translate value3="0.5 5.5 10"/>
+            </transforms>
+            <children>
+                <noderef id="jarHalf"/>
+                <noderef id="jarHalf1"/>
+            </children>
+        </node>
+        <node id="jar1">
+            <materialref id="jarApp"/>
+            <children>
+                <noderef id="jar"/>
+            </children>
+        </node>
+        <node id="jar2">
+            <materialref id="jar2App"/>
+            <transforms>
+                <translate value3="0 0 2"/>
+            </transforms>
+            <children>
+                <noderef id="jar"/>
+            </children>
+        </node>
+        <node id="jars">
+            <children>
+                <noderef id="jar1"/>
+                <noderef id="jar2"/>
+            </children>
+        </node>
+        <!-- END JAR related -->
+        <!-- SUPER MARIO WORLD related -->
+        <node id="dirt1">
+            <materialref id="marioBlockApp"/>
+            <children>
+                <noderef id="box"/>
+            </children>
+        </node>
+        <node id="dirt2">
+            <transforms>
+                <translate value3="1 0 0"/>
+            </transforms>
+            <children>
+                <noderef id="dirt1"/>
+            </children>
+        </node>
+        <node id="dirt3">
+            <transforms>
+                <translate value3="2 0 0"/>
+            </transforms>
+            <children>
+                <noderef id="dirt1"/>
+            </children>
+        </node>
+        <node id="item">
+            <materialref id="marioItemApp"/>
+            <transforms>
+                <translate value3="1 2 0"/>
+            </transforms>
+            <children>
+                <noderef id="box"/>
+            </children>
+        </node>
+        <node id="upperPipe">
+            <transforms>
+                <translate value3="0 0.8 0"/>
+                <scale value3="0.6 0.2 0.6"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="bodyPipe">
+            <transforms>
+                <scale value3="0.4 0.5 0.4"/>
+            </transforms>
+            <children>
+                <noderef id="cylinderBase"/>
+            </children>
+        </node>
+        <node id="pipe">
+            <materialref id="marioPipeApp"/>
+            <transforms>
+                <translate value3="-2.5 0 0"/>
+            </transforms>
+            <children>
+                <noderef id="upperPipe"/>
+                <noderef id="bodyPipe"/>
+            </children>
+        </node>
+        <node id="superMario">
+            <transforms>
+                <translate value3="0.5 3.3 11" />
+                <rotate value3="0 90 0"/>
+                <scale value3="0.5 0.5 0.5"/>
+            </transforms>
+            <children>
+                <noderef id="dirt1"/>
+                <noderef id="dirt2"/>
+                <noderef id="dirt3"/>
+                <noderef id="item"/>
+                <noderef id="pipe"/>
+            </children>
+        </node>
+        <!-- END SUPER MARIO WORLD related -->
+        <!-- PAINTING -->
+        <node id="paint">
+            <materialref id="paintApp"/>
+            <transforms>
+                <translate value3="3 0 0.02"/>
+            </transforms>
+            <children>
+                <primitive>
+                    <rectangle xy1="6 3" xy2="10 7" />
+                </primitive>
+            </children>
+        </node>
+        <!-- END PAINTING -->
+        <!-- KEYBOARD -->
+        <node id="keyboard">
+            <materialref id="keyboardApp"/>
+            <transforms>
+                <rotate value3="275 0 0"/>
+                <scale value3="0.5 0.5 1"/>
+                <translate value3="9.5 2.32 9.1"/>
+            </transforms>
+            <children>
+                <primitive>
+                    <rectangle xy1="0 0" xy2="2 1" />
+                </primitive>
+            </children>
+        </node>
+        <!-- END KEYBOARD -->
+        <!-- NEWSPAPER -->
+        <node id="sheet">
+            <children>
+                <primitive>
+                    <nurbs degree_u="2" degree_v="1" parts_u="20" parts_v="20" distance="0.0">
+                        <!-- U = 0 -->
+                        <controlpoint xx="-1" yy="-1.5" zz="0.0" />
+                        <controlpoint xx="-1" yy="1.5" zz="0.0" />
+
+                        <!-- U = 1 -->
+                        <controlpoint xx="0" yy="-1.5" zz="-1.5" />
+                        <controlpoint xx="0" yy="1.5" zz="-1.5" />
+
+                        <!-- U = 2 -->
+                        <controlpoint xx="1" yy="-1.5" zz="0.0" />
+                        <controlpoint xx="1" yy="1.5" zz="0.0" />
+                    </nurbs>
+                </primitive>
+            </children>
+        </node>
+        <node id="sheet1">
+            <transforms>
+                <translate value3="0.03 0.06 0"/>
+            </transforms>
+            <children>
+                <noderef id="sheet"/>
+            </children>
+        </node>
+        <node id="sheet2">
+            <transforms>
+                <translate value3="0.06 0.12 0"/>
+            </transforms>
+            <children>
+                <noderef id="sheet"/>
+            </children>
+        </node>
+        <node id="sheet3">
+            <transforms>
+                <translate value3="0.09 0.18 0"/>
+            </transforms>
+            <children>
+                <noderef id="sheet"/>
+            </children>
+        </node>
+        <node id="sheet4">
+            <transforms>
+                <translate value3="0.12 0.24 0"/>
+            </transforms>
+            <children>
+                <noderef id="sheet"/>
+            </children>
+        </node>
+        <node id="leftPages">
+            <children>
+                <noderef id="sheet"/>
+                <noderef id="sheet1"/>
+                <noderef id="sheet2"/>
+                <noderef id="sheet3"/>
+                <noderef id="sheet4"/>
+            </children>
+        </node>
+        <node id="rightPages">
+            <transforms>
+                <translate value3="-10 4 0"/>
+                <rotate value3="0 0 340"/>
+            </transforms>
+            <children>
+                <noderef id="leftPages"/>
+            </children>
+        </node>
+        <node id="newspaper">
+            <materialref id="newspaperApp"/>
+            <transforms>
+                <translate value3="11.6 2.42 8.2"/>
+                <rotate value3= "270 0 20"/>
+                <scale value3="0.3 0.3 0.15"/>
+            </transforms>
+            <children>
+                <noderef id="leftPages"/>
+                <noderef id="rightPages"/>
+            </children>
+        </node>
+        <!-- END NEWSPAPER -->
+        <!-- BALLS -->
+        <node id="football">
+            <materialref id="footballApp"/>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="basketball">
+            <materialref id="basketballApp"/>
+            <transforms>
+                <scale value3="1.2 1.2 1.2"/>
+                <translate value3="2.6 0.2 0"/>
+            </transforms>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="tenisball">
+            <materialref id="tenisballApp"/>
+            <transforms>
+                <scale value3="0.5 0.5 0.5"/>
+                <translate value3="4.5 -0.5 0"/>
+            </transforms>
+            <children>
+                <noderef id="spheres"/>
+            </children>
+        </node>
+        <node id="balls">
+            <transforms>
+                <translate value3="0.7 1.7 12.2" />
+                <scale value3="0.6 0.6 0.6"/>
+                <rotate value3="0 90 0"/>
+            </transforms>
+            <children>
+                <noderef id="football"/>
+                <noderef id="basketball"/>
+                <noderef id="tenisball"/>
+            </children>
+        </node>
+        <!-- END BALLS -->
     </graph> 
 	
 </yaf> 

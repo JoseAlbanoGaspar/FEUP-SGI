@@ -102,7 +102,6 @@ class MyTextureCreator {
             texture?.mipmap4, texture?.mipmap5, texture?.mipmap6, texture?.mipmap7,
         ]
 
-        console.log(mipmaps)
         for (let level = 0; level < 8; level++ ){
             if(mipmaps[level]) { // add mipmaps
                 this.#loadMipmap(textureMaterial, level, mipmaps[level])  
