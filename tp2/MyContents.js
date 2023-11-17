@@ -4,7 +4,7 @@ import { MyFileReader } from './parser/MyFileReader.js';
 import { MySceneData } from './parser/MySceneData.js';
 import MyPrimitiveCreator from './MyPrimitiveCreator.js';
 import MyLightsCreator from './MyLightsCreator.js';
-import MyTextureCreator from './myTextureCreator.js';
+import MyTextureCreator from './MyTextureCreator.js';
 
 /**
  *  This class contains the contents of out application
@@ -30,10 +30,8 @@ class MyContents  {
         this.lights = new Map()
         this.ambientLight = null
         
-        
-        this.reader.open("scenes/T03G05/scene.xml");
+        this.reader.open("scenes/demo/demo.xml");
 
-        
     }
 
     convertRGBtoTHREEColor(rgbColor) {
@@ -61,8 +59,6 @@ class MyContents  {
         // dealing with fog
         if (data.fog)
             this.app.scene.fog = new THREE.Fog( this.convertRGBtoTHREEColor(data.fog.color), data.fog.near, data.fog.far );
-
-        console.log(data.skyboxes.default)
         
         if (data.skyboxes.default) {
             const skybox = this.primitiveCreator.drawSkybox(data.skyboxes.default)
@@ -108,11 +104,9 @@ class MyContents  {
      * Add materials to scene
      */
     addMaterials(data){
-        //console.log("materials")
-        //console.log(data.textures)
+
         for (const name in data.materials){
             const material = data.materials[name]
-            //console.log(material)
             const color = material.color
             //const shading = material.shading
             const emissive = material.emissive
@@ -187,7 +181,6 @@ class MyContents  {
             //deal with node
             this.applyTransformations(group, node.transformations)
             for (const child in node.children) {
-                //console.log(node.children[child])
                 group.add(this.visit(node.children[child], activeMaterial))
             }
         }
