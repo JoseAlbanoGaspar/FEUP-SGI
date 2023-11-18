@@ -30,7 +30,7 @@ class MyContents  {
         this.lights = new Map()
         this.ambientLight = null
         
-        this.reader.open("scenes/demo/demo.xml");
+        this.reader.open("scenes/T03G05/scene.xml");
 
     }
 

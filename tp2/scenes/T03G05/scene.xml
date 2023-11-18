@@ -402,12 +402,30 @@
                     position="11.25 7.3 3.75"  
                 /> 
 
-                <directionallight id="light5" enabled="true" 
+                <spotlight id="light4" enabled="true" 
                     color="1.0 1.0 1.0 1" 
-                    intensity="1.0"
+                    intensity="120.0"
+                    distance="1000"
+                    decay="2.0"
                     castshadow="true"
-                    position="2 2 4" 
+                    position="9 10 9" 
+                    target="11 0 9"
+                    penumbra="1.0"
+                    angle="20.0" 
                 /> 
+
+                 <spotlight id="light5" enabled="true" 
+                    color="1.0 1.0 1.0 1" 
+                    intensity="180.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    position="0.5 8 12" 
+                    target="9 0 0"
+                    penumbra="1.0"
+                    angle="40.0" 
+                /> 
+
             </children> 
         </node>
 
@@ -728,7 +746,7 @@
                 <directionallight id="light5" enabled="true" 
                     color="1.0 1.0 1.0 1" 
                     intensity="5.0"
-                    castshadow="true"
+                    castshadow="false"
                     position="2 2.3 -7" 
                 /> 
             </children> 
