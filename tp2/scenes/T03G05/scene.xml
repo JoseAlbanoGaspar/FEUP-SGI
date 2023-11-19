@@ -360,6 +360,11 @@
         </materials> 
 
     <graph rootid="scene"> 
+
+        <lod id="demo" near="0" far="1000" > 
+            <noderef id="unitCube" mindist="10" />
+            <noderef id="sphere2" mindist="20"/>
+        </lod>
 		
 		<node id="scene"> 
             <children> 
@@ -383,6 +388,8 @@
                 <noderef id="keyboard"/>
                 <noderef id="newspaper"/>
                 <noderef id="balls" />
+
+                <lodref id="demo" /> 
 				 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 0.8 1" 
@@ -427,6 +434,30 @@
                 /> 
 
             </children> 
+        </node>
+
+        <node id="sphere">
+            <transforms>
+                <translate value3="0 0 0.5" />
+            </transforms>
+            <materialref id="tenisballApp" />
+            <children>
+                <primitive>
+                    <sphere radius="1" slices="32" stacks="32" />
+                </primitive>
+            </children>
+        </node>
+
+         <node id="sphere2">
+            <transforms>
+                <translate value3="0 0 0.5" />
+            </transforms>
+            <materialref id="basketballApp" />
+            <children>
+                <primitive>
+                    <sphere radius="1" slices="32" stacks="32" />
+                </primitive>
+            </children>
         </node>
 
         <node id="rectangle1"> 

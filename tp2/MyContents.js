@@ -174,8 +174,8 @@ class MyContents  {
         else if (node.type === "pointlight" || node.type === "spotlight" || node.type === "directionallight") {
             group.add(this.dealWithLights(node))
         }
-
         else if (node.type === "node") {
+            console.log("nos: ", node)
             // update material if declared
             activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
             //deal with node
@@ -184,24 +184,23 @@ class MyContents  {
                 group.add(this.visit(node.children[child], activeMaterial))
             }
         }
-        
         else if (node.type === "lod"){
             const lod = new THREE.LOD()
             for (let child in node.children){
-                console.log("child: ", child)
-                //type === lodnoderef
-                const groupLod = new THREE.Group()
                 
-                console.log("nodes: ", node.children[child].node)
-                groupLod.add(this.visit(node.children[child].node))
-                lod.addLevel(groupLod, child.mindist)
+                //console.log("nodes lod children: ", node.children[child].node)
+                //console.log("distance: ", node.children[child].mindist)
+                
+                lod.addLevel(this.visit(node.children[child].node, activeMaterial), node.children[child].mindist)
             }
-            console.log(lod)
+            //console.log(lod)
+            group.add(lod)
         }
 
         return group
     }
 
+    
     /**
      * 
      * @param {MySceneData.node} node 
@@ -296,7 +295,6 @@ class MyContents  {
     onSceneLoaded(data) {
         //console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
-        console.log(data)
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials

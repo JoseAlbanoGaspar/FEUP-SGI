@@ -91,7 +91,7 @@ class MyPrimitiveCreator {
         const triangle = new THREE.Mesh(geometry, activeMaterial);
         triangle.receiveShadow = true;
         triangle.castShadow = true;
-        //this.app.scene.add(triangle)
+
         return triangle
     }
 
@@ -111,8 +111,8 @@ class MyPrimitiveCreator {
         const box = new THREE.Mesh(geometry, activeMaterial);
         box.receiveShadow = true;
         box.castShadow = true;
-        //this.app.scene.add(box)
-      return box
+        
+        return box
     }
 
     /**
@@ -137,9 +137,8 @@ class MyPrimitiveCreator {
         const cylinder = new THREE.Mesh(geometry, activeMaterial)
         cylinder.receiveShadow = true;
         cylinder.castShadow = true;
-        //this.app.scene.add(cylinder)
+        
         return cylinder
-
     }
 
     /**
@@ -163,6 +162,7 @@ class MyPrimitiveCreator {
         const sphere = new THREE.Mesh(geometry, activeMaterial)  
         sphere.receiveShadow = true;
         sphere.castShadow = true;
+
         return sphere
     }
 
@@ -179,7 +179,7 @@ class MyPrimitiveCreator {
         const mesh = this.#createNurbSurface(controlPoints, nodeInfo.degree_u, nodeInfo.degree_v, nodeInfo.parts_u, nodeInfo.parts_v, activeMaterial);
         mesh.receiveShadow = true;
         mesh.castShadow = true;
-        //this.app.scene.add(mesh)
+        
         return mesh
     }
 
