@@ -53,7 +53,7 @@ class MyLightsCreator {
         console.log(spotLight)
 
         const helper = new THREE.SpotLightHelper(spotLight, 1)
-        this.app.scene.add(helper)
+        //this.app.scene.add(helper)
 
         return spotLight
     }
