@@ -29,7 +29,16 @@ class MyPrimitiveCreator {
         let mesh = new THREE.Mesh( surfaceData, activeMaterial );
         return mesh
     }
-
+    /**
+     * 
+     * @param {Array} controlPoints 
+     * @param {Int} orderU 
+     * @param {Int} orderV 
+     * @returns control points in the required format
+     * 
+     * This function takes control points from the MySceneData and transforms them into the appropriate data structure, 
+     * needed to build nurbs
+     */
     #transformControlPoints(controlPoints, orderU, orderV) {
         if ((orderU + 1) * (orderV + 1) !== controlPoints.length) {
             throw new Error('Invalid input: The product of orderU + 1 and orderV + 1 must match the number of control points.');
@@ -54,7 +63,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Rectangle
+     * This function create a primitive of subtype Rectangle
      */
      drawRectangle(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -76,7 +85,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Triangle
+     * This function create a primitive of subtype Triangle
      */
     drawTriangle(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -100,7 +109,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Box
+     * This function create a primitive of subtype Box
      */
     drawBox(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -120,7 +129,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Cylinder
+     * This function create a primitive of subtype Cylinder
      */
     drawCylinder(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -147,7 +156,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Sphere
+     * This function create a primitive of subtype Sphere
      */
     drawSphere(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -171,7 +180,7 @@ class MyPrimitiveCreator {
      * @param {MySceneData.node} node 
      * @param {THREE.Material} activeMaterial 
      * 
-     * This function draws a primitive of subtype Nurbs
+     * This function create a primitive of subtype Nurbs
      */
     drawNurbs(node, activeMaterial) {
         let nodeInfo = node.representations[0]
@@ -182,10 +191,15 @@ class MyPrimitiveCreator {
         //this.app.scene.add(mesh)
         return mesh
     }
-
+    
+    /**
+     * 
+     * @param {*} node 
+     * @returns skybox
+     * 
+     * This function create a primitive of subtype skybox 
+     */
     drawSkybox(node) {
-        const center = node.center
-
         //back plane 
         const width = node.size[0]
         const height = node.size[1]

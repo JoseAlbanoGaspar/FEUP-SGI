@@ -72,6 +72,8 @@ class MyTextureCreator {
      * 
      * @param {*} texture 
      * @returns Video texture
+     * 
+     * This function also generates necessary html code for videos to work
      */
     buildVideoTexture(texture){
         const id = texture.id
