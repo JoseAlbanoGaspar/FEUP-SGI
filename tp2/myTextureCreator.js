@@ -75,6 +75,18 @@ class MyTextureCreator {
      */
     buildVideoTexture(texture){
         const id = texture.id
+        let videoElement = document.createElement('video');
+        videoElement.autoplay = true;
+        videoElement.loop = true;
+        videoElement.id = id;
+        videoElement.auto = true;
+        videoElement.muted = true;
+        const source = document.createElement('source');
+        source.src = texture.filepath;
+        source.type = 'video/mp4';
+        videoElement.appendChild(source);
+        document.body.appendChild(videoElement);
+        
         const video = document.getElementById(id)
         return new THREE.VideoTexture( video ) 
     }
