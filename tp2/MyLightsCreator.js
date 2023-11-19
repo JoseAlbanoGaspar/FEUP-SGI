@@ -23,6 +23,9 @@ class MyLightsCreator {
         pointLight.shadow.mapSize.width = node.shadowmapsize ?? 512
         pointLight.shadow.mapSize.height = node.shadowmapsize ?? 512
 
+        //const helper = new THREE.PointLightHelper(pointLight, 5)
+        //this.app.scene.add(helper)
+
         return pointLight
     }
 
@@ -49,6 +52,9 @@ class MyLightsCreator {
         spotLight.target = target
         console.log(spotLight)
 
+        const helper = new THREE.SpotLightHelper(spotLight, 1)
+        this.app.scene.add(helper)
+
         return spotLight
     }
 
@@ -59,6 +65,7 @@ class MyLightsCreator {
      * This function creates a Directional Light 
      */
     createDirectionalLight(node) {
+        console.log(node)
         const directionalLight = new THREE.DirectionalLight(node.color, node.intensity)
         directionalLight.position.set(node.position[0], node.position[1], node.position[2])
 
@@ -68,6 +75,8 @@ class MyLightsCreator {
         directionalLight.shadow.mapSize.width = node.shadowmapsize ?? 512
         directionalLight.shadow.mapSize.height = node.shadowmapsize ?? 512
 
+        //const helper = new THREE.DirectionalLightHelper(directionalLight, 5)
+        //this.app.scene.add(helper)
 
         return directionalLight
     }
