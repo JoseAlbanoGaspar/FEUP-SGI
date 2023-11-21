@@ -31,11 +31,16 @@ class MyGuiInterface  {
         this.contents = contents
     }
 
+    /**
+     * Creates the camera dropdown on gui
+     */
     createCameraDropdown() {
         this.cameraController = this.cameraFolder.add(this.app, 'activeCameraName', this.app.cameraNames).name('active camera');
       }
 
-
+    /**
+     * updatesCameraDropdown when needed
+     */
     updateCameraDropdown() {
 
         this.cameraFolder.children = []

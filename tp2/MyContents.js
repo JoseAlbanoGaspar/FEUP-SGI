@@ -34,6 +34,11 @@ class MyContents  {
 
     }
 
+    /**
+     * 
+     * @param {*} rgbColor 
+     * @returns a THREE.Color
+     */
     convertRGBtoTHREEColor(rgbColor) {
         return new THREE.Color(
             rgbColor.r / 255, // Convert 0-255 range to 0.0-1.0
@@ -42,6 +47,12 @@ class MyContents  {
           );
     }
 
+    /**
+     * 
+     * @param {MySceneData} data 
+     * 
+     * This function translates the xml of ambient light, fog and skybox to a THREE.js code
+     */
     addGlobals(data) {
         // dealing with ambient 
         const ambientData = data.options.ambient
@@ -66,6 +77,12 @@ class MyContents  {
         }
     }
 
+    /**
+     * 
+     * @param {MySceneData} data
+     * 
+     * This function translates the cameras tag in xml to THREE.js code 
+     */
     addCameras(data) {
         this.activeCameraName = data.activeCameraName
 
@@ -257,8 +274,10 @@ class MyContents  {
 
     /**
      * 
-     * @param {THREE.Group} group 
-     * @param {Array} transformations
+     * @param {THREE.Group} object 
+     * @param {Array} data
+     * 
+     * This function applies transformations to groups
      */
     applyTransformations(object, data) {
         for(let i = 0; i < data.length; i++){
@@ -296,59 +315,10 @@ class MyContents  {
      * @param {MySceneData} data the entire scene data object
      */
     onSceneLoaded(data) {
-        //console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
-        this.onAfterSceneLoadedAndBeforeRender(data);
         this.addGlobals(data); // add globals
         this.addCameras(data); // add cameras
         this.addMaterials(data); //add materials
         this.addNodes(data); //traverse nodes
-    }
-
-    output(obj, indent = 0) {
-        console.log("" + new Array(indent * 4).join(' ') + " - " + obj.type + " " + (obj.id !== undefined ? "'" + obj.id + "'" : ""))
-    }
-
-    onAfterSceneLoadedAndBeforeRender(data) {
-      /* 
-        // refer to descriptors in class MySceneData.js
-        // to see the data structure for each item
-        console.log(data)
-        this.output(data.options)
-        console.log("textures:")
-        for (var key in data.textures) {
-            let texture = data.textures[key]
-            this.output(texture, 1)
-        }
-
-        console.log("materials:")
-        for (var key in data.materials) {
-            let material = data.materials[key]
-            this.output(material, 1)
-        }
-
-        console.log("cameras:")
-        for (var key in data.cameras) {
-            let camera = data.cameras[key]
-            this.output(camera, 1)
-        }
-
-        console.log("nodes:")
-        for (var key in data.nodes) {
-            let node = data.nodes[key]
-            this.output(node, 1)
-            for (let i=0; i< node.children.length; i++) {
-                let child = node.children[i]
-                if (child.type === "primitive") {
-                    console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + " with "  + child.representations.length + " " + child.subtype + " representation(s)")
-                    if (child.subtype === "nurbs") {
-                        console.log("" + new Array(3 * 4).join(' ') + " - " + child.representations[0].controlpoints.length + " control points")
-                    }
-                }
-                else {
-                    this.output(child, 2)
-                }
-            }
-        }*/
     }
 
     update() {

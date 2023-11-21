@@ -34,7 +34,6 @@ class MyLightsCreator {
     createSpotLight(node) {
         const spotLight = new THREE.SpotLight(node.color, node.intensity, node.distance, THREE.MathUtils.degToRad(node.angle), node.penumbra, node.decay)
         spotLight.position.set(node.position[0], node.position[1], node.position[2])
-    
         // shadows
         spotLight.castShadow = node.castshadow
         spotLight.receiveShadow = node.castshadow
@@ -48,7 +47,7 @@ class MyLightsCreator {
         spotLight.target = target
 
         const helper = new THREE.SpotLightHelper(spotLight, 1)
-        this.app.scene.add(helper)
+        //this.app.scene.add(helper)
 
         return spotLight
     }
