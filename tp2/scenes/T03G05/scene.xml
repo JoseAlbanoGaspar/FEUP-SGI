@@ -94,7 +94,7 @@
             texlength_s="1" 
             texlength_t="1" 
             bumpref = "bumpWall"
-            bumpscale = "1"
+            bumpscale = "0.05"
             specularref = "bumpWall" />
 		
 		<material id="rightWallApp" 
