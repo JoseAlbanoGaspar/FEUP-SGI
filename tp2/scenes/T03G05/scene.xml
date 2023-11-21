@@ -388,6 +388,7 @@
                 <noderef id="keyboard"/>
                 <noderef id="newspaper"/>
                 <noderef id="balls" />
+                <noderef id="carpet" />
 
                 <lodref id="demo" /> 
 				 
@@ -1719,6 +1720,20 @@
             </children>
         </node>
         <!-- END BALLS -->
+
+        <node id="carpet">
+            <transforms>
+                <translate value3="4 0.1 10" />
+                <scale value3="1.2 1.2 -1.2" />
+                <rotate value3="270 0 0" />
+            </transforms>
+            <children>
+                <primitive>
+                    <polygon radius="2.0" slices="10" stacks="6" color_c="0 0.2 0.8 1" color_p="0 0.8 0.9 1" />
+                </primitive>
+            </children>
+        </node>
+
     </graph> 
 	
 </yaf> 

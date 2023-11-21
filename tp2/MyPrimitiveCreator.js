@@ -290,6 +290,71 @@ class MyPrimitiveCreator {
         return group
     }
 
+    drawPolygon(node) {
+        let nodeInfo = node.representations[0]
+        let radius = nodeInfo.radius
+        let stacks = nodeInfo.stacks
+        let slices = nodeInfo.slices
+        let color_center = nodeInfo.color_c
+        let color_periferia = nodeInfo.color_p
+        let radiusStep = radius/stacks
+        let angleStep = 2 * Math.PI / slices;
+
+        let vertices = [0, 0, 0];
+        let colors = [];
+        let normals = [];
+        colors.push(...color_center.toArray());
+
+        //add points
+        for(let j = 1; j <= stacks; j++){
+            for (let i = 0; i < slices; i++) {
+                const angle = i * angleStep;
+    
+                const x = radiusStep*j * Math.sin(angle);
+                const y = radiusStep*j * Math.cos(angle);
+        
+                vertices.push(x, y, 0);
+                normals.push(0,0,1);
+            }
+        }
+    
+        //indices
+        let indices = [];
+        //first stack j=1
+        for(let i = 0; i < slices; i++){
+            indices.push(0, i+1, (i+1)%slices+1)
+            colors.push(...color_center.clone().lerp(color_periferia, 1 / stacks).toArray());
+        }
+
+        //remaining stacks
+        for(let j = 2; j <= stacks; j++){
+            for(let k = 0; k < slices; k++){
+
+                let fIndice = (j - 1) * slices + k + 1
+                let sIndice = (j - 2) * slices + ((k + 1) % slices) + 1
+                let tIndice = (j - 2) * slices + k + 1
+                let foIndice = (j - 1) * slices + ((k + 1) % slices) + 1
+
+                indices.push(
+                    fIndice, sIndice, tIndice,
+                    fIndice, foIndice, sIndice
+                )
+                colors.push(...color_center.clone().lerp(color_periferia, j / stacks).toArray());
+            }
+        }
+        
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        geometry.setIndex(indices);
+
+        const material = new THREE.MeshBasicMaterial({vertexColors: true});
+        const mesh = new THREE.Mesh(geometry, material);
+        return mesh;
+    }
+        
 }
+
   
   export default MyPrimitiveCreator;

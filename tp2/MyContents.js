@@ -175,7 +175,7 @@ class MyContents  {
             group.add(this.dealWithLights(node))
         }
         else if (node.type === "node") {
-            console.log("nos: ", node)
+            //console.log("nos: ", node)
             // update material if declared
             activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
             //deal with node
@@ -226,6 +226,9 @@ class MyContents  {
         }
         else if (node.subtype === "nurbs") {
            return this.primitiveCreator.drawNurbs(node, activeMaterial) 
+        }
+        else if (node.subtype === "polygon") {
+            return this.primitiveCreator.drawPolygon(node)
         }
     }
 
