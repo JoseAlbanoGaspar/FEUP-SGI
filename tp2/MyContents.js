@@ -121,7 +121,6 @@ class MyContents  {
      * Add materials to scene
      */
     addMaterials(data){
-
         for (const name in data.materials){
             const material = data.materials[name]
             const color = material.color
@@ -156,7 +155,7 @@ class MyContents  {
                 materialObject.side = THREE.DoubleSide
             }
             if(material.bumpref) {
-                this.textureCreator.buildBumpTexture(data.textures[material.textureref], materialObject, material)
+                this.textureCreator.buildBumpTexture(data.textures[material.bumpref], materialObject, material)
             }       
             this.materials.set(name, materialObject)
         }
