@@ -184,6 +184,7 @@ class MyContents  {
      * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
      */
     visit(node, activeMaterial) {
+        console.log(node)
         let group = new THREE.Group()
         if (node.type === "primitive") { // deal with primitives
             group.add(this.dealWithPrimitives(node, activeMaterial))
