@@ -149,6 +149,9 @@ class MyContents  {
                     this.textureCreator.buildDefaultMipMaps(texture, textureMaterial)
                 }
                 textureMaterial.anisotropy = texture.anisotropy
+                textureMaterial.wrapS = THREE.RepeatWrapping; // Repeat along the x-axis
+                textureMaterial.wrapT = THREE.RepeatWrapping; // Repeat along the y-axis
+                textureMaterial.repeat.set(material.texlength_s, material.texlength_t); 
                 materialObject.map = textureMaterial
             }
             if (material.twosided) {
@@ -183,7 +186,6 @@ class MyContents  {
      * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
      */
     visit(node, activeMaterial) {
-        console.log(node)
         let group = new THREE.Group()
         if (node.type === "primitive") { // deal with primitives
             group.add(this.dealWithPrimitives(node, activeMaterial))

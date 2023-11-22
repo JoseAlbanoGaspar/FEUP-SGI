@@ -176,8 +176,8 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="sofaTex" 
-            texlength_s="4" 
-            texlength_t="4" 
+            texlength_s="1" 
+            texlength_t="1" 
             bumpref = "sofaTex"
             bumpscale = "1"
             specularref = "sofaTex"
@@ -189,8 +189,8 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="tableLiteTex" 
-            texlength_s="4" 
-            texlength_t="4" 
+            texlength_s="1" 
+            texlength_t="1" 
             twosided = "true"  
         />
 
@@ -200,8 +200,8 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="boardTex" 
-            texlength_s="4" 
-            texlength_t="4" 
+            texlength_s="1" 
+            texlength_t="1" 
             twosided = "true"  
         />
 
@@ -269,7 +269,7 @@
             specular="0 0 0 0" 
             shininess="0" 
             textureref="marioBlockTex" 
-            texlength_s="1" 
+            texlength_s="3" 
             texlength_t="1" 
             twosided = "true"  
         />
@@ -1637,26 +1637,14 @@
         </node>
         <!-- END JAR related -->
         <!-- SUPER MARIO WORLD related -->
-        <node id="dirt1">
+        <node id="dirt">
             <materialref id="marioBlockApp"/>
-            <children>
-                <noderef id="box"/>
-            </children>
-        </node>
-        <node id="dirt2">
             <transforms>
                 <translate value3="1 0 0"/>
+                <scale value3="3 1 1"/> 
             </transforms>
             <children>
-                <noderef id="dirt1"/>
-            </children>
-        </node>
-        <node id="dirt3">
-            <transforms>
-                <translate value3="2 0 0"/>
-            </transforms>
-            <children>
-                <noderef id="dirt1"/>
+                <noderef id="box"/>
             </children>
         </node>
         <node id="item">
@@ -1702,9 +1690,7 @@
                 <scale value3="0.5 0.5 0.5"/>
             </transforms>
             <children>
-                <noderef id="dirt1"/>
-                <noderef id="dirt2"/>
-                <noderef id="dirt3"/>
+                <noderef id="dirt"/>
                 <noderef id="item"/>
                 <noderef id="pipe"/>
             </children>
