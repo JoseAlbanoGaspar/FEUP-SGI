@@ -124,10 +124,11 @@ class MyContents  {
         for (const name in data.materials){
             const material = data.materials[name]
             const color = material.color
-            //const shading = material.shading
             const emissive = material.emissive
             const shininess = material.shininess
             const specular = material.specular
+            const texture_s = material.texlength_s
+            const texture_t = material.texlength_t
 
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
                 emissive: emissive, shininess: shininess})
@@ -141,7 +142,7 @@ class MyContents  {
                 else { 
                     textureMaterial = this.textureCreator.buildTexture(texture)                  
                 }
-                
+
                 if(texture.mipmaps) { 
                     this.textureCreator.buildMipMaps(texture, textureMaterial)             
                 }
@@ -194,7 +195,6 @@ class MyContents  {
             group.add(this.dealWithLights(node))
         }
         else if (node.type === "node") {
-            //console.log("nos: ", node)
             // update material if declared
             activeMaterial = (node.materialIds.length !== 0) ? this.materials.get(node.materialIds[0]) : activeMaterial
             //deal with node
@@ -205,20 +205,17 @@ class MyContents  {
         }
         else if (node.type === "lod"){
             const lod = new THREE.LOD()
+
             for (let child in node.children){
-                
-                //console.log("nodes lod children: ", node.children[child].node)
-                //console.log("distance: ", node.children[child].mindist)
-                
+                //create a new lod level and visits the children of it
                 lod.addLevel(this.visit(node.children[child].node, activeMaterial), node.children[child].mindist)
             }
-            //console.log(lod)
+           
             group.add(lod)
         }
 
         return group
     }
-
     
     /**
      * 
@@ -229,22 +226,22 @@ class MyContents  {
      */
     dealWithPrimitives(node, activeMaterial) {
         if (node.subtype === "rectangle") {
-           return this.primitiveCreator.drawRectangle(node, activeMaterial)
+            return this.primitiveCreator.drawRectangle(node, activeMaterial)
         }
         else if (node.subtype === "triangle") {
-           return this.primitiveCreator.drawTriangle(node, activeMaterial)
+            return this.primitiveCreator.drawTriangle(node, activeMaterial)
         }
         else if (node.subtype === "box") {
-           return this.primitiveCreator.drawBox(node, activeMaterial) 
+            return this.primitiveCreator.drawBox(node, activeMaterial) 
         }   
         else if (node.subtype === "cylinder") {
-           return this.primitiveCreator.drawCylinder(node, activeMaterial) 
+            return this.primitiveCreator.drawCylinder(node, activeMaterial) 
         }
         else if (node.subtype === "sphere") {
-           return this.primitiveCreator.drawSphere(node, activeMaterial)
+            return this.primitiveCreator.drawSphere(node, activeMaterial)
         }
         else if (node.subtype === "nurbs") {
-           return this.primitiveCreator.drawNurbs(node, activeMaterial) 
+            return this.primitiveCreator.drawNurbs(node, activeMaterial) 
         }
         else if (node.subtype === "polygon") {
             return this.primitiveCreator.drawPolygon(node)
@@ -295,7 +292,6 @@ class MyContents  {
             else if(transf.type == "S")
                 object.scale.set(object.scale.x * transf.scale[0], object.scale.y * transf.scale[1], object.scale.z * transf.scale[2]);
         }
-
 
         return object;
     }

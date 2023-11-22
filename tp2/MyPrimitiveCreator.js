@@ -311,8 +311,8 @@ class MyPrimitiveCreator {
         let slices = nodeInfo.slices
         let color_center = nodeInfo.color_c
         let color_periferia = nodeInfo.color_p
-        let radiusStep = radius/stacks
-        let angleStep = 2 * Math.PI / slices;
+        let radiusInc = radius/stacks
+        let angleInc = 2 * Math.PI / slices;
 
         let vertices = [0, 0, 0];
         let colors = [];
@@ -322,11 +322,13 @@ class MyPrimitiveCreator {
         //add points
         for(let j = 1; j <= stacks; j++){
             for (let i = 0; i < slices; i++) {
-                const angle = i * angleStep;
+                const angle = i * angleInc;
     
-                const x = radiusStep*j * Math.sin(angle);
-                const y = radiusStep*j * Math.cos(angle);
+                const x = radiusInc*j * Math.sin(angle);
+                const y = radiusInc*j * Math.cos(angle);
         
+                //push color of each vertice to the array
+                colors.push(...color_center.clone().lerp(color_periferia, j / stacks).toArray());
                 vertices.push(x, y, 0);
                 normals.push(0,0,1);
             }
@@ -337,34 +339,33 @@ class MyPrimitiveCreator {
         //first stack j=1
         for(let i = 0; i < slices; i++){
             indices.push(0, i+1, (i+1)%slices+1)
-            colors.push(...color_center.clone().lerp(color_periferia, 1 / stacks).toArray());
         }
 
         //remaining stacks
         for(let j = 2; j <= stacks; j++){
             for(let k = 0; k < slices; k++){
-
+                
                 let fIndice = (j - 1) * slices + k + 1
                 let sIndice = (j - 2) * slices + ((k + 1) % slices) + 1
                 let tIndice = (j - 2) * slices + k + 1
                 let foIndice = (j - 1) * slices + ((k + 1) % slices) + 1
 
+                //create the edges of the two triangles that compose the slice
                 indices.push(
                     fIndice, sIndice, tIndice,
                     fIndice, foIndice, sIndice
                 )
-                colors.push(...color_center.clone().lerp(color_periferia, j / stacks).toArray());
             }
         }
         
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
-        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-        geometry.setIndex(indices);
+        const polygon = new THREE.BufferGeometry();
+        polygon.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        polygon.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+        polygon.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        polygon.setIndex(indices);
 
         const material = new THREE.MeshBasicMaterial({vertexColors: true});
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(polygon, material);
         return mesh;
     }
         
