@@ -6,61 +6,66 @@
 | Inês Gaspar      | 202007210 | up202007210@up.pt  |
 | José Gaspar      | 202008561 | up202008561@up.pt  |
 
+
 ## Name
 Home Office
 
 
-# Getting started
+## Description
 
-Considering a code block (for instance class A.js), to load an xml file (in the defined structure) call:
-
-    let reader = new MyFileReader(app, this, *this.onSceneLoaded*);
-    reader.open("<path to xml file>");	
-
-The last argument in the MyFileReader object call is the name of the method that is to be called when the xml file is loaded and parsed.
-
-Hence, In the same code block (for instance class A.js) add a function method with the following signature: 
-
-    onSceneLoaded(data) {
-        // do something with the data object
-    }
-
-This method is called once the xml file is loaded and parsed successfully. This method single input argument, *data*, is an object containing the entire scene data object. This document can be traversed according to the rules defined in the section on MySceneData class
-
-
-# MyFileServer
-File MyFileServer.js contains the class responsible for the XML parser general functionality. Most of the parsing process is derived from descriptors defined in MySceneData.js. A small part is hardcoded.
-
-
-# MySceneData
-File MySceneData.js contains a class with metadata description and, in the end of parsing, contains the full set of objects loaded from the xml scene file. This class has several important object attributes:
-- options: contains the scene options, from the globals section
-- fog: contains the scene fog options, from the fog section
-- materials: associative array/list with the scene described materials
-- textures: associative array/list with the scene described textures
-- cameras: associative array/list with all the cameras in the scene
-- activeCameraId: the id of the active camera
-- nodes: associative array/list with all the scene nodes.
-- rootId: the id of the root node
+In this project, we started to represent the scene by reading the parsed xml file. Then, we constructed a scene that represents a home office in the space.
+The scene has the following objects:
+- 2 Walls
+    - One with bump texture, other without.
+- Floor
+- Table
+    - On the table we can find papers (nurbs) and a keyboard (rectangle) besides a computer playing a video.
+- Teddy bear
+    - This teady bear can be seen next to the table and has lods implemented.
+- Wooden Chair
+- Sofas
+    - 2 sofas can be seen. Lods and bump textures were used.
+- Smaller table
+    - This table has a checkers board with pieces on it.
+    - Different textures were used.
+- Chandelier
+- Clock
+- Painting with mipmaps
+- Shelves
+    - Firt shelf - 2 jars (nurbs) with lods implemented.
+    - Second shelf - Super Mario World with some blocks, item block plus a pipe.
+    - Third shelf - 3 balls.
+- Carpet
+    - Carpet implemented using buffer geometry.
+- Illumination
+    - All 3 types of lights are displayed. All of them can be controlled via the 2D interface.
+- Cameras
+    - All 2 types of cameras are created on xml and can be selected individually via the 2D interface.  
 
 
-## Custom attributes
-Use  the custom attribute in the data objects to add further attributes:
+## Contributing
 
+### Highlights
+* Ilumination and Shadows - A point that we consider to be a strength of our work is the light sources and shadows. Those lights can be changed on the 2D interface.
+* Textures - We have defined materials with the different textures we have implemented: simple textures, repetitions on objects, mipmaps, bump textures and video textures.
+* Diversity of objects - We have several objects in our scene, some simple and others complex, and using the various primitives we have available.
 
-    let obj = {
-        id: "some id",
-        type: "some type",
-        custom: {
-            attr1: "value1",
-            attr2: "value2"
-        } 
-    }
+### Dificulties
+* We had some difficulties understanding how the LODs and the xml structure for these elements.
+* We also had some difficulties with the buffer geometry, especially when it came to creating the indices for the various triangles that had to be built.
 
-in the previous object, attr1 and attr2 are custom attributes that were added to the object by the programmer (student), in light its program specific needs.
+## Authors and acknowledgment
+The authors of this project are the students: Inês Sá Pereira Estêvão Gaspar and José Albano de Almeida Gaspar.
+
+## License
+No license required.
+
+## Project status
+The project is concluded. All the milestones were achieved successfully.
+
 
 ## Visuals
-Below are some screenshots of the scene created in order to visualize the final result in greater detail. In here can be seen the 3 level of LODs we have:
+Below are some screenshots of the scene created in order to visualize the final result in greater detail. In the screenshots you can see the 3 levels of LODs we set for some objects:
 
 ![Complete Scene LOD1](screenshots/scene_lod1.png)
 

@@ -112,7 +112,7 @@ class MyContents  {
                     this.app.buildCamera(camera.id, orthogonalCamera)
                 }
             }
-          }
+        }
     }
 
     /**
@@ -127,9 +127,7 @@ class MyContents  {
             const emissive = material.emissive
             const shininess = material.shininess
             const specular = material.specular
-            const texture_s = material.texlength_s
-            const texture_t = material.texlength_t
-
+        
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
                 emissive: emissive, shininess: shininess})
 
