@@ -1,5 +1,13 @@
-# sgi-tp2-base
-The starting point of the second assignment of SGI.
+# SGI Project 1
+
+## Group T03G35
+| Name             | Number    | E-Mail             |
+| ---------------- | --------- | ------------------ |
+| Inês Gaspar      | 202007210 | up202007210@up.pt  |
+| José Gaspar      | 202008561 | up202008561@up.pt  |
+
+## Name
+Home Office
 
 
 # Getting started
@@ -20,11 +28,9 @@ Hence, In the same code block (for instance class A.js) add a function method wi
 This method is called once the xml file is loaded and parsed successfully. This method single input argument, *data*, is an object containing the entire scene data object. This document can be traversed according to the rules defined in the section on MySceneData class
 
 
-
 # MyFileServer
 File MyFileServer.js contains the class responsible for the XML parser general functionality. Most of the parsing process is derived from descriptors defined in MySceneData.js. A small part is hardcoded.
 
-> <span style="color: red;">**DO NOT CHANGE MyFileServer.js FILE. IT WILL BE MODIFIED OR REPLACED DURING EVALUATION**</span>
 
 # MySceneData
 File MySceneData.js contains a class with metadata description and, in the end of parsing, contains the full set of objects loaded from the xml scene file. This class has several important object attributes:
@@ -37,11 +43,6 @@ File MySceneData.js contains a class with metadata description and, in the end o
 - nodes: associative array/list with all the scene nodes.
 - rootId: the id of the root node
 
-NOTES: 
-1. for each entity type, there are no repeated ids. For instance, if there are two nodes with the same id, the parser will complain and the scene will not be loaded.
-2. For each loaded entity, the parser will check if all the required attributes are present. If not, the parser will complain and the scene will not be loaded.
-3. For each entity, a descriptor defined in the constructor defines the attribute's name, type, requiredness, default value.
-4. **DO NOT CHANGE MySceneData.js IT WILL BE MODIFIED OR REPLACED DURING EVALUATION**
 
 ## Custom attributes
 Use  the custom attribute in the data objects to add further attributes:
@@ -58,3 +59,11 @@ Use  the custom attribute in the data objects to add further attributes:
 
 in the previous object, attr1 and attr2 are custom attributes that were added to the object by the programmer (student), in light its program specific needs.
 
+## Visuals
+Below are some screenshots of the scene created in order to visualize the final result in greater detail. In here can be seen the 3 level of LODs we have:
+
+![Complete Scene LOD1](screenshots/scene_lod1.png)
+
+![Complete Scene LOD2](screenshots/scene_lod2.png)
+
+![Complete Scene LOD3](screenshots/scene_lod3.png)
