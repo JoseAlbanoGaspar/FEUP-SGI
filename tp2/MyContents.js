@@ -172,8 +172,30 @@ class MyContents  {
     addNodes(data) {
         let node = data.nodes[data.rootId]
         let defaultMaterial = (node.materialIds.length !== 0) ? node.materialIds[0] : null
-        this.sceneGroup = this.visit(node, this.materials.get(defaultMaterial))
+        this.sceneGroup = this.visit(node, this.materials.get(defaultMaterial), false, false)
         this.app.scene.add(this.sceneGroup)
+    }
+
+    /**
+     * 
+     * @param {*} node 
+     * @param {*} castShadow 
+     * @param {*} receiveShadow 
+     * @returns updated values for castShadow and receiveShadow
+     */
+    updateShadows(node, castShadow, receiveShadow) {
+   
+        if (node.castShadows || castShadow) {
+            node.castShadows = true
+            castShadow = true
+        }
+        if (node.receiveShadows || receiveShadow) {
+            node.receiveShadows = true
+            receiveShadow = true
+        }
+        
+
+        return [castShadow, receiveShadow]
     }
 
     /**
@@ -184,8 +206,14 @@ class MyContents  {
      * This traverse all the nodes of the graph
      * If it's a primitive draw the primitive with the activeMaterial, otherwise creates a group and do recursion
      */
-    visit(node, activeMaterial) {
-        let group = new THREE.Group()
+    visit(node, activeMaterial, castShadow, receiveShadow) {
+        let group = new THREE.Group() 
+
+        // update shadows       
+        let update = this.updateShadows(node, castShadow, receiveShadow)
+        castShadow = update[0]
+        receiveShadow = update[1]
+
         if (node.type === "primitive") { // deal with primitives
             group.add(this.dealWithPrimitives(node, activeMaterial))
         }
@@ -198,7 +226,7 @@ class MyContents  {
             //deal with node
             this.applyTransformations(group, node.transformations)
             for (const child in node.children) {
-                group.add(this.visit(node.children[child], activeMaterial))
+                group.add(this.visit(node.children[child], activeMaterial, castShadow, receiveShadow))
             }
         }
         else if (node.type === "lod"){
@@ -206,7 +234,7 @@ class MyContents  {
 
             for (let child in node.children){
                 //create a new lod level and visits the children of it
-                lod.addLevel(this.visit(node.children[child].node, activeMaterial), node.children[child].mindist)
+                lod.addLevel(this.visit(node.children[child].node, activeMaterial, castShadow, receiveShadow), node.children[child].mindist)
             }
            
             group.add(lod)

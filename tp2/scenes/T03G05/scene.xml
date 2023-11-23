@@ -361,7 +361,7 @@
 
     <graph rootid="scene"> 
 
-		<node id="scene"> 
+		<node id="scene" castshadows="true" receiveshadows="true"> 
             <children> 
                 <noderef id="leftWall" /> 
 				<noderef id="rightWall" /> 
