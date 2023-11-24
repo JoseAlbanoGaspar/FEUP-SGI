@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
+import { MyCar } from './MyCar.js';
 
 /**
  *  This class contains the contents of out application
@@ -58,7 +59,15 @@ class MyContents  {
         const sphereSize = 0.5;
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
+
         
+        
+        this.car = new MyCar(0,0);
+        this.app.scene.add(this.car);
+            
+        
+
+
     }
 
     /**
@@ -67,7 +76,7 @@ class MyContents  {
      * 
      */
     update() {
-       
+       this.car.update()
     }
 
 }
