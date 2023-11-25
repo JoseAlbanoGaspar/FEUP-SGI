@@ -132,7 +132,6 @@ class MyCar extends THREE.Object3D {
 
     mapCoordinatesToPixelIndex(x, z, sizeOfImage) {
       // Calculate the corresponding pixel position from the given x, y coordinates
-      // Assuming x and z are in the range of -125 to 125 in 3D space
       const half = sizeOfImage / 2; // must return integer
       const pixelX = Math.floor((x + half) );
       const pixelZ = Math.floor((z + half) );
@@ -198,6 +197,15 @@ class MyCar extends THREE.Object3D {
       for (const wheel of this.frontWheels) {
         wheel.rotation.y = -this.steering
       }    
+    }
+
+    updateWheelRotationVelocity() {
+      for (const wheel of this.frontWheels) {
+        wheel.rotation.z -= this.velocity
+      }
+      for (const wheel of this.backWheels) {
+        wheel.rotation.z -= this.velocity
+      }
     }
 
     updateVelocity() {
@@ -285,6 +293,7 @@ class MyCar extends THREE.Object3D {
         this.updateVelocity()
         this.updateSteering()
         this.updateCarDirection()
+        this.updateWheelRotationVelocity()
         this.updateCarPosition()
         this.updateWheelDirection()
     }
