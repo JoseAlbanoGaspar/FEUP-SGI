@@ -97,10 +97,11 @@ class MyTrack extends THREE.Object3D {
 
         this.curve.add(this.mesh);
         //this.curve.add(this.wireframe);
-        this.curve.add(this.line);
+        //this.curve.add(this.line);
 
         this.curve.rotateZ(Math.PI);
         this.curve.scale.set(1,0.2,1);
+        this.curve.position.set(0, -1.3, 0);
         this.app.scene.add(this.curve);
     }
 }
