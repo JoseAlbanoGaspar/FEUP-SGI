@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
-import { MyCar } from './MyCar.js';
+import { MyCar } from './car/MyCar.js';
 
 /**
  *  This class contains the contents of out application

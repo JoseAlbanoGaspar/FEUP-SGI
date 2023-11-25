@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { MyWheel } from './MyWheel.js';
+import { MyCarAxis } from './MyCarAxis.js';
+import { MyBody } from './MyBody.js';
 
 class MyCar extends THREE.Object3D {
     /**
@@ -32,75 +35,60 @@ class MyCar extends THREE.Object3D {
         //direction
         this.direction = 0;
 
-        
-
-        // car geometry
-        // car body
-        const materialObject = new THREE.MeshPhongMaterial({color: "#ff0000", specular: "#000000", 
-            emissive: 1, shininess: 3})
-        const geometry = new THREE.BoxGeometry(6, 3, 3, 1, 1, 1);
-        const box = new THREE.Mesh(geometry, materialObject);
-        box.receiveShadow = true;
-        box.castShadow = true;
-
-        //wheels
-        const cylinderMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
-
-        const geometryWhell = new THREE.CylinderGeometry(1.25, 1.25, 0.5, 16, 16 )
-        const wheel = new THREE.Mesh(geometryWhell, cylinderMaterial)
-        wheel.receiveShadow = true;
-        wheel.castShadow = true;
-        const wheel2 = wheel.clone()
-        const wheel3 = wheel.clone()
-        const wheel4 = wheel.clone()
-
-        //axis
-        const axisMaterial = new THREE.MeshPhongMaterial({ color: "#00ff00", specular: "000000", emissive: 1, shininess: 3});
-
-        const geometryAxis = new THREE.CylinderGeometry(0.1,0.1, 4.5, 16, 16 )
-        const axis = new THREE.Mesh(geometryAxis, axisMaterial)
-        axis.receiveShadow = true;
-        axis.castShadow = true;
-        const axis2 = axis.clone()
-        
-        // transformations
-        wheel.position.set(0, -2.25, 0)
-        wheel2.position.set(0, 2.25, 0)
-
-        this.frontWheels = new THREE.Group()
-        this.frontWheels.add(wheel)
-        this.frontWheels.add(wheel2)
-        this.frontWheels.add(axis)
-
-        this.frontWheels.rotation.x = Math.PI / 2
-        this.frontWheels.position.set(2, -0.75, 0)
-
-        wheel3.position.set(0, -2.25, 0)
-        wheel4.position.set(0, 2.25, 0)
-
-        this.backWheels = new THREE.Group()
-        this.backWheels.add(wheel3)
-        this.backWheels.add(wheel4)
-        this.backWheels.add(axis2)
-
-        this.backWheels.rotation.x = Math.PI / 2
-        this.backWheels.position.set(-2, -0.75, 0)
-
-
-        this.add(box)
-        this.add(this.frontWheels)
-        this.add(this.backWheels)
-        this.add(this.backWheels)
-
-
-        
-        
+        // initCar
+        this.initBody()
+        this.initWheels()
+        this.initAxis()
+      
         // add event listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
     }
+
+    initBody() {
+      const body = new MyBody();
+      this.add(body)
+    }
+
+    initAxis() {
+      const axis1 = new MyCarAxis()
+      const axis2 = new MyCarAxis()
+
+      //transformations
+      axis1.rotation.x = Math.PI / 2
+      axis1.position.set(2, -0.75, 0)
+      axis2.rotation.x = Math.PI / 2
+      axis2.position.set(-2, -0.75, 0)
+
+      this.add(axis1)
+      this.add(axis2)
+    }
+
+    initWheels() {
+      // wheels
+      const wheel = new MyWheel()
+      const wheel2 = new MyWheel()
+      const wheel3 = new MyWheel()
+      const wheel4 = new MyWheel()
+
+      this.frontWheels = [wheel, wheel2]
+      this.backWheels = [wheel3, wheel4]
+
+      // transformations
+      wheel.position.set(2, -0.75, -2.25)
+      wheel2.position.set(2, -0.75, 2.25)
+      wheel3.position.set(-2, -0.75, -2.25)
+      wheel4.position.set(-2, -0.75, 2.25)
+
+      // add to group
+      this.add(wheel)
+      this.add(wheel2)
+      this.add(wheel3)
+      this.add(wheel4)
+    }
+
 
     handleKeyDown(event) {
         const keyCode = event.code;
@@ -145,6 +133,12 @@ class MyCar extends THREE.Object3D {
         }
     }
 
+    updateWheelDirection() {
+      for (const wheel of this.frontWheels) {
+        wheel.rotation.y = -this.steering
+      }    
+    }
+
     /**
      * 
      */
@@ -171,7 +165,7 @@ class MyCar extends THREE.Object3D {
         // left and right
 
         if (this.velocity != 0) {
-            this.direction += this.steering / 10  * this.velocity
+            this.direction += this.steering / 7  * this.velocity
         }
 
         if (this.left && !this.right ) {
@@ -196,8 +190,8 @@ class MyCar extends THREE.Object3D {
         
         this.rotation.y = -this.direction
 
-        this.frontWheels.rotation.z = this.steering
-        
+        this.updateWheelDirection()
+       
 
 
     }
