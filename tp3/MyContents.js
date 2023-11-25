@@ -81,7 +81,7 @@ class MyContents  {
 
 
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
-        const geometry = new THREE.PlaneGeometry( 200, 200, 100, 100 )
+        const geometry = new THREE.PlaneGeometry( 250, 250, 100, 100 )
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
