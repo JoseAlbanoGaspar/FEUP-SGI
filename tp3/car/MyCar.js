@@ -36,11 +36,20 @@ class MyCar extends THREE.Object3D {
         //direction
         this.direction = 0;
 
+        //pivot for back axis rotation
+        this.car = new THREE.Group()
+        this.pivot = new THREE.Group()
+        const wheelAxisOffset = 2
+        this.pivot.position.set(wheelAxisOffset, 0, 0)
+        this.car.add(this.pivot)
+
         //initCar
         this.initBody()
         this.initWheels()
         this.initAxis()
         this.initCarLights()
+
+        this.add(this.car)
       
         // add event listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -62,13 +71,16 @@ class MyCar extends THREE.Object3D {
       light2.position.set(3, 0, -0.75)
       light.position.set(3, 0, 0.75)
 
-      this.add(light)
-      this.add(light2)
+      this.car.add(light)
+      this.car.add(light2)
+      this.pivot.add(light)
+      this.pivot.add(light2)
     }
 
     initBody() {
       const body = new MyBody();
-      this.add(body)
+      this.car.add(body)
+      this.pivot.add(body)
     }
 
     initAxis() {
@@ -81,8 +93,10 @@ class MyCar extends THREE.Object3D {
       axis2.rotation.x = Math.PI / 2
       axis2.position.set(-2, -0.75, 0)
 
-      this.add(axis1)
-      this.add(axis2)
+      this.car.add(axis1)
+      this.car.add(axis2)
+      this.pivot.add(axis1)
+      this.pivot.add(axis2)
     }
 
     initWheels() {
@@ -102,10 +116,15 @@ class MyCar extends THREE.Object3D {
       wheel4.position.set(-2, -0.75, 2.25)
 
       // add to group
-      this.add(wheel)
-      this.add(wheel2)
-      this.add(wheel3)
-      this.add(wheel4)
+      this.car.add(wheel)
+      this.car.add(wheel2)
+      this.car.add(wheel3)
+      this.car.add(wheel4)
+
+      this.pivot.add(wheel)
+      this.pivot.add(wheel2)
+      this.pivot.add(wheel3)
+      this.pivot.add(wheel4)
     }
 
 
