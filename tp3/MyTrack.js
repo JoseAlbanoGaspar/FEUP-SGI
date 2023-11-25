@@ -16,28 +16,48 @@ class MyTrack extends THREE.Object3D {
         this.showLine = true;
         this.closedCurve = false;
 
-        this.path = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-50, 0, 0),
-        new THREE.Vector3(-50, 0, 50),
-        
-        new THREE.Vector3(-10, 0 , 88),
-        new THREE.Vector3(0, 0, 90),
-        new THREE.Vector3(40, 0, 85),
-        new THREE.Vector3(50, 0 , 70),
-        new THREE.Vector3(35, 0 , 50),
-        new THREE.Vector3(20, 0 , 20),
-        new THREE.Vector3(40, 0 , 5),
-        new THREE.Vector3(70, 0 , 0),
-        new THREE.Vector3(90, 0, -30),
-        new THREE.Vector3(70, 0, -50),
-        new THREE.Vector3(70, 0, -80),
-        new THREE.Vector3(30, 0, -85),
-        new THREE.Vector3(-50, 0, -50),
-        new THREE.Vector3(-50, 0, 0),
-       ]);
+        //updated with trackMap
+        this.imgSize = 0;
 
+        this.path = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-50, 0, 0),
+            new THREE.Vector3(-50, 0, 50),
+            new THREE.Vector3(-10, 0 , 88),
+            new THREE.Vector3(0, 0, 90),
+            new THREE.Vector3(40, 0, 85),
+            new THREE.Vector3(50, 0 , 70),
+            new THREE.Vector3(35, 0 , 50),
+            new THREE.Vector3(20, 0 , 20),
+            new THREE.Vector3(40, 0 , 5),
+            new THREE.Vector3(70, 0 , 0),
+            new THREE.Vector3(90, 0, -30),
+            new THREE.Vector3(70, 0, -50),
+            new THREE.Vector3(70, 0, -80),
+            new THREE.Vector3(30, 0, -85),
+            new THREE.Vector3(-50, 0, -50),
+            new THREE.Vector3(-50, 0, 0),
+        ]);
+
+        this.whitePixels = [];
         this.buildCurve();
     }
+
+    async loadAndProcessImage() {
+        const texture = await this.loadImage('textures/trackMap.png');
+        await this.mapCoordinates(texture);
+    }
+
+    loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const loader = new THREE.TextureLoader();
+            loader.load(url, (texture) => {
+                resolve(texture);
+            }, undefined, (error) => {
+                reject(error);
+            });
+        });
+    }
+
 
     /**
      * Creates the necessary elements for the curve
@@ -45,6 +65,47 @@ class MyTrack extends THREE.Object3D {
     buildCurve() {
         this.createCurveMaterialsTextures();
         this.createCurveObjects();
+    }
+
+    mapCoordinates(texture) {
+        return new Promise((resolve, reject) => {
+            // Assuming texture is already loaded and passed as an argument
+    
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const image = texture.image;
+    
+            canvas.width = image.width;
+            canvas.height = image.height;
+            
+            context.drawImage(image, 0, 0, image.width, image.height);
+            this.imgSize = image.width
+            const imageData = context.getImageData(0, 0, image.width, image.height).data;
+
+            // Assuming this.whitePixels is defined in the class where this function resides
+            this.whitePixels = [];
+    
+            for (let i = 0; i < imageData.length; i += 4) {
+                const r = imageData[i];
+                const g = imageData[i + 1];
+                const b = imageData[i + 2];
+    
+                if (r > 200 && g > 200 && b > 200) { // non red == white
+                    this.whitePixels.push(i / 4);
+                }
+            }
+    
+            resolve(); // Resolve the promise when processing is complete
+        });
+    }
+    
+
+    getTrackPixels() {
+        return this.whitePixels;
+    }
+
+    getSizeTrack() {
+        return this.imgSize;
     }
 
     /**

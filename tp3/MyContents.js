@@ -18,6 +18,9 @@ class MyContents  {
 
         // shadows
         this.mapSize = 4096
+
+        this.car == null
+        this.initialized = false
     }
 
     /**
@@ -30,10 +33,15 @@ class MyContents  {
             child.receiveShadow = true; // for receiving shadows
           }
     }
-    
-    
-    
 
+    async initializeTrackandCar() {
+        this.track = new MyTrack(this.app);
+        await this.track.loadAndProcessImage(); // Wait for image processing to finish
+        this.car = new MyCar(this.app, 0,0, this.track.getTrackPixels());
+        this.app.scene.add(this.car);
+        this.initialized = true; // Set the initialization flag to true after car creation
+
+    }
 
     /**
      * initializes the contents
@@ -72,21 +80,14 @@ class MyContents  {
         directionalLight.shadow.camera.far = 500;
         this.app.scene.add(directionalLight)
 
-
+        this.initializeTrackandCar()        
         
-        this.car = new MyCar(this.app, 0,0);
-        this.app.scene.add(this.car);
-
-        this.track = new MyTrack(this.app);
-
-
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
         const geometry = new THREE.PlaneGeometry( 250, 250, 100, 100 )
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
         this.app.scene.add(rectangle)
-
     }
 
     /**
@@ -95,7 +96,9 @@ class MyContents  {
      * 
      */
     update() {
-       this.car.update(Date.now())
+        if (this.initialized && this.car !== null) {
+            this.car.update(Date.now(), this.track.getSizeTrack())
+        }
     }
 
 }

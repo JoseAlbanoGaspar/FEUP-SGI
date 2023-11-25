@@ -10,7 +10,7 @@ class MyCar extends THREE.Object3D {
      * 
      * @param {MyApp} app 
      */
-    constructor(app, x, z) {
+    constructor(app, x, z, trackPixels) {
         super();
         this.app = app;
         this.type = 'Group';
@@ -59,7 +59,10 @@ class MyCar extends THREE.Object3D {
         this.initAxis()
         this.initCarLights()
         this.add(this.car)
-      
+
+        // used on car update to see if it is still on track
+        this.whitePixels = trackPixels
+             
         // add event listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
@@ -123,6 +126,30 @@ class MyCar extends THREE.Object3D {
       this.pivot.add(wheel4)
     }
 
+    setOnTrackPixels(pixels) {
+      this.whitePixels = pixels;
+    }
+
+    mapCoordinatesToPixelIndex(x, z, sizeOfImage) {
+      // Calculate the corresponding pixel position from the given x, y coordinates
+      // Assuming x and z are in the range of -125 to 125 in 3D space
+      const half = sizeOfImage / 2; // must return integer
+      const pixelX = Math.floor((x + half) );
+      const pixelZ = Math.floor((z + half) );
+  
+      // Calculate the index in the imageData array corresponding to the pixel position
+      const index = (pixelZ * sizeOfImage) + pixelX; // 250 is the image width
+
+      // Check if the calculated index exists in the list of white pixels
+      if (this.whitePixels.includes(index)) {
+          console.log("inside", index, this.position.x, this.position.z)
+          return index;
+      } else {
+          // If the pixel is not found, you might want to handle this case accordingly
+          console.log('outside track');
+          return -1; // Or any other indication that the pixel wasn't found
+      }
+  }
 
     handleKeyDown(event) {
         const keyCode = event.code;
@@ -243,11 +270,16 @@ class MyCar extends THREE.Object3D {
       this.prevElapsedTime = t
     }
 
+    updateIfOutTrack(sizeTrack) {
+      this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, sizeTrack)
+    }
+
     /**
      * 
      */
-    update(t) {
+    update(t, sizeTrack) {
         this.updateDeltas(t)
+        this.updateIfOutTrack(sizeTrack)
         this.updateVelocity()
         this.updateSteering()
         this.updateCarDirection()

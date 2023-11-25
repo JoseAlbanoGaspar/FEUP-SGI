@@ -28,10 +28,7 @@ class MyCarLights extends THREE.Object3D {
     }
 
     setTarget(x, y, z) {
-        console.log("target")
-        console.log(x, y, z)
-        this.targetObject.position.set(x, y, z); 
-
+        this.targetObject.position.set(x, y, z)
         this.spotLight.target = this.targetObject
 
     }
