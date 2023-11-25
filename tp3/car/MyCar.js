@@ -4,6 +4,7 @@ import { MyCarAxis } from './MyCarAxis.js';
 import { MyBody } from './MyBody.js';
 import { MyCarLights } from './MyCarLights.js';
 
+
 class MyCar extends THREE.Object3D {
     /**
      * 
@@ -15,12 +16,18 @@ class MyCar extends THREE.Object3D {
         this.type = 'Group';
 
         // assign initial position
-        this.position.set(x, 1.5, z)
+        this.position.set(x, 2, z)
 
         // movement parameters
         this.MAX_VELOCITY = 1;
+        this.MAX_STEERING = Math.PI / 8;
+        this.STEERING_ACCELERATION = Math.PI / 2 ;
+        this.STEERING_FRICTION = this.STEERING_ACCELERATION * 1.6;
+        this.ACCELERATION = 0.25
+        this.FRICTION = this.ACCELERATION * 0.8;
+        this.BREAKING = this.ACCELERATION * 2;
+
         this.velocity = 0;
-        this.MAX_STEERING = THREE.MathUtils.degToRad(20);
         this.steering = 0;
 
         // movement flags
@@ -30,11 +37,14 @@ class MyCar extends THREE.Object3D {
         this.right = false;
 
         // deltas
-        this.deltaInc = 0.01;
-        this.deltaSteer = 0.1;
+        this.deltaInc = 0;
+        this.deltaSteer = 0;
 
         //direction
         this.direction = 0;
+
+        // time elapsed
+        this.prevElapsedTime = Date.now()
 
         //pivot for back axis rotation
         this.car = new THREE.Group()
@@ -48,7 +58,6 @@ class MyCar extends THREE.Object3D {
         this.initWheels()
         this.initAxis()
         this.initCarLights()
-
         this.add(this.car)
       
         // add event listeners
@@ -62,24 +71,18 @@ class MyCar extends THREE.Object3D {
       const light = new MyCarLights(this.app);
       const light2 = new MyCarLights(this.app);
 
-      //light.drawHelper()
-      //light2.drawHelper()
-
       this.lights = [light, light2]
 
       // transformations
       light2.position.set(3, 0, -0.75)
       light.position.set(3, 0, 0.75)
 
-      this.car.add(light)
-      this.car.add(light2)
       this.pivot.add(light)
       this.pivot.add(light2)
     }
 
     initBody() {
       const body = new MyBody();
-      this.car.add(body)
       this.pivot.add(body)
     }
 
@@ -93,8 +96,6 @@ class MyCar extends THREE.Object3D {
       axis2.rotation.x = Math.PI / 2
       axis2.position.set(-2, -0.75, 0)
 
-      this.car.add(axis1)
-      this.car.add(axis2)
       this.pivot.add(axis1)
       this.pivot.add(axis2)
     }
@@ -116,11 +117,6 @@ class MyCar extends THREE.Object3D {
       wheel4.position.set(-2, -0.75, 2.25)
 
       // add to group
-      this.car.add(wheel)
-      this.car.add(wheel2)
-      this.car.add(wheel3)
-      this.car.add(wheel4)
-
       this.pivot.add(wheel)
       this.pivot.add(wheel2)
       this.pivot.add(wheel3)
@@ -177,60 +173,86 @@ class MyCar extends THREE.Object3D {
       }    
     }
 
+    updateVelocity() {
+      // back and forward
+      if (this.front && this.velocity <= this.MAX_VELOCITY - this.deltaInc ) { // car moving forward
+        this.velocity += this.deltaInc;
+        if (this.velocity > this.MAX_VELOCITY) this.velocity = this.MAX_VELOCITY
+      }
+      else if (!this.front && this.velocity > 0) { // player released w
+          this.velocity -= this.deltaFric;
+          if (this.velocity < 0) this.velocity = 0; // make the car stop
+      }
+
+      if (this.back && this.velocity >= - (this.MAX_VELOCITY - this.deltaInc)) { // car moving backwards
+          this.velocity -= this.deltaInc;
+          if (this.velocity < - this.MAX_VELOCITY) this.velocity = - this.MAX_VELOCITY
+
+      }
+      else if (!this.back && this.velocity < 0) {
+        this.velocity += this.deltaFric;
+        if (this.velocity > 0) this.velocity = 0; // make the car stop
+      }
+
+      if (this.back && this.velocity > 0 ) { // braking
+        this.velocity -= this.deltaBreak
+      }
+      else if (this.front && this.velocity < 0) {
+        this.velocity += this.deltaInc
+      }
+    }
+
+    updateSteering() {
+      // left and right
+      if (this.left && !this.right ) {
+          this.steering -= this.deltaSteer
+          if (this.steering < - this.MAX_STEERING) this.steering = - this.MAX_STEERING
+      }
+      else if (!this.left && this.right) {
+        this.steering += this.deltaSteer
+        if (this.steering > this.MAX_STEERING) this.steering = this.MAX_STEERING
+      }
+
+      if (this.velocity != 0 && !this.left && !this.right) {
+          if (this.steering > this.deltaSteer*2) this.steering -= this.deltaSteerFric 
+          else if (this.steering < - this.deltaSteer*2) this.steering += this.deltaSteerFric
+          else this.steering = 0
+      }
+    }
+
+    updateCarDirection() {
+      if (this.velocity != 0) {
+        this.direction += this.steering / 7  * this.velocity
+      }
+
+      this.rotation.y = -this.direction
+    }
+
+    updateCarPosition() {
+      this.position.set(this.position.x + this.velocity * Math.cos(this.direction), this.position.y , this.position.z + this.velocity * Math.sin(this.direction));
+
+    }
+
+    updateDeltas(t) {
+      let elapsedTime = (t - this.prevElapsedTime ) / 1000 // time in seconds
+      this.deltaInc = this.ACCELERATION * elapsedTime
+      this.deltaFric = this.FRICTION * elapsedTime
+      this.deltaSteer = this.STEERING_ACCELERATION * elapsedTime
+      this.deltaSteerFric = this.STEERING_FRICTION * elapsedTime
+      this.deltaBreak = this.BREAKING * elapsedTime;
+      this.prevElapsedTime = t
+    }
+
     /**
      * 
      */
-    update() {
-        // back and forward
-        if (this.front && this.velocity <= this.MAX_VELOCITY - this.deltaInc ) { // car moving forward
-            this.velocity += this.deltaInc;
-            if (this.velocity > this.MAX_VELOCITY) this.velocity = this.MAX_VELOCITY
-        }
-        if (!this.front && this.velocity > 0) { // player released w
-            this.velocity -= this.deltaInc;
-            if (this.velocity < 0) this.velocity = 0; // make the car stop
-        }
-
-        if (this.back && this.velocity >= - (this.MAX_VELOCITY - this.deltaInc)) { // car moving backwards
-            this.velocity -= this.deltaInc;
-            if (this.velocity < - this.MAX_VELOCITY) this.velocity = - this.MAX_VELOCITY
-
-        }
-        if (!this.back && this.velocity < 0) {
-            this.velocity += this.deltaInc;
-            if (this.velocity > 0) this.velocity = 0; // make the car stop
-        }
-        // left and right
-
-        if (this.velocity != 0) {
-            this.direction += this.steering / 7  * this.velocity
-        }
-
-        if (this.left && !this.right ) {
-            this.steering -= this.deltaSteer
-            if (this.steering < - this.MAX_STEERING) this.steering = - this.MAX_STEERING
-        }
-
-        if (this.velocity != 0 && !this.left && !this.right) {
-            if (this.steering > this.deltaSteer*2) this.steering -= this.deltaSteer * 0.2
-            else if (this.steering < - this.deltaSteer*2) this.steering += this.deltaSteer * 0.2
-            else this.steering = 0
-        }
-
-        if (!this.left && this.right) {
-            this.steering += this.deltaSteer
-            if (this.steering > this.MAX_STEERING) this.steering = this.MAX_STEERING
-
-        }
-
-        this.position.set(this.position.x + this.velocity * Math.cos(this.direction), this.position.y , this.position.z + this.velocity * Math.sin(this.direction));
-        
-        
-        this.rotation.y = -this.direction
-
+    update(t) {
+        this.updateDeltas(t)
+        this.updateVelocity()
+        this.updateSteering()
+        this.updateCarDirection()
+        this.updateCarPosition()
         this.updateWheelDirection()
-
-
     }
 
 }
