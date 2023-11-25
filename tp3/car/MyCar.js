@@ -157,10 +157,6 @@ class MyCar extends THREE.Object3D {
         wheel.rotation.y = -this.steering
       }    
     }
-    updateLights() {
-      this.lights[0].setTarget(this.position.x + 6, this.position.y - 2.5, this.position.z + 0.75)
-      this.lights[1].setTarget(this.position.x + 6, this.position.y - 2.5, this.position.z - 0.75)
-    }
 
     /**
      * 
@@ -214,7 +210,6 @@ class MyCar extends THREE.Object3D {
         this.rotation.y = -this.direction
 
         this.updateWheelDirection()
-        //this.updateLights()
 
 
     }
