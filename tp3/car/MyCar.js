@@ -41,7 +41,7 @@ class MyCar extends THREE.Object3D {
         this.deltaSteer = 0;
 
         //direction
-        this.direction = 0;
+        this.direction = Math.PI / 2;
 
         // time elapsed
         this.prevElapsedTime = Date.now()
@@ -143,11 +143,11 @@ class MyCar extends THREE.Object3D {
       // Check if the calculated index exists in the list of white pixels
       if (this.whitePixels.includes(index)) {
           console.log("inside", index, this.position.x, this.position.z)
-          return index;
+          return true;
       } else {
           // If the pixel is not found, you might want to handle this case accordingly
           console.log('outside track');
-          return -1; // Or any other indication that the pixel wasn't found
+          return false; // Or any other indication that the pixel wasn't found
       }
   }
 
@@ -271,7 +271,9 @@ class MyCar extends THREE.Object3D {
     }
 
     updateIfOutTrack(sizeTrack) {
-      this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, sizeTrack)
+      if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, sizeTrack)) {
+        this.velocity *= 0.95
+      }
     }
 
     /**

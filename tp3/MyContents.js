@@ -37,7 +37,7 @@ class MyContents  {
     async initializeTrackandCar() {
         this.track = new MyTrack(this.app);
         await this.track.loadAndProcessImage(); // Wait for image processing to finish
-        this.car = new MyCar(this.app, 0,0, this.track.getTrackPixels());
+        this.car = new MyCar(this.app, 50 ,0, this.track.getTrackPixels());
         this.app.scene.add(this.car);
         this.initialized = true; // Set the initialization flag to true after car creation
 
