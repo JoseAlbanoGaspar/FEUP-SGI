@@ -62,8 +62,17 @@ class MyContents  {
 
         
         
-        this.car = new MyCar(0,0);
+        this.car = new MyCar(this.app, 0,0);
         this.app.scene.add(this.car);
+
+
+        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
+        const geometry = new THREE.PlaneGeometry( 100, 100, 100, 100 )
+
+        const rectangle = new THREE.Mesh(geometry, planeMaterial)
+        rectangle.rotation.x = 3 * Math.PI / 2 
+        this.app.scene.add(rectangle)
+
             
         
 

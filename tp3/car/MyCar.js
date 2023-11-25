@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyWheel } from './MyWheel.js';
 import { MyCarAxis } from './MyCarAxis.js';
 import { MyBody } from './MyBody.js';
+import { MyCarLights } from './MyCarLights.js';
 
 class MyCar extends THREE.Object3D {
     /**
@@ -14,7 +15,7 @@ class MyCar extends THREE.Object3D {
         this.type = 'Group';
 
         // assign initial position
-        this.position.set(x, 0, z)
+        this.position.set(x, 1.5, z)
 
         // movement parameters
         this.MAX_VELOCITY = 1;
@@ -35,16 +36,34 @@ class MyCar extends THREE.Object3D {
         //direction
         this.direction = 0;
 
-        // initCar
+        //initCar
         this.initBody()
         this.initWheels()
         this.initAxis()
+        this.initCarLights()
       
         // add event listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
+    }
+
+    initCarLights() {
+      const light = new MyCarLights(this.app);
+      const light2 = new MyCarLights(this.app);
+
+      //light.drawHelper()
+      //light2.drawHelper()
+
+      this.lights = [light, light2]
+
+      // transformations
+      light2.position.set(3, 0, -0.75)
+      light.position.set(3, 0, 0.75)
+
+      this.add(light)
+      this.add(light2)
     }
 
     initBody() {
@@ -138,6 +157,10 @@ class MyCar extends THREE.Object3D {
         wheel.rotation.y = -this.steering
       }    
     }
+    updateLights() {
+      this.lights[0].setTarget(this.position.x + 6, this.position.y - 2.5, this.position.z + 0.75)
+      this.lights[1].setTarget(this.position.x + 6, this.position.y - 2.5, this.position.z - 0.75)
+    }
 
     /**
      * 
@@ -191,7 +214,7 @@ class MyCar extends THREE.Object3D {
         this.rotation.y = -this.direction
 
         this.updateWheelDirection()
-       
+        //this.updateLights()
 
 
     }
