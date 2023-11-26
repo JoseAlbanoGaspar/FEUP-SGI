@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyCar } from './car/MyCar.js';
 import { MyTrack } from './MyTrack.js';
+import { MyParkingLot } from './MyParkingLot.js';
 
 /**
  *  This class contains the contents of out application
@@ -41,6 +42,21 @@ class MyContents  {
         this.app.scene.add(this.car);
         this.initialized = true; // Set the initialization flag to true after car creation
 
+    }
+
+    initializeParkingLots() {
+        const playerPark = new MyParkingLot()
+        playerPark.position.set(145, 0, -80);
+        
+        const opponentPark = new MyParkingLot()
+        opponentPark.position.set(145, 0, 80);
+
+        const obstaclesPark = new MyParkingLot()
+        obstaclesPark.position.set(145, 0, 0);
+
+        this.app.scene.add(playerPark)
+        this.app.scene.add(opponentPark)
+        this.app.scene.add(obstaclesPark)
     }
 
     /**
@@ -88,6 +104,9 @@ class MyContents  {
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
         this.app.scene.add(rectangle)
+
+        this.initializeParkingLots()
+
     }
 
     /**
