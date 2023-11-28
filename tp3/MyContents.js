@@ -3,6 +3,8 @@ import { MyAxis } from './MyAxis.js';
 import { MyCar } from './car/MyCar.js';
 import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
+import { MyObstacle } from './MyObstacle.js';
+import { MyPowerUps } from './MyPowerUps.js';
 
 /**
  *  This class contains the contents of out application
@@ -57,6 +59,33 @@ class MyContents  {
         this.app.scene.add(playerPark)
         this.app.scene.add(opponentPark)
         this.app.scene.add(obstaclesPark)
+    }
+
+    drawObjects() {
+        const obs = new MyObstacle()
+        this.app.scene.add(obs)
+
+        const powerups = new MyPowerUps()
+        this.app.scene.add(powerups)
+    }
+
+    stateGame(state) {
+        switch (state) {
+            case "start":
+                startGame()
+                break;
+            
+            case "game":
+                startGame()
+                break;
+                
+            case "end":
+                endGame()
+                break;    
+        
+            default:
+                break;
+        }
     }
 
     /**
