@@ -3,6 +3,7 @@ import { MyAxis } from './MyAxis.js';
 import { MyCar } from './car/MyCar.js';
 import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
+import { MyRace } from './MyRace.js';
 
 /**
  *  This class contains the contents of out application
@@ -23,6 +24,10 @@ class MyContents  {
 
         this.car == null
         this.initialized = false
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 3* Math.PI / 2, false);
+        this.track = new MyTrack();
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
     }
 
     /**
@@ -34,15 +39,6 @@ class MyContents  {
             child.castShadow = true; // for casting shadows
             child.receiveShadow = true; // for receiving shadows
           }
-    }
-
-    async initializeTrackandCar() {
-        this.track = new MyTrack(this.app);
-        await this.track.load(); // Wait for image processing to finish
-        this.car = new MyCar(this.app, 50 ,0, this.track.getTrackPixels(), this.track.getSizeTrack());
-        this.app.scene.add(this.car);
-        this.initialized = true; // Set the initialization flag to true after car creation
-
     }
 
     initializeParkingLots() {
@@ -95,9 +91,7 @@ class MyContents  {
         directionalLight.shadow.mapSize.height = 1024;
         directionalLight.shadow.camera.near = 0.5;
         directionalLight.shadow.camera.far = 500;
-        this.app.scene.add(directionalLight)
-
-        this.initializeTrackandCar()        
+        this.app.scene.add(directionalLight)        
         
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
@@ -116,9 +110,7 @@ class MyContents  {
      * 
      */
     update() {
-        if (this.initialized && this.car !== null) {
-            this.car.update(Date.now())
-        }
+        this.race.update(Date.now());
     }
 
 }

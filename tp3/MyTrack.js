@@ -2,10 +2,9 @@ import * as THREE from 'three';
 
 class MyTrack extends THREE.Object3D {
 
-    constructor(app) {
+    constructor() {
         super();
         this.type = 'Group';
-        this.app = app;
 
         //Curve related attributes
         this.segments = 100;
@@ -39,7 +38,7 @@ class MyTrack extends THREE.Object3D {
         ]);
 
         this.whitePixels = [];
-        this.buildCurve();
+        this.add(this.buildCurve());
     }
 
     async load() {
@@ -64,7 +63,7 @@ class MyTrack extends THREE.Object3D {
     */
     buildCurve() {
         this.createCurveMaterialsTextures();
-        this.createCurveObjects();
+        return this.createCurveObjects();
     }
 
     mapCoordinates(texture) {
@@ -163,7 +162,8 @@ class MyTrack extends THREE.Object3D {
         this.curve.rotateZ(Math.PI);
         this.curve.scale.set(1,0.2,1);
         this.curve.position.set(0, -1.3, 0);
-        this.app.scene.add(this.curve);
+        //this.app.scene.add(this.curve);
+        return this.curve;
     }
 }
 

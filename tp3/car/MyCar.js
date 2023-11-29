@@ -10,10 +10,11 @@ class MyCar extends THREE.Object3D {
      * 
      * @param {MyApp} app 
      */
-    constructor(app, x, z, trackPixels, trackSize) {
+    constructor(app, x, z, direction, isPlayer = false,  trackPixels = [], trackSize = -1) {
         super();
         this.app = app;
         this.type = 'Group';
+        this.isPlayer = isPlayer;
 
         // assign initial position
         this.position.set(x, 2, z)
@@ -41,7 +42,8 @@ class MyCar extends THREE.Object3D {
         this.deltaSteer = 0;
 
         //direction
-        this.direction = Math.PI / 2;
+        this.direction = direction;
+        this.rotation.y = direction;
 
         // time elapsed
         this.prevElapsedTime = Date.now()
@@ -65,10 +67,20 @@ class MyCar extends THREE.Object3D {
         this.trackSize = trackSize
              
         // add event listeners
-        this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.handleKeyUp = this.handleKeyUp.bind(this);
-        window.addEventListener('keydown', this.handleKeyDown);
-        window.addEventListener('keyup', this.handleKeyUp);
+        if (this.isPlayer) {
+          this.handleKeyDown = this.handleKeyDown.bind(this);
+          this.handleKeyUp = this.handleKeyUp.bind(this);
+          window.addEventListener('keydown', this.handleKeyDown);
+          window.addEventListener('keyup', this.handleKeyUp);
+        }
+    }
+
+    setTrackPixels(trackPixels) {
+      this.whitePixels = trackPixels; 
+    }
+
+    setTrackSize(trackSize) {
+      this.trackSize = trackSize; 
     }
 
     initCarLights() {
@@ -125,10 +137,6 @@ class MyCar extends THREE.Object3D {
       this.pivot.add(wheel2)
       this.pivot.add(wheel3)
       this.pivot.add(wheel4)
-    }
-
-    setOnTrackPixels(pixels) {
-      this.whitePixels = pixels;
     }
 
     mapCoordinatesToPixelIndex(x, z) {
