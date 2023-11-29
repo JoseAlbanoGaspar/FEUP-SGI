@@ -61,12 +61,14 @@ class MyContents  {
         this.app.scene.add(obstaclesPark)
     }
 
-    drawObjects() {
-        const obs = new MyObstacle()
-        this.app.scene.add(obs)
+    drawObstacle() {
+        const obs = new MyObstacle(this.app)
+        return obs
+    }
 
-        const powerups = new MyPowerUps()
-        this.app.scene.add(powerups)
+    drawPowerUps() {
+        const powerups = new MyPowerUps(this.app)
+        return powerups
     }
 
     stateGame(state) {
@@ -135,6 +137,8 @@ class MyContents  {
         this.app.scene.add(rectangle)
 
         this.initializeParkingLots()
+        this.drawObstacle()
+        this.drawPowerUps()
 
     }
 

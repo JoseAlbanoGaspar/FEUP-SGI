@@ -2,7 +2,9 @@ import * as THREE from 'three'
 
 class MyPowerUps extends THREE.Object3D {
 
-    constructor() {
+    constructor(app) {
+        super()
+        this.app = app
 
         const material = new THREE.MeshPhongMaterial({color: "#0000ff"})
         const box = new THREE.BoxGeometry(1, 1, 1, 32, 32, 32)
@@ -10,7 +12,9 @@ class MyPowerUps extends THREE.Object3D {
         powerups.receiveShadow = true
         powerups.castShadow = true
 
-        powerups.position.set(1, 1, 1)
+        powerups.position.set(45, 1, 10)
+
+        this.app.scene.add(powerups)
 
     }
 }
