@@ -10,11 +10,12 @@ class MyCar extends THREE.Object3D {
      * 
      * @param {MyApp} app 
      */
-    constructor(app, x, z, direction, isPlayer = false,  trackPixels = [], trackSize = -1) {
+    constructor(app, x, z, direction, bodyColor, isPlayer = false,  trackPixels = [], trackSize = -1) {
         super();
         this.app = app;
         this.type = 'Group';
         this.isPlayer = isPlayer;
+        this.bodyColor = bodyColor;
 
         // assign initial position
         this.position.set(x, 2, z)
@@ -98,7 +99,7 @@ class MyCar extends THREE.Object3D {
     }
 
     initBody() {
-      const body = new MyBody();
+      const body = new MyBody(this.bodyColor);
       this.pivot.add(body)
     }
 

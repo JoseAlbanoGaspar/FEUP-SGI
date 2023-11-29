@@ -24,8 +24,10 @@ class MyContents  {
 
         this.car == null
         this.initialized = false
-        this.playerCar = new MyCar(this.app, 56, 0, Math.PI / 2, true);
-        this.opponentCar = new MyCar(this.app, 56, 0, 3* Math.PI / 2, false);
+        this.playerCarColor = "#ff0000"
+        this.opponentCarColor = "#0000ff"
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 3* Math.PI / 2, this.opponentCarColor, false);
         this.track = new MyTrack();
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
     }
