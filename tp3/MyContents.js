@@ -16,6 +16,7 @@ class MyContents  {
     constructor(app) {
         this.app = app
         this.axis = null
+        this.TRACK_SIZE = 250; // for now this value should not change - need to update the track.load() and car.mapCoordinatesToPixelIndex() first
 
         // shadows
         this.mapSize = 4096
@@ -99,7 +100,7 @@ class MyContents  {
         this.initializeTrackandCar()        
         
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
-        const geometry = new THREE.PlaneGeometry( 250, 250, 100, 100 )
+        const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
