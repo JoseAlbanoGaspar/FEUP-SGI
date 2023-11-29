@@ -150,11 +150,11 @@ class MyCar extends THREE.Object3D {
 
       // Check if the calculated index exists in the list of white pixels
       if (this.whitePixels.includes(index)) {
-          console.log("inside", index, this.position.x, this.position.z)
+          //console.log("inside", index, this.position.x, this.position.z)
           return true;
       } else {
           // If the pixel is not found, you might want to handle this case accordingly
-          console.log('outside track');
+          //console.log('outside track');
           return false; // Or any other indication that the pixel wasn't found
       }
   }
@@ -291,6 +291,7 @@ class MyCar extends THREE.Object3D {
       if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, this.trackSize)) {
         this.velocity *= 0.95
       }
+      
     }
 
     /**
@@ -305,6 +306,8 @@ class MyCar extends THREE.Object3D {
         this.updateWheelRotationVelocity()
         this.updateCarPosition()
         this.updateWheelDirection()
+
+        //console.log("new THREE.Vector3( ",this.position.x, ", 0,", this.position.z, ")," ) uncomment to build more routes
     }
 
 }

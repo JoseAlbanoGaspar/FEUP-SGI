@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import { MyRoutes } from './MyRoutes.js';
 class MyTrack extends THREE.Object3D {
 
     constructor() {
@@ -14,6 +14,11 @@ class MyTrack extends THREE.Object3D {
         this.showMesh = true;
         this.showLine = true;
         this.closedCurve = false;
+
+        this.routes = [
+            new MyRoutes().route1(),
+            new MyRoutes().route2()
+        ]
 
         //updated with trackMap
         this.imgSize = 0;
