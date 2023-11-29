@@ -42,7 +42,7 @@ class MyTrack extends THREE.Object3D {
         this.buildCurve();
     }
 
-    async loadAndProcessImage() {
+    async load() {
         const texture = await this.loadImage('textures/trackMap.png');
         await this.mapCoordinates(texture);
     }

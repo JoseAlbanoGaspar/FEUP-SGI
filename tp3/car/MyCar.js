@@ -10,7 +10,7 @@ class MyCar extends THREE.Object3D {
      * 
      * @param {MyApp} app 
      */
-    constructor(app, x, z, trackPixels) {
+    constructor(app, x, z, trackPixels, trackSize) {
         super();
         this.app = app;
         this.type = 'Group';
@@ -62,6 +62,7 @@ class MyCar extends THREE.Object3D {
 
         // used on car update to see if it is still on track
         this.whitePixels = trackPixels
+        this.trackSize = trackSize
              
         // add event listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -130,14 +131,14 @@ class MyCar extends THREE.Object3D {
       this.whitePixels = pixels;
     }
 
-    mapCoordinatesToPixelIndex(x, z, sizeOfImage) {
+    mapCoordinatesToPixelIndex(x, z) {
       // Calculate the corresponding pixel position from the given x, y coordinates
-      const half = sizeOfImage / 2; // must return integer
+      const half = this.trackSize / 2; // must return integer
       const pixelX = Math.floor((x + half) );
       const pixelZ = Math.floor((z + half) );
   
       // Calculate the index in the imageData array corresponding to the pixel position
-      const index = (pixelZ * sizeOfImage) + pixelX; // 250 is the image width
+      const index = (pixelZ * this.trackSize) + pixelX; // 250 is the image width
 
       // Check if the calculated index exists in the list of white pixels
       if (this.whitePixels.includes(index)) {
@@ -278,8 +279,8 @@ class MyCar extends THREE.Object3D {
       this.prevElapsedTime = t
     }
 
-    updateIfOutTrack(sizeTrack) {
-      if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, sizeTrack)) {
+    updateIfOutTrack() {
+      if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, this.trackSize)) {
         this.velocity *= 0.95
       }
     }
@@ -287,9 +288,9 @@ class MyCar extends THREE.Object3D {
     /**
      * 
      */
-    update(t, sizeTrack) {
+    update(t) {
         this.updateDeltas(t)
-        this.updateIfOutTrack(sizeTrack)
+        this.updateIfOutTrack()
         this.updateVelocity()
         this.updateSteering()
         this.updateCarDirection()
