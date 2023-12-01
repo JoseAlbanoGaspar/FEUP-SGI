@@ -5,7 +5,7 @@ class MyRoutes {
 
     route1() {
         return [
-            
+                        
                 new THREE.Vector3(56, 0, 0),
                 new THREE.Vector3(56, 0, 50),
                 new THREE.Vector3(40, 0, 70),

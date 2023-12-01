@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { MyAnimation } from './MyAnimation.js';
 
 class MyRace {
     constructor(app, playerCar, opponentCar, track) {
@@ -7,10 +8,13 @@ class MyRace {
         this.opponentCar = opponentCar;
         this.track = track;
         this.route = this.track.getRoutes()[0]; // choosing the route
+        this.clock = new THREE.Clock();
+
         this.initialized = false;
 
-        this.init()
+        this.init();
         this.display();
+        this.starOpponentCarAnimation();
         
         this.debugKeyFrames();
     }
@@ -20,6 +24,20 @@ class MyRace {
         this.playerCar.setTrackPixels(this.track.getTrackPixels());
         this.playerCar.setTrackSize(this.track.getSizeTrack());
         this.initialized = true; 
+    }
+
+    starOpponentCarAnimation() {
+        this.animationBuilder = new MyAnimation(this.route);
+        // Create an AnimationMixer
+        this.mixer = new THREE.AnimationMixer(this.opponentCar)
+
+        // Create AnimationActions for each clip
+        const positionAction = this.mixer.clipAction(this.animationBuilder.getPositionClip());
+        const rotationAction = this.mixer.clipAction(this.animationBuilder.getRotationClip());
+
+        // Play both animations
+        positionAction.play()
+        rotationAction.play()
     }
 
     display() {
@@ -57,6 +75,9 @@ class MyRace {
         if (this.initialized) {
             this.playerCar.update(Date.now())
         }
+        const delta = this.clock.getDelta()
+        this.mixer.update(delta)
+
     }
 }
 
