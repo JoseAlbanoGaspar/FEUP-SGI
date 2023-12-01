@@ -2,7 +2,7 @@ import * as THREE from 'three'
 
 class MyObstacle extends THREE.Object3D {
 
-    constructor(app) {
+    constructor(app, x, z) {
         super()
         this.app = app;
 
@@ -12,7 +12,7 @@ class MyObstacle extends THREE.Object3D {
         obstacle.receiveShadow = true
         obstacle.castShadow = true
 
-        obstacle.position.set(45, 1, 0)
+        obstacle.position.set(x, 1, z)
         
         this.app.scene.add(obstacle)
     }

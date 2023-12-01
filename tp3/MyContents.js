@@ -5,6 +5,8 @@ import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
 import { MyObstacle } from './MyObstacle.js';
 import { MyPowerUps } from './MyPowerUps.js';
+import { MyInitialScreen } from './MyInitialScreen.js';
+import { MyInterruptScreen } from './MyInterruptScreen.js';
 
 /**
  *  This class contains the contents of out application
@@ -23,7 +25,9 @@ class MyContents  {
         this.mapSize = 4096
 
         this.car == null
+        this.obstacles = []
         this.initialized = false
+        this.state = "start"
     }
 
     /**
@@ -62,8 +66,17 @@ class MyContents  {
     }
 
     drawObstacle() {
-        const obs = new MyObstacle(this.app)
+        const obs = new MyObstacle(this.app, 45, 3)
+        this.obstacles.push(obs)
+        console.log("OBSTACLES ", this.obstacles)
         return obs
+    }
+
+    colisionWithObstacle() {
+        //ir buscar o centro do carro
+        //ir buscar as coordenadas do obstáculo
+        //fazer a distância entre o centro do carro e o obstáculo
+        //se for menor que o raio do carro, bateu
     }
 
     drawPowerUps() {
@@ -71,21 +84,33 @@ class MyContents  {
         return powerups
     }
 
-    stateGame(state) {
-        switch (state) {
+    stateGame() {
+        switch (this.state) {
             case "start":
-                startGame()
+                //MyInitalPage
+                console.log("INITIAL ", this.state)
+                let init = new MyInitialScreen(this.app)
+                this.state = init.startGame()
                 break;
             
             case "game":
-                startGame()
+                //MyGame
+                console.log("GAME ", this.state)
                 break;
+
+            case "pause":
+                //pause screen
+                let pause = new MyInterruptScreen(this.state)
+                break;    
                 
             case "end":
+                //MyEndPage
                 endGame()
                 break;    
         
             default:
+                //default exist the game
+                exit()
                 break;
         }
     }
@@ -139,6 +164,8 @@ class MyContents  {
         this.initializeParkingLots()
         this.drawObstacle()
         this.drawPowerUps()
+        this.colisionWithObstacle()
+        this.stateGame(this.state)
 
     }
 
@@ -151,6 +178,8 @@ class MyContents  {
         if (this.initialized && this.car !== null) {
             this.car.update(Date.now(), this.track.getSizeTrack())
         }
+
+        this.stateGame(this.state)
     }
 
 }
