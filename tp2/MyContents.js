@@ -129,7 +129,7 @@ class MyContents  {
             const specular = material.specular
         
             const materialObject = new THREE.MeshPhongMaterial({color: color, specular: specular, 
-                emissive: emissive, shininess: shininess})
+                emissive: emissive, shininess: shininess, wireframe: material.wireframe})
 
             if (material.textureref) {
                 let textureMaterial

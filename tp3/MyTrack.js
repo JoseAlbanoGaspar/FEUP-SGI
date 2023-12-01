@@ -104,6 +104,10 @@ class MyTrack extends THREE.Object3D {
     }
     
 
+    getRoutes() {
+        return this.routes;
+    }
+
     getTrackPixels() {
         return this.whitePixels;
     }

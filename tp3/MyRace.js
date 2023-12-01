@@ -1,13 +1,18 @@
+import * as THREE from 'three';
+
 class MyRace {
     constructor(app, playerCar, opponentCar, track) {
         this.app = app;
         this.playerCar = playerCar;
         this.opponentCar = opponentCar;
         this.track = track;
+        this.route = this.track.getRoutes()[0]; // choosing the route
         this.initialized = false;
 
         this.init()
         this.display();
+        
+        this.debugKeyFrames();
     }
 
     async init() {
@@ -18,9 +23,34 @@ class MyRace {
     }
 
     display() {
-        this.app.scene.add(this.track);
+        //this.app.scene.add(this.track);
         this.app.scene.add(this.playerCar);
         this.app.scene.add(this.opponentCar);
+    }
+
+    /**
+     * Build control points and a visual path for debug
+     */
+    debugKeyFrames() {
+
+        let spline = new THREE.CatmullRomCurve3([...this.route])
+        // Setup visual control points
+
+        for (let i = 0; i < this.route.length; i++) {
+            const geometry = new THREE.SphereGeometry(1, 32, 32)
+            const material = new THREE.MeshBasicMaterial({ color: 0x0000ff })
+            const sphere = new THREE.Mesh(geometry, material)
+            sphere.position.set(... this.route[i])
+
+            this.app.scene.add(sphere)
+        }
+
+        const tubeGeometry = new THREE.TubeGeometry(spline, 100, 0.05, 10, false)
+        const tubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+        const tubeMesh = new THREE.Mesh(tubeGeometry, tubeMaterial)
+
+        this.app.scene.add(tubeMesh)
+
     }
 
     update() {

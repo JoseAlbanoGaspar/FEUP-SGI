@@ -83,7 +83,8 @@
             shininess="10" 
             textureref="tableTex" 
             texlength_s="1" 
-            texlength_t="1" />
+            texlength_t="1"
+            wireframe="true" />
 			
 		<material id="leftWallApp" 
             emissive="0.0 0.0 0.0 1" 
@@ -132,7 +133,8 @@
             shininess="10" 
             textureref="stuffedTex" 
             texlength_s="1" 
-            texlength_t="1" />    
+            texlength_t="1" 
+            wireframe="true"/>    
 
         <material id="pinguinApp" 
             color="1 1 1 1.0" 
