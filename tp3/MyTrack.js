@@ -1,11 +1,10 @@
 import * as THREE from 'three';
-
+import { MyRoutes } from './MyRoutes.js';
 class MyTrack extends THREE.Object3D {
 
-    constructor(app) {
+    constructor() {
         super();
         this.type = 'Group';
-        this.app = app;
 
         //Curve related attributes
         this.segments = 100;
@@ -15,6 +14,11 @@ class MyTrack extends THREE.Object3D {
         this.showMesh = true;
         this.showLine = true;
         this.closedCurve = false;
+
+        this.routes = [
+            new MyRoutes().route1(),
+            new MyRoutes().route2()
+        ]
 
         //updated with trackMap
         this.imgSize = 0;
@@ -39,10 +43,10 @@ class MyTrack extends THREE.Object3D {
         ]);
 
         this.whitePixels = [];
-        this.buildCurve();
+        this.add(this.buildCurve());
     }
 
-    async loadAndProcessImage() {
+    async load() {
         const texture = await this.loadImage('textures/trackMap.png');
         await this.mapCoordinates(texture);
     }
@@ -64,7 +68,7 @@ class MyTrack extends THREE.Object3D {
     */
     buildCurve() {
         this.createCurveMaterialsTextures();
-        this.createCurveObjects();
+        return this.createCurveObjects();
     }
 
     mapCoordinates(texture) {
@@ -99,6 +103,10 @@ class MyTrack extends THREE.Object3D {
         });
     }
     
+
+    getRoutes() {
+        return this.routes;
+    }
 
     getTrackPixels() {
         return this.whitePixels;
@@ -163,7 +171,8 @@ class MyTrack extends THREE.Object3D {
         this.curve.rotateZ(Math.PI);
         this.curve.scale.set(1,0.2,1);
         this.curve.position.set(0, -1.3, 0);
-        this.app.scene.add(this.curve);
+        //this.app.scene.add(this.curve);
+        return this.curve;
     }
 }
 

@@ -7,6 +7,7 @@ import { MyObstacle } from './MyObstacle.js';
 import { MyPowerUps } from './MyPowerUps.js';
 import { MyInitialScreen } from './MyInitialScreen.js';
 import { MyInterruptScreen } from './MyInterruptScreen.js';
+import { MyRace } from './MyRace.js';
 
 /**
  *  This class contains the contents of out application
@@ -20,14 +21,22 @@ class MyContents  {
     constructor(app) {
         this.app = app
         this.axis = null
+        this.TRACK_SIZE = 250; // for now this value should not change - need to update the track.load() and car.mapCoordinatesToPixelIndex() first
 
         // shadows
         this.mapSize = 4096
 
         this.car == null
         this.obstacles = []
+        this.powerUps = []
         this.initialized = false
         this.state = "start"
+        this.playerCarColor = "#ff0000"
+        this.opponentCarColor = "#0000ff"
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 3* Math.PI / 2, this.opponentCarColor, false);
+        this.track = new MyTrack();
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
     }
 
     /**
@@ -39,15 +48,6 @@ class MyContents  {
             child.castShadow = true; // for casting shadows
             child.receiveShadow = true; // for receiving shadows
           }
-    }
-
-    async initializeTrackandCar() {
-        this.track = new MyTrack(this.app);
-        await this.track.loadAndProcessImage(); // Wait for image processing to finish
-        this.car = new MyCar(this.app, 50 ,0, this.track.getTrackPixels());
-        this.app.scene.add(this.car);
-        this.initialized = true; // Set the initialization flag to true after car creation
-
     }
 
     initializeParkingLots() {
@@ -67,8 +67,9 @@ class MyContents  {
 
     drawObstacle() {
         const obs = new MyObstacle(this.app, 45, 3)
+        const obs1 = new MyObstacle(this.app, -45, 3)
         this.obstacles.push(obs)
-        console.log("OBSTACLES ", this.obstacles)
+        this.obstacles.push(obs1)
         return obs
     }
 
@@ -77,6 +78,21 @@ class MyContents  {
         //ir buscar as coordenadas do obstáculo
         //fazer a distância entre o centro do carro e o obstáculo
         //se for menor que o raio do carro, bateu
+        //console.log("car position ", this.playerCar.getPosition())
+        for (let obstacle in this.obstacles){
+            //console.log("nhbhvjbnh, ", this.obstacles[obstacle].position)
+            let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
+            //console.log(distance)
+            if(distance <= 2){
+                console.log("colidiu!!!! :)")
+                const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
+                this.obstacles[obstacle].material = newMaterial
+            }
+        }
+    }
+
+    colisionWithPowerUps() {
+
     }
 
     drawPowerUps() {
@@ -150,12 +166,10 @@ class MyContents  {
         directionalLight.shadow.mapSize.height = 1024;
         directionalLight.shadow.camera.near = 0.5;
         directionalLight.shadow.camera.far = 500;
-        this.app.scene.add(directionalLight)
-
-        this.initializeTrackandCar()        
+        this.app.scene.add(directionalLight)        
         
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
-        const geometry = new THREE.PlaneGeometry( 250, 250, 100, 100 )
+        const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
@@ -179,7 +193,9 @@ class MyContents  {
             this.car.update(Date.now(), this.track.getSizeTrack())
         }
 
-        this.stateGame(this.state)
+        //this.stateGame(this.state)
+        this.race.update(Date.now());
+        this.colisionWithObstacle();
     }
 
 }

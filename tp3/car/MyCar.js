@@ -10,10 +10,12 @@ class MyCar extends THREE.Object3D {
      * 
      * @param {MyApp} app 
      */
-    constructor(app, x, z, trackPixels) {
+    constructor(app, x, z, direction, bodyColor, isPlayer = false,  trackPixels = [], trackSize = -1) {
         super();
         this.app = app;
         this.type = 'Group';
+        this.isPlayer = isPlayer;
+        this.bodyColor = bodyColor;
 
         // assign initial position
         this.position.set(x, 2, z)
@@ -41,7 +43,8 @@ class MyCar extends THREE.Object3D {
         this.deltaSteer = 0;
 
         //direction
-        this.direction = Math.PI / 2;
+        this.direction = direction;
+        this.rotation.y = direction;
 
         // time elapsed
         this.prevElapsedTime = Date.now()
@@ -64,19 +67,31 @@ class MyCar extends THREE.Object3D {
         this.initAxis()
         this.initCarLights()
         this.add(this.car)
+        console.log("car ", this.car.position)
 
         // used on car update to see if it is still on track
         this.whitePixels = trackPixels
+        this.trackSize = trackSize
              
         // add event listeners
-        this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.handleKeyUp = this.handleKeyUp.bind(this);
-        window.addEventListener('keydown', this.handleKeyDown);
-        window.addEventListener('keyup', this.handleKeyUp);
+        if (this.isPlayer) {
+          this.handleKeyDown = this.handleKeyDown.bind(this);
+          this.handleKeyUp = this.handleKeyUp.bind(this);
+          window.addEventListener('keydown', this.handleKeyDown);
+          window.addEventListener('keyup', this.handleKeyUp);
+        }
     }
 
-    getCenter() {
-      return this.position.x
+    getPosition(){
+      return this.position
+    }
+
+    setTrackPixels(trackPixels) {
+      this.whitePixels = trackPixels; 
+    }
+
+    setTrackSize(trackSize) {
+      this.trackSize = trackSize; 
     }
 
     initCarLights() {
@@ -94,7 +109,7 @@ class MyCar extends THREE.Object3D {
     }
 
     initBody() {
-      const body = new MyBody();
+      const body = new MyBody(this.bodyColor);
       this.pivot.add(body)
     }
 
@@ -135,26 +150,22 @@ class MyCar extends THREE.Object3D {
       this.pivot.add(wheel4)
     }
 
-    setOnTrackPixels(pixels) {
-      this.whitePixels = pixels;
-    }
-
-    mapCoordinatesToPixelIndex(x, z, sizeOfImage) {
+    mapCoordinatesToPixelIndex(x, z) {
       // Calculate the corresponding pixel position from the given x, y coordinates
-      const half = sizeOfImage / 2; // must return integer
+      const half = this.trackSize / 2; // must return integer
       const pixelX = Math.floor((x + half) );
       const pixelZ = Math.floor((z + half) );
   
       // Calculate the index in the imageData array corresponding to the pixel position
-      const index = (pixelZ * sizeOfImage) + pixelX; // 250 is the image width
+      const index = (pixelZ * this.trackSize) + pixelX; // 250 is the image width
 
       // Check if the calculated index exists in the list of white pixels
       if (this.whitePixels.includes(index)) {
-          console.log("inside", index, this.position.x, this.position.z)
+          //console.log("inside", index, this.position.x, this.position.z)
           return true;
       } else {
           // If the pixel is not found, you might want to handle this case accordingly
-          console.log('outside track');
+          //console.log('outside track');
           return false; // Or any other indication that the pixel wasn't found
       }
   }
@@ -287,24 +298,27 @@ class MyCar extends THREE.Object3D {
       this.prevElapsedTime = t
     }
 
-    updateIfOutTrack(sizeTrack) {
-      if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, sizeTrack)) {
+    updateIfOutTrack() {
+      if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, this.trackSize)) {
         this.velocity *= 0.95
       }
+      
     }
 
     /**
      * 
      */
-    update(t, sizeTrack) {
+    update(t) {
         this.updateDeltas(t)
-        this.updateIfOutTrack(sizeTrack)
+        this.updateIfOutTrack()
         this.updateVelocity()
         this.updateSteering()
         this.updateCarDirection()
         this.updateWheelRotationVelocity()
         this.updateCarPosition()
         this.updateWheelDirection()
+
+        //console.log("new THREE.Vector3( ",this.position.x, ", 0,", this.position.z, ")," ) uncomment to build more routes
     }
 
 }

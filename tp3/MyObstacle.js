@@ -7,15 +7,17 @@ class MyObstacle extends THREE.Object3D {
         this.app = app;
 
         const material = new THREE.MeshPhongMaterial({color: "#00ff00"})
-        const box = new THREE.BoxGeometry(2, 2, 2, 32, 32, 32)
-        const obstacle = new THREE.Mesh(box, material)
-        obstacle.receiveShadow = true
-        obstacle.castShadow = true
+        const box = new THREE.BoxGeometry(4, 4, 4, 32, 32, 32)
+        this.obstacle = new THREE.Mesh(box, material)
+        this.obstacle.receiveShadow = true
+        this.obstacle.castShadow = true
 
-        obstacle.position.set(x, 1, z)
+        this.obstacle.position.set(x, 1, z)
         
-        this.app.scene.add(obstacle)
+        this.app.scene.add(this.obstacle)
+        return this.obstacle
     }
+
 }
 
 export { MyObstacle };
