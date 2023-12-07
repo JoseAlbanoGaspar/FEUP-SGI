@@ -41,7 +41,7 @@ class MyRace {
     }
 
     display() {
-        //this.app.scene.add(this.track);
+        this.app.scene.add(this.track);
         this.app.scene.add(this.playerCar);
         this.app.scene.add(this.opponentCar);
     }

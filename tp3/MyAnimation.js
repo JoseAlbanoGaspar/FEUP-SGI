@@ -28,7 +28,7 @@ class MyAnimation {
 
         // Generate quaternion keyframes based on computed angles
         const quaternionKeyframeValues = [];
-        let angle = Math.PI / 2;
+        let angle = 3* Math.PI / 2;
         for (let i = 0; i < numKeyframes; i++) {
 
             if (i > 0 && i < numKeyframes - 1) {
