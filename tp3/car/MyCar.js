@@ -56,12 +56,18 @@ class MyCar extends THREE.Object3D {
         this.pivot.position.set(wheelAxisOffset, 0, 0)
         this.car.add(this.pivot)
 
+        this.center = new Float32Array(0, 9, 0)
+        //this sphere is used to determine the colisions
+        //translate to the center of the car
+        this.sphere = new THREE.SphereGeometry(1, 32, 32)
+
         //initCar
         this.initBody()
         this.initWheels()
         this.initAxis()
         this.initCarLights()
         this.add(this.car)
+        console.log("car ", this.car.position)
 
         // used on car update to see if it is still on track
         this.whitePixels = trackPixels
@@ -74,6 +80,10 @@ class MyCar extends THREE.Object3D {
           window.addEventListener('keydown', this.handleKeyDown);
           window.addEventListener('keyup', this.handleKeyUp);
         }
+    }
+
+    getPosition(){
+      return this.position
     }
 
     setTrackPixels(trackPixels) {

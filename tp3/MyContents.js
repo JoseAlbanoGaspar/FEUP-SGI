@@ -3,6 +3,10 @@ import { MyAxis } from './MyAxis.js';
 import { MyCar } from './car/MyCar.js';
 import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
+import { MyObstacle } from './MyObstacle.js';
+import { MyPowerUps } from './MyPowerUps.js';
+import { MyInitialScreen } from './MyInitialScreen.js';
+import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
 
 /**
@@ -23,7 +27,10 @@ class MyContents  {
         this.mapSize = 4096
 
         this.car == null
+        this.obstacles = []
+        this.powerUps = []
         this.initialized = false
+        this.state = "start"
         this.playerCarColor = "#ff0000"
         this.opponentCarColor = "#0000ff"
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
@@ -56,6 +63,72 @@ class MyContents  {
         this.app.scene.add(playerPark)
         this.app.scene.add(opponentPark)
         this.app.scene.add(obstaclesPark)
+    }
+
+    drawObstacle() {
+        const obs = new MyObstacle(this.app, 45, 3)
+        const obs1 = new MyObstacle(this.app, -45, 3)
+        this.obstacles.push(obs)
+        this.obstacles.push(obs1)
+        return obs
+    }
+
+    colisionWithObstacle() {
+        //ir buscar o centro do carro
+        //ir buscar as coordenadas do obstáculo
+        //fazer a distância entre o centro do carro e o obstáculo
+        //se for menor que o raio do carro, bateu
+        //console.log("car position ", this.playerCar.getPosition())
+        for (let obstacle in this.obstacles){
+            //console.log("nhbhvjbnh, ", this.obstacles[obstacle].position)
+            let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
+            //console.log(distance)
+            if(distance <= 2){
+                console.log("colidiu!!!! :)")
+                const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
+                this.obstacles[obstacle].material = newMaterial
+            }
+        }
+    }
+
+    colisionWithPowerUps() {
+
+    }
+
+    drawPowerUps() {
+        const powerups = new MyPowerUps(this.app)
+        return powerups
+    }
+
+    stateGame() {
+        switch (this.state) {
+            case "start":
+                //MyInitalPage
+                console.log("INITIAL ", this.state)
+                let init = new MyInitialScreen(this.app)
+                this.state = init.startGame()
+                break;
+            
+            case "game":
+                //MyGame
+                console.log("GAME ", this.state)
+                break;
+
+            case "pause":
+                //pause screen
+                let pause = new MyInterruptScreen(this.state)
+                break;    
+                
+            case "end":
+                //MyEndPage
+                endGame()
+                break;    
+        
+            default:
+                //default exist the game
+                exit()
+                break;
+        }
     }
 
     /**
@@ -103,6 +176,10 @@ class MyContents  {
         this.app.scene.add(rectangle)
 
         this.initializeParkingLots()
+        this.drawObstacle()
+        this.drawPowerUps()
+        this.colisionWithObstacle()
+        this.stateGame(this.state)
 
     }
 
@@ -112,7 +189,13 @@ class MyContents  {
      * 
      */
     update() {
+        if (this.initialized && this.car !== null) {
+            this.car.update(Date.now(), this.track.getSizeTrack())
+        }
+
+        //this.stateGame(this.state)
         this.race.update(Date.now());
+        this.colisionWithObstacle();
     }
 
 }
