@@ -37,6 +37,14 @@ class MyContents  {
         this.opponentCar = new MyCar(this.app, 56, 0, 3* Math.PI / 2, this.opponentCarColor, false);
         this.track = new MyTrack();
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+
+        this.pointer = new THREE.Vector2()
+        this.intersectedObj = null
+        this.pickingColor = "0x00ff00"
+        
+        this.notPickableObjectIDs = []
+
+        //events
     }
 
     /**
@@ -74,29 +82,51 @@ class MyContents  {
     }
 
     colisionWithObstacle() {
-        //ir buscar o centro do carro
-        //ir buscar as coordenadas do obstáculo
-        //fazer a distância entre o centro do carro e o obstáculo
-        //se for menor que o raio do carro, bateu
-        //console.log("car position ", this.playerCar.getPosition())
         for (let obstacle in this.obstacles){
-            //console.log("nhbhvjbnh, ", this.obstacles[obstacle].position)
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
-            //console.log(distance)
-            if(distance <= 2){
-                console.log("colidiu!!!! :)")
-                const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
-                this.obstacles[obstacle].material = newMaterial
+            if(distance <= 3){
+                //const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
+                //this.obstacles[obstacle].material = newMaterial
+                //this.reduceVelocity()
             }
         }
     }
 
+    // Car velocity reduce during 5 seconds
+    reduceVelocity() {
+        const duration = 5000
+        const reductionRate = 0.1
+        
+        const startTime = Date.now();
+        const intervalId = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            
+            const reducedVelocity = this.playerCar.velocity * (1 - reductionRate * (elapsed / duration));
+            this.playerCar.velocity = reducedVelocity;
+            if (elapsed >= duration) {
+                clearInterval(intervalId);
+            }
+        }, 50); 
+    }
+  
+  
     colisionWithPowerUps() {
-
+        for (let powerUp in this.powerUps){
+            let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
+            console.log("distance ", distance)
+            if (distance <= 2){
+                //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
+                console.log("Before slice ", this.powerUps)
+                this.powerUps.splice(powerUp)
+                console.log("After slice ", this.powerUps)
+                //force refresh
+            }
+        }
     }
 
     drawPowerUps() {
-        const powerups = new MyPowerUps(this.app)
+        const powerups = new MyPowerUps(this.app, 45, 10)
+        this.powerUps.push(powerups)
         return powerups
     }
 
@@ -196,6 +226,8 @@ class MyContents  {
         //this.stateGame(this.state)
         this.race.update(Date.now());
         this.colisionWithObstacle();
+        this.colisionWithPowerUps();
+
     }
 
 }
