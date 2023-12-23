@@ -6,24 +6,24 @@ class MyRoutes {
     route1() {
         return [
                         
-                new THREE.Vector3(56, 0, 0),
-                new THREE.Vector3(56, 0, 50),
-                new THREE.Vector3(40, 0, 70),
-                new THREE.Vector3(20, 0, 90),
-                new THREE.Vector3(-10, 0, 100),
-                new THREE.Vector3(-45, 0, 90),
-                new THREE.Vector3(-55, 0, 70),
-                new THREE.Vector3(-35, 0, 50),
-                new THREE.Vector3(-20, 0, 25),
-                new THREE.Vector3(-40, 0, 10),
-                new THREE.Vector3(-80, 0, 0),
-                new THREE.Vector3(-90, 0, -25),
-                new THREE.Vector3(-85, 0, -45),
-                new THREE.Vector3(-75, 0, -80),
-                new THREE.Vector3(-35, 0, -93),
-                new THREE.Vector3(40, 0, -70),
-                new THREE.Vector3(60, 0, -30),
-                new THREE.Vector3(56, 0, 0)            
+                new THREE.Vector3(56, 2, 0),
+                new THREE.Vector3(56, 2, 50),
+                new THREE.Vector3(40, 2, 70),
+                new THREE.Vector3(20, 2, 90),
+                new THREE.Vector3(-10, 2, 100),
+                new THREE.Vector3(-45, 2, 90),
+                new THREE.Vector3(-55, 2, 70),
+                new THREE.Vector3(-35, 2, 50),
+                new THREE.Vector3(-20, 2, 25),
+                new THREE.Vector3(-40, 2, 10),
+                new THREE.Vector3(-80, 2, 0),
+                new THREE.Vector3(-90, 2, -25),
+                new THREE.Vector3(-85, 2, -45),
+                new THREE.Vector3(-75, 2, -80),
+                new THREE.Vector3(-35, 2, -93),
+                new THREE.Vector3(40, 2, -70),
+                new THREE.Vector3(60, 2, -30),
+                new THREE.Vector3(56, 2, 0)            
             
         ]
     }
