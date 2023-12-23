@@ -135,6 +135,10 @@ class MyApp  {
         this.activeCamera = this.cameras[this.activeCameraName]
     }
 
+    getActiveCamera() {
+        return this.cameras[this.activeCameraName]
+    }
+
     /**
      * updates the active camera if required
      * this function is called in the render loop
@@ -182,6 +186,7 @@ class MyApp  {
      */
     setContents(contents) {
         this.contents = contents;
+        window.addEventListener('pointermove', this.onPointerMove)
     }
 
     /**

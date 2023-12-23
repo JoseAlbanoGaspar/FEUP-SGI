@@ -8,6 +8,7 @@ import { MyPowerUps } from './MyPowerUps.js';
 import { MyInitialScreen } from './MyInitialScreen.js';
 import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
+import { MyPicking } from './MyPicking.js';
 
 /**
  *  This class contains the contents of out application
@@ -38,13 +39,6 @@ class MyContents  {
         this.track = new MyTrack();
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
 
-        this.pointer = new THREE.Vector2()
-        this.intersectedObj = null
-        this.pickingColor = "0x00ff00"
-        
-        this.notPickableObjectIDs = []
-
-        //events
     }
 
     /**
@@ -85,9 +79,9 @@ class MyContents  {
         for (let obstacle in this.obstacles){
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
             if(distance <= 3){
-                //const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
-                //this.obstacles[obstacle].material = newMaterial
-                //this.reduceVelocity()
+                const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
+                this.obstacles[obstacle].material = newMaterial
+                this.reduceVelocity()
             }
         }
     }
@@ -135,8 +129,9 @@ class MyContents  {
             case "start":
                 //MyInitalPage
                 console.log("INITIAL ", this.state)
-                let init = new MyInitialScreen(this.app)
-                this.state = init.startGame()
+                //let init = new MyInitialScreen(this.app)
+                let init = new MyPicking(this.app)
+                //this.state = init.startGame()
                 break;
             
             case "game":
