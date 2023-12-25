@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { MyAxis } from "./MyAxis.js";
 
 /**
  *  This class contains the contents of out application
@@ -11,7 +10,6 @@ class MyPicking {
       */
     constructor(app) {
         this.app = app;
-        this.axis = null;
 
         // box related attributes
         this.boxMesh = null;
@@ -64,13 +62,7 @@ class MyPicking {
      * initializes the contents
      */
     init() {
-        // create once
-        if (this.axis === null) {
-            // create and attach the axis to the scene
-            this.axis = new MyAxis(this);
-            this.app.scene.add(this.axis);
-        }
-
+    
         //setup lights
         this.buildLights()
 
@@ -233,15 +225,6 @@ class MyPicking {
 
             console.log(intersects[i]);
 
-            /*
-            An intersection has the following properties :
-                - object : intersected object (THREE.Mesh)
-                - distance : distance from camera to intersection (number)
-                - face : intersected face (THREE.Face3)
-                - faceIndex : intersected face index (number)
-                - point : intersection point (THREE.Vector3)
-                - uv : intersection point in the object's UV coordinates (THREE.Vector2)
-            */
         }
     }
 
