@@ -27,7 +27,6 @@ class MyContents  {
         // shadows
         this.mapSize = 4096
 
-        this.car == null
         this.obstacles = []
         this.powerUps = []
         this.initialized = false
@@ -85,7 +84,7 @@ class MyContents  {
             if(distance <= 3){
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
-                this.reduceVelocity()
+                //this.reduceVelocity()
             }
         }
     }
@@ -110,12 +109,13 @@ class MyContents  {
     colisionWithPowerUps() {
         for (let powerUp in this.powerUps){
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
-            console.log("distance ", distance)
+            //console.log("distance ", distance)
             if (distance <= 2){
                 //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#000000"})
                 this.powerUps[powerUp].material = newMaterial
                 console.log("Before slice ", this.powerUps)
+                this.app.scene.remove(this.powerUps[powerUp])
                 this.powerUps.splice(powerUp)
                 console.log("After slice ", this.powerUps)
                 this.increaseVelocity()
@@ -160,7 +160,7 @@ class MyContents  {
 
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
-        console.log("DISTANCE", distance);
+        //console.log("DISTANCE", distance);
         if(distance <= 4){
             this.stop()
         }
