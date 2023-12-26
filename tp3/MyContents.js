@@ -9,6 +9,7 @@ import { MyInitialScreen } from './MyInitialScreen.js';
 import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
 import { MyPicking } from './MyPicking.js';
+import { MyShader } from './MyShader.js';
 
 /**
  *  This class contains the contents of out application
@@ -254,7 +255,60 @@ class MyContents  {
         this.colisionWithObstacle()
         this.stateGame(this.state)
 
+        //shaders
+        /**
+         * Usage:
+         *  index 0 - shader for pulsing obstacles
+         *  index 1 - TBD
+         *  index 2 - TBD 
+         *  ...
+         */
+        this.shaders = [
+                new MyShader(this.app, "Color mix shading", "Uses two flat colors and color mix to shade the object",
+                    "shaders/colormix.vert", "shaders/colormix.frag", {
+                        colorB: {type: 'vec3', value: new THREE.Color(1,0,0)},
+                        colorA: {type: 'vec3', value: new THREE.Color(0,1,0)}
+                })
+            ]
+        this.waitForShaders()
+
     }
+
+    //-------------- BEGIN OF SHADER FUNCTIONS ----------------------
+
+    waitForShaders() {
+        for (let i=0; i<this.shaders.length; i++) {
+            if (this.shaders[i].ready === false) {
+                setTimeout(this.waitForShaders.bind(this), 100)
+                return;
+            }
+        }
+         // set initial shader on obstacles
+        for (const obstacle in this.obstacles) {
+            this.setCurrentShader(this.shaders[0], this.obstacles[obstacle])
+        }        
+         // set initial shader
+         //this.onSelectedShaderChanged(this.selectedShaderIndex);
+ 
+         // set initial shader details visualization
+         //this.onShaderCodeVizChanged(this.showShaderCode);
+    }
+
+    setCurrentShader(shader, selectedObject) {
+        if (shader === null || shader === undefined) {
+            return
+        }
+        console.log("Selected shader '" + shader.name + "'")
+  
+        if (selectedObject !== null) {
+            selectedObject.material = shader.material
+            selectedObject.material.needsUpdate = true
+        }
+    }
+
+
+    //-----------------END OF SHADER FUNCTIONS ----------------------
+
 
     /**
      * updates the contents
