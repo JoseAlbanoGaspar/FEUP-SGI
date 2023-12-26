@@ -8,6 +8,7 @@ import { MyPowerUps } from './MyPowerUps.js';
 import { MyInitialScreen } from './MyInitialScreen.js';
 import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
+import { MyPicking } from './MyPicking.js';
 
 /**
  *  This class contains the contents of out application
@@ -37,6 +38,7 @@ class MyContents  {
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
         this.track = new MyTrack();
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+
     }
 
     /**
@@ -59,44 +61,114 @@ class MyContents  {
 
         const obstaclesPark = new MyParkingLot()
         obstaclesPark.position.set(145, 0, 0);
+        const obstacle1 = new MyObstacle(this.app, 145, 2, 3)
+        const obstacle2 = new MyObstacle(this.app, 145, 2, 16)
+        const obstacle3 = new MyObstacle(this.app, 145, 2, -10)
 
         this.app.scene.add(playerPark)
         this.app.scene.add(opponentPark)
         this.app.scene.add(obstaclesPark)
+      
     }
 
     drawObstacle() {
-        const obs = new MyObstacle(this.app, 45, 3)
-        const obs1 = new MyObstacle(this.app, -45, 3)
+        const obs = new MyObstacle(this.app, 45, 1, 3)
+        const obs1 = new MyObstacle(this.app, -45, 1, 3)
         this.obstacles.push(obs)
         this.obstacles.push(obs1)
         return obs
     }
 
     colisionWithObstacle() {
-        //ir buscar o centro do carro
-        //ir buscar as coordenadas do obstáculo
-        //fazer a distância entre o centro do carro e o obstáculo
-        //se for menor que o raio do carro, bateu
-        //console.log("car position ", this.playerCar.getPosition())
         for (let obstacle in this.obstacles){
-            //console.log("nhbhvjbnh, ", this.obstacles[obstacle].position)
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
-            //console.log(distance)
-            if(distance <= 2){
-                console.log("colidiu!!!! :)")
-                const newMaterial = new THREE.MeshBasicMaterial({color: "0xffffff"});
+            if(distance <= 3){
+                const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
+                this.reduceVelocity()
             }
         }
     }
 
+    // Car velocity reduce during 5 seconds
+    reduceVelocity() {
+        const duration = 5000
+        const reductionRate = 0.1
+        
+        const startTime = Date.now();
+        const intervalId = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            
+            const reducedVelocity = this.playerCar.velocity * (1 - reductionRate * (elapsed / duration));
+            this.playerCar.velocity = reducedVelocity;
+            if (elapsed >= duration) {
+                clearInterval(intervalId);
+            }
+        }, 50); 
+    }
+  
     colisionWithPowerUps() {
+        for (let powerUp in this.powerUps){
+            let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
+            console.log("distance ", distance)
+            if (distance <= 2){
+                //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
+                const newMaterial = new THREE.MeshPhongMaterial({color: "#000000"})
+                this.powerUps[powerUp].material = newMaterial
+                console.log("Before slice ", this.powerUps)
+                this.powerUps.splice(powerUp)
+                console.log("After slice ", this.powerUps)
+                this.increaseVelocity()
+                //force refresh
+            }
+        }
+    }
 
+    // Car velocity increase during 5 seconds
+    increaseVelocity() {
+        const duration = 5000;
+        const increaseRate = 0.1;
+
+        const startTime = Date.now();
+        const intervalId = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+
+            const increasedVelocity = this.playerCar.velocity * (1 + increaseRate * (elapsed / duration));
+            this.playerCar.velocity = increasedVelocity;
+
+            if (elapsed >= duration) {
+                clearInterval(intervalId);
+            }
+        }, 50);
+    }
+
+    stop() {
+        const duration = 5000;
+        const increaseRate = 0.1;
+
+        const startTime = Date.now();
+        const intervalId = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+
+            this.playerCar.velocity = 0;
+
+            if (elapsed >= duration) {
+                clearInterval(intervalId);
+            }
+        }, 50);
+    }
+
+    colisionWithOtherCar() {
+        let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
+        console.log("DISTANCE", distance);
+        if(distance <= 4){
+            this.stop()
+        }
     }
 
     drawPowerUps() {
-        const powerups = new MyPowerUps(this.app)
+        const powerups = new MyPowerUps(this.app, 45, 10)
+        this.powerUps.push(powerups)
         return powerups
     }
 
@@ -105,8 +177,9 @@ class MyContents  {
             case "start":
                 //MyInitalPage
                 console.log("INITIAL ", this.state)
-                let init = new MyInitialScreen(this.app)
-                this.state = init.startGame()
+                //let init = new MyInitialScreen(this.app)
+                let init = new MyPicking(this.app)
+                //this.state = init.startGame()
                 break;
             
             case "game":
@@ -196,6 +269,9 @@ class MyContents  {
         //this.stateGame(this.state)
         this.race.update(Date.now());
         this.colisionWithObstacle();
+        this.colisionWithPowerUps();
+        this.colisionWithOtherCar();
+
     }
 
 }
