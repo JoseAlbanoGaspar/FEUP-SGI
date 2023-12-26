@@ -73,6 +73,12 @@ class MyShader {
     hasUniform(key) {
         return this.uniformValues[key] !== undefined
     }
+
+    update(t) {
+        if (this.hasUniform("timeFactor")) {
+            this.updateUniformsValue("timeFactor", t  );
+        }
+    }
 }
 export {MyShader}
 

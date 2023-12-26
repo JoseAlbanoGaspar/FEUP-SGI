@@ -326,6 +326,13 @@ class MyContents  {
         this.colisionWithPowerUps();
         this.colisionWithOtherCar();
 
+        // update shaders
+        for (const currentShader in this.shaders)
+            if (this.shaders[currentShader] !== undefined && this.shaders[currentShader] !== null) {
+                this.shaders[currentShader].update(this.app.clock.getElapsedTime())
+                
+        }
+
     }
 
 }
