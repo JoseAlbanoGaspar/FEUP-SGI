@@ -8,6 +8,7 @@ class MyRace {
         this.opponentCar = opponentCar;
         this.track = track;
         this.route = this.track.getRoutes()[0]; // choosing the route
+        this.wheelsMixers = []; // keeps mixer for each wheel
         this.clock = new THREE.Clock();
 
         this.initialized = false;
@@ -38,6 +39,17 @@ class MyRace {
         // Play both animations
         positionAction.play()
         rotationAction.play()
+
+        const wheels = this.opponentCar.getFrontWheels();
+
+        console.log(wheels)
+        for (const wheel of wheels) {
+            const steeringMixer = new THREE.AnimationMixer(wheel);
+            const steeringAction = steeringMixer.clipAction(this.animationBuilder.getWheelSteeringClip());
+            
+            steeringAction.play();
+            this.wheelsMixers.push(steeringMixer);
+        }
     }
 
     display() {
@@ -78,6 +90,8 @@ class MyRace {
         const delta = this.clock.getDelta()
         this.mixer.update(delta)
 
+        for (const wheelMixer of this.wheelsMixers) 
+            wheelMixer.update(delta)
     }
 }
 

@@ -94,6 +94,10 @@ class MyCar extends THREE.Object3D {
       this.trackSize = trackSize; 
     }
 
+    getFrontWheels() {
+      return this.frontWheels;
+    }
+
     initCarLights() {
       const light = new MyCarLights(this.app);
       const light2 = new MyCarLights(this.app);
@@ -249,7 +253,7 @@ class MyCar extends THREE.Object3D {
         if (this.velocity > 0) this.velocity = 0; // make the car stop
       }
 
-      if (this.back && this.velocity > 0 ) { // braking
+      if (this.back && this.velocity > 0 ) { // breaking
         this.velocity -= this.deltaBreak
       }
       else if (this.front && this.velocity < 0) {
