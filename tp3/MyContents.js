@@ -37,8 +37,9 @@ class MyContents  {
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
         this.track = new MyTrack();
+        this.track.mesh.name = "mytrack";
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
-
+       
     }
 
     /**
@@ -55,20 +56,34 @@ class MyContents  {
     initializeParkingLots() {
         const playerPark = new MyParkingLot()
         playerPark.position.set(145, 0, -80);
+        const car1 = new MyCar(this.app, 145, -90, Math.PI, this.playerCarColor, true)
+        const car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
+        const car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
         
         const opponentPark = new MyParkingLot()
         opponentPark.position.set(145, 0, 80);
+        const carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, this.opponentCarColor, true)
+        const carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
+        const carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
         const obstaclesPark = new MyParkingLot()
         obstaclesPark.position.set(145, 0, 0);
-        const obstacle1 = new MyObstacle(this.app, 145, 2, 3)
-        const obstacle2 = new MyObstacle(this.app, 145, 2, 16)
-        const obstacle3 = new MyObstacle(this.app, 145, 2, -10)
+        new MyObstacle(this.app, 145, 2, 3)
+        new MyObstacle(this.app, 145, 2, 16)
+        new MyObstacle(this.app, 145, 2, -10)
 
         this.app.scene.add(playerPark)
         this.app.scene.add(opponentPark)
         this.app.scene.add(obstaclesPark)
+
+        this.app.scene.add(car1)
+        this.app.scene.add(car2)
+        this.app.scene.add(car3)
       
+        this.app.scene.add(carOpponent1)
+        this.app.scene.add(carOpponent2)
+        this.app.scene.add(carOpponent3)
+        
     }
 
     drawObstacle() {
@@ -110,14 +125,14 @@ class MyContents  {
     colisionWithPowerUps() {
         for (let powerUp in this.powerUps){
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
-            console.log("distance ", distance)
+            //console.log("distance ", distance)
             if (distance <= 2){
                 //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#000000"})
                 this.powerUps[powerUp].material = newMaterial
-                console.log("Before slice ", this.powerUps)
+                this.app.scene.remove(this.powerUps[powerUp].mesh)
                 this.powerUps.splice(powerUp)
-                console.log("After slice ", this.powerUps)
+                
                 this.increaseVelocity()
                 //force refresh
             }
@@ -144,7 +159,6 @@ class MyContents  {
 
     stop() {
         const duration = 5000;
-        const increaseRate = 0.1;
 
         const startTime = Date.now();
         const intervalId = setInterval(() => {
@@ -160,7 +174,7 @@ class MyContents  {
 
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
-        console.log("DISTANCE", distance);
+        //console.log("DISTANCE", distance);
         if(distance <= 4){
             this.stop()
         }
@@ -179,6 +193,9 @@ class MyContents  {
                 console.log("INITIAL ", this.state)
                 //let init = new MyInitialScreen(this.app)
                 let init = new MyPicking(this.app)
+                
+                init.addNotPickeableObject(this.track.mesh.name)
+                console.log(init.getNotPickeableObject())
                 //this.state = init.startGame()
                 break;
             
