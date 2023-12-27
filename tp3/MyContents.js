@@ -327,9 +327,6 @@ class MyContents  {
      * 
      */
     update() {
-        if (this.initialized && this.car !== null) {
-            this.car.update(Date.now(), this.track.getSizeTrack())
-        }
 
         //this.stateGame(this.state)
         this.race.update(Date.now());
