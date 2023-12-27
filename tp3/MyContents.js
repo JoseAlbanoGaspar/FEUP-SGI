@@ -256,6 +256,16 @@ class MyContents  {
         this.stateGame(this.state)
 
         //shaders
+
+        // generating the samples for shaders
+        const texture1  = new THREE.TextureLoader().load('textures/obstacle.png' )
+        texture1.wrapS = THREE.RepeatWrapping;
+        texture1.wrapT = THREE.RepeatWrapping;
+        
+        this.shaderSamplers = {
+            'obstacle' : texture1
+        }
+
         /**
          * Usage:
          *  index 0 - shader for pulsing obstacles
@@ -265,11 +275,12 @@ class MyContents  {
          */
         this.shaders = [
                 new MyShader(this.app, "Color mix shading", "Uses two flat colors and color mix to shade the object",
-                    "shaders/colormix.vert", "shaders/colormix.frag", {
-                        colorB: {type: 'vec3', value: new THREE.Color(1,0,0)},
-                        colorA: {type: 'vec3', value: new THREE.Color(0,1,0)}
+                    "shaders/pulsing.vert", "shaders/pulsing.frag", {
+                        timeFactor: {type: 'f', value: 0.0 },
+                        uSampler: {type: 'sampler2D', value: texture1 }
                 })
             ]
+        
         this.waitForShaders()
 
     }
