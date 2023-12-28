@@ -14,7 +14,10 @@ class MyStartLine extends THREE.Object3D {
 
         const rectangleMaterial = new THREE.MeshPhongMaterial({
             map: textureLoader.load('textures/raceBanner.jpg'),
-            color: "#ffffff" // Default color in case texture fails to load
+            color: "#ffffff", // Default color in case texture fails to load
+            specular: "#ffffff", 
+            emissive: "#000000",
+            shininess: 1 
         });
 
         const HEIGHT = 30;

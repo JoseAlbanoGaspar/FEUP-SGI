@@ -18,7 +18,7 @@ class MyCar extends THREE.Object3D {
         this.bodyColor = bodyColor;
 
         // assign initial position
-        this.position.set(x, 2, z)
+        this.position.set(x, 2.4, z);
 
         // movement parameters
         this.MAX_VELOCITY = 1;

@@ -120,13 +120,13 @@ class MyTrack extends THREE.Object3D {
     * Create materials for the curve elements: the mesh, the line and the wireframe
     */
     createCurveMaterialsTextures() {
-        /*const texture = new THREE.TextureLoader().load("./images/uvmapping.jpg");
+        const texture = new THREE.TextureLoader().load("textures/road.jpg");
         texture.wrapS = THREE.RepeatWrapping;
 
-        this.material = new THREE.MeshBasicMaterial({ map: texture });
+        this.material = new THREE.MeshPhongMaterial({ map: texture  });
         this.material.map.repeat.set(3, 3);
         this.material.map.wrapS = THREE.RepeatWrapping;
-        this.material.map.wrapT = THREE.RepeatWrapping;*/
+        this.material.map.wrapT = THREE.RepeatWrapping;
 
         this.wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0x0000ff,
@@ -170,7 +170,7 @@ class MyTrack extends THREE.Object3D {
 
         this.curve.rotateZ(Math.PI);
         this.curve.scale.set(1,0.2,1);
-        this.curve.position.set(0, -1.3, 0);
+        this.curve.position.set(0, -1.4, 0);
         //this.app.scene.add(this.curve);
         return this.curve;
     }

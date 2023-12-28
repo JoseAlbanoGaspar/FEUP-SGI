@@ -15,7 +15,7 @@ class MyCarLights extends THREE.Object3D {
         light.receiveShadow = true;
         light.castShadow = true;
         
-        this.spotLight = new THREE.SpotLight("ffffff", 10, 15, 1, 0.7, 2);
+        this.spotLight = new THREE.SpotLight("ffffff", 30, 15, 1, 0.7, 2);
         this.spotLight.position.set(0, 0, 0);
 
         this.setTarget(5, 10, 0 )

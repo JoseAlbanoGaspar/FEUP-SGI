@@ -241,10 +241,23 @@ class MyContents  {
         directionalLight.shadow.mapSize.height = 1024;
         directionalLight.shadow.camera.near = 0.5;
         directionalLight.shadow.camera.far = 500;
-        this.app.scene.add(directionalLight)        
+        this.app.scene.add(directionalLight);
+
+        // Adding hemisphere light
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x080820, 1);
+        hemisphereLight.position.set(0, 20, 0);
+        this.app.scene.add(hemisphereLight);
         
         // ground
-        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
+
+        const textureLoader = new THREE.TextureLoader();
+        
+        const grass = textureLoader.load('textures/grass.jpg')
+        grass.wrapS = THREE.RepeatWrapping;
+        grass.wrapT = THREE.RepeatWrapping;
+        grass.repeat.set(8, 8);
+
+        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", map: grass});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
