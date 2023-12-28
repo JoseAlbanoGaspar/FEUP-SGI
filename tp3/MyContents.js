@@ -54,27 +54,27 @@ class MyContents  {
     }
 
     initializeParkingLots() {
-        const playerPark = new MyParkingLot()
-        playerPark.position.set(145, 0, -80);
+        this.playerPark = new MyParkingLot()
+        this.playerPark.position.set(145, 0, -80);
         const car1 = new MyCar(this.app, 145, -90, Math.PI, this.playerCarColor, true)
         const car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
         const car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
         
-        const opponentPark = new MyParkingLot()
-        opponentPark.position.set(145, 0, 80);
+        this.opponentPark = new MyParkingLot()
+        this.opponentPark.position.set(145, 0, 80);
         const carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, this.opponentCarColor, true)
         const carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
         const carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
-        const obstaclesPark = new MyParkingLot()
-        obstaclesPark.position.set(145, 0, 0);
+        this.obstaclesPark = new MyParkingLot()
+        this.obstaclesPark.position.set(145, 0, 0);
         new MyObstacle(this.app, 145, 2, 3)
         new MyObstacle(this.app, 145, 2, 16)
         new MyObstacle(this.app, 145, 2, -10)
 
-        this.app.scene.add(playerPark)
-        this.app.scene.add(opponentPark)
-        this.app.scene.add(obstaclesPark)
+        this.app.scene.add(this.playerPark)
+        this.app.scene.add(this.opponentPark)
+        this.app.scene.add(this.obstaclesPark)
 
         this.app.scene.add(car1)
         this.app.scene.add(car2)
@@ -134,7 +134,7 @@ class MyContents  {
                 this.powerUps.splice(powerUp)
                 
                 this.increaseVelocity()
-                //force refresh
+                
             }
         }
     }
@@ -192,10 +192,6 @@ class MyContents  {
                 //MyInitalPage
                 console.log("INITIAL ", this.state)
                 //let init = new MyInitialScreen(this.app)
-                let init = new MyPicking(this.app)
-                
-                init.addNotPickeableObject(this.track.mesh.name)
-                console.log(init.getNotPickeableObject())
                 //this.state = init.startGame()
                 break;
             
@@ -263,7 +259,14 @@ class MyContents  {
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
+        rectangle.name = "myplane"
         this.app.scene.add(rectangle)
+
+
+        let init = new MyPicking(this.app)
+        init.addNotPickeableObject(this.track.mesh.name)
+        init.addNotPickeableObject(rectangle.name)
+        console.log(init.getNotPickeableObject())
 
         this.initializeParkingLots()
         this.drawObstacle()
