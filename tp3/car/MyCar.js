@@ -289,7 +289,6 @@ class MyCar extends THREE.Object3D {
 
     updateCarPosition() {
       this.position.set(this.position.x + this.velocity * Math.cos(this.direction), this.position.y , this.position.z + this.velocity * Math.sin(this.direction));
-
     }
 
     updateDeltas(t) {
