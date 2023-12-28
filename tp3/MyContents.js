@@ -9,6 +9,7 @@ import { MyInitialScreen } from './MyInitialScreen.js';
 import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
 import { MyPicking } from './MyPicking.js';
+import { MyShader } from './MyShader.js';
 
 /**
  *  This class contains the contents of out application
@@ -27,7 +28,6 @@ class MyContents  {
         // shadows
         this.mapSize = 4096
 
-        this.car == null
         this.obstacles = []
         this.powerUps = []
         this.initialized = false
@@ -100,7 +100,7 @@ class MyContents  {
             if(distance <= 3){
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
-                this.reduceVelocity()
+                //this.reduceVelocity()
             }
         }
     }
@@ -130,7 +130,8 @@ class MyContents  {
                 //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#000000"})
                 this.powerUps[powerUp].material = newMaterial
-                this.app.scene.remove(this.powerUps[powerUp].mesh)
+                console.log("Before slice ", this.powerUps)
+                this.app.scene.remove(this.powerUps[powerUp])
                 this.powerUps.splice(powerUp)
                 
                 this.increaseVelocity()
@@ -274,7 +275,71 @@ class MyContents  {
         this.colisionWithObstacle()
         this.stateGame(this.state)
 
+        //shaders
+
+        // generating the samples for shaders
+        const texture1  = new THREE.TextureLoader().load('textures/obstacle.png' )
+        texture1.wrapS = THREE.RepeatWrapping;
+        texture1.wrapT = THREE.RepeatWrapping;
+        
+        this.shaderSamplers = {
+            'obstacle' : texture1
+        }
+
+        /**
+         * Usage:
+         *  index 0 - shader for pulsing obstacles
+         *  index 1 - TBD
+         *  index 2 - TBD 
+         *  ...
+         */
+        this.shaders = [
+                new MyShader(this.app, "Color mix shading", "Uses two flat colors and color mix to shade the object",
+                    "shaders/pulsing.vert", "shaders/pulsing.frag", {
+                        timeFactor: {type: 'f', value: 0.0 },
+                        uSampler: {type: 'sampler2D', value: texture1 }
+                })
+            ]
+        
+        this.waitForShaders()
+
     }
+
+    //-------------- BEGIN OF SHADER FUNCTIONS ----------------------
+
+    waitForShaders() {
+        for (let i=0; i<this.shaders.length; i++) {
+            if (this.shaders[i].ready === false) {
+                setTimeout(this.waitForShaders.bind(this), 100)
+                return;
+            }
+        }
+         // set initial shader on obstacles
+        for (const obstacle in this.obstacles) {
+            this.setCurrentShader(this.shaders[0], this.obstacles[obstacle])
+        }        
+         // set initial shader
+         //this.onSelectedShaderChanged(this.selectedShaderIndex);
+ 
+         // set initial shader details visualization
+         //this.onShaderCodeVizChanged(this.showShaderCode);
+    }
+
+    setCurrentShader(shader, selectedObject) {
+        if (shader === null || shader === undefined) {
+            return
+        }
+        console.log("Selected shader '" + shader.name + "'")
+  
+        if (selectedObject !== null) {
+            selectedObject.material = shader.material
+            selectedObject.material.needsUpdate = true
+        }
+    }
+
+
+    //-----------------END OF SHADER FUNCTIONS ----------------------
+
 
     /**
      * updates the contents
@@ -282,15 +347,19 @@ class MyContents  {
      * 
      */
     update() {
-        if (this.initialized && this.car !== null) {
-            this.car.update(Date.now(), this.track.getSizeTrack())
-        }
 
         //this.stateGame(this.state)
         this.race.update(Date.now());
         this.colisionWithObstacle();
         this.colisionWithPowerUps();
         this.colisionWithOtherCar();
+
+        // update shaders
+        for (const currentShader in this.shaders)
+            if (this.shaders[currentShader] !== undefined && this.shaders[currentShader] !== null) {
+                this.shaders[currentShader].update(this.app.clock.getElapsedTime())
+                
+        }
 
     }
 

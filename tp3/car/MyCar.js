@@ -94,6 +94,10 @@ class MyCar extends THREE.Object3D {
       this.trackSize = trackSize; 
     }
 
+    getFrontWheels() {
+      return this.frontWheels;
+    }
+
     initCarLights() {
       const light = new MyCarLights(this.app);
       const light2 = new MyCarLights(this.app);
@@ -200,13 +204,13 @@ class MyCar extends THREE.Object3D {
             if (this.front) this.front = false;
             break;
           case 'KeyS': // Stop moving car backward
-            this.back = false;
+            if (this.back) this.back = false;
             break;
           case 'KeyA': // Stop rotating car left
-            this.left = false;
+            if (this.left) this.left = false;
             break;
           case 'KeyD': // Stop rotating car right
-            this.right = false;
+            if (this.right) this.right = false;
             break;
           default:
             break;
@@ -249,7 +253,7 @@ class MyCar extends THREE.Object3D {
         if (this.velocity > 0) this.velocity = 0; // make the car stop
       }
 
-      if (this.back && this.velocity > 0 ) { // braking
+      if (this.back && this.velocity > 0 ) { // breaking
         this.velocity -= this.deltaBreak
       }
       else if (this.front && this.velocity < 0) {
@@ -318,7 +322,6 @@ class MyCar extends THREE.Object3D {
         this.updateCarPosition()
         this.updateWheelDirection()
 
-        //console.log("new THREE.Vector3( ",this.position.x, ", 0,", this.position.z, ")," ) uncomment to build more routes
     }
 
 }
