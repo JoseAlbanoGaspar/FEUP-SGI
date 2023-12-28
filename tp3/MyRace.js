@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyAnimation } from './MyAnimation.js';
+import { MyStartLine } from './MyStartLine.js';
 
 class MyRace {
     constructor(app, playerCar, opponentCar, track) {
@@ -28,6 +29,8 @@ class MyRace {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         window.addEventListener('keydown', this.handleKeyDown);
 
+        // static element
+        this.startLine = new MyStartLine();
 
         this.init();
         
@@ -89,6 +92,7 @@ class MyRace {
         this.app.scene.add(this.track);
         this.app.scene.add(this.playerCar);
         this.app.scene.add(this.opponentCar);
+        this.app.scene.add(this.startLine);
     }
 
     /**

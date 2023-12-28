@@ -34,10 +34,7 @@ class MyContents  {
         this.state = "start"
         this.playerCarColor = "#ff0000"
         this.opponentCarColor = "#0000ff"
-        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
-        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
-        this.track = new MyTrack();
-        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+        
 
     }
 
@@ -233,6 +230,10 @@ class MyContents  {
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Color, Intensity
         directionalLight.position.set(0, 20, 0); // Set light direction
+        
+        // --------------------------------------------------------------
+        //    INITIALIZING LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
+        // --------------------------------------------------------------
 
         // temporary directional light
         directionalLight.castShadow = true;
@@ -242,6 +243,7 @@ class MyContents  {
         directionalLight.shadow.camera.far = 500;
         this.app.scene.add(directionalLight)        
         
+        // ground
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
 
@@ -249,11 +251,22 @@ class MyContents  {
         rectangle.rotation.x = 3 * Math.PI / 2 
         this.app.scene.add(rectangle)
 
+        // --------------------------------------------------------------
+        //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
+        // --------------------------------------------------------------
+
+        // INITIALIZE RACE
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
+        this.track = new MyTrack();
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+
         this.initializeParkingLots()
         this.drawObstacle()
         this.drawPowerUps()
         this.colisionWithObstacle()
         this.stateGame(this.state)
+
 
         //shaders
 
