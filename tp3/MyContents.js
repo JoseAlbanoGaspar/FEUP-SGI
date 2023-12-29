@@ -127,10 +127,6 @@ class MyContents  {
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
             //console.log("distance ", distance)
             if (distance <= 2){
-                //const newMaterial = new THREE.MeshBasicMaterial({color: "0x000000"});
-                const newMaterial = new THREE.MeshPhongMaterial({color: "#000000"})
-                this.powerUps[powerUp].material = newMaterial
-                console.log("Before slice ", this.powerUps)
                 this.app.scene.remove(this.powerUps[powerUp])
                 this.powerUps.splice(powerUp)
                 
@@ -147,6 +143,7 @@ class MyContents  {
 
         const startTime = Date.now();
         const intervalId = setInterval(() => {
+        
             const elapsed = Date.now() - startTime;
 
             const increasedVelocity = this.playerCar.velocity * (1 + increaseRate * (elapsed / duration));
@@ -192,8 +189,8 @@ class MyContents  {
             case "start":
                 //MyInitalPage
                 console.log("INITIAL ", this.state)
-                //let init = new MyInitialScreen(this.app)
-                //this.state = init.startGame()
+                let init = new MyInitialScreen(this.app)
+                this.state = init.startGame()
                 break;
             
             case "game":
@@ -267,9 +264,12 @@ class MyContents  {
         let init = new MyPicking(this.app)
         init.addNotPickeableObject(this.track.mesh.name)
         init.addNotPickeableObject(rectangle.name)
-        console.log(init.getNotPickeableObject())
 
         this.initializeParkingLots()
+
+        init.addNotPickeableObject(this.playerPark.getName())
+        console.log(init.getNotPickeableObject())
+
         this.drawObstacle()
         this.drawPowerUps()
         this.colisionWithObstacle()

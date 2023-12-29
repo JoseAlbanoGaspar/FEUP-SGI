@@ -11,23 +11,6 @@ class MyPicking {
     constructor(app) {
         this.app = app;
 
-        // box related attributes
-        this.boxMesh = null;
-
-        // plane related attributes
-        this.diffusePlaneColor = "#00ffff";
-        this.specularPlaneColor = "#777777";
-        this.planeShininess = 30;
-        this.planeMaterial = new THREE.MeshPhongMaterial({
-            color: this.diffusePlaneColor,
-            specular: this.specularPlaneColor,
-            emissive: "#000000",
-            shininess: this.planeShininess,
-        });
-
-
-        //picking: read documentation of THREE.Raycaster
-
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
         this.raycaster.far = 100
@@ -36,15 +19,14 @@ class MyPicking {
         this.intersectedObj = null
         this.pickingColor = "0xff0000"
 
-
         // define the objects ids that are not to be pickeable
-        // NOTICE: not a ThreeJS facility
         this.notPickableObjIds = []
       
         //register events
 
         document.addEventListener(
-            "pointermove",
+            //"pointermove",
+            "pointerdown",
             this.onPointerMove.bind(this)
         );
     }
@@ -101,11 +83,20 @@ class MyPicking {
                 this.restoreColorOfFirstPickedObj()
                 console.log("Object cannot be picked !")
             }
-            else
+            else {
                 this.changeColorOfFirstPickedObj(obj)
+                this.intersectedObj = obj
+                this.changePositionObj()
+            }
+                
         } else {
             this.restoreColorOfFirstPickedObj()
         }
+    }
+
+    changePositionObj() {
+        this.intersectedObj.position.set(this.pointer.x, this.pointer.y)
+        this.intersectedObj = null
     }
 
 
@@ -123,9 +114,6 @@ class MyPicking {
 
     onPointerMove(event) {
 
-        // calculate pointer position in normalized device coordinates
-        // (-1 to +1) for both components
-
         //of the screen is the origin
         this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -137,10 +125,10 @@ class MyPicking {
 
         //3. compute intersections
         var intersects = this.raycaster.intersectObjects(this.app.scene.children);
-
+        
         this.pickingHelper(intersects)
 
-        this.transverseRaycastProperties(intersects)
+        //this.transverseRaycastProperties(intersects)
     }
 
 
