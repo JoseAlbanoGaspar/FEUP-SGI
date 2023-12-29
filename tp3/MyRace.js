@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyAnimation } from './MyAnimation.js';
+import { MyStartLine } from './MyStartLine.js';
 
 class MyRace {
     constructor(app, playerCar, opponentCar, track) {
@@ -17,6 +18,7 @@ class MyRace {
         this.prevPlayerPos = this.playerCar.getPosition();
         this.opponentLaps = 0;
         this.prevOpponentPos = this.opponentCar.getPosition();
+        this.cheatCheck = [false, false, false, false]; // the car must pass through all quadrants before the lap is valid
 
         // chronometers
         this.timer = new THREE.Clock()
@@ -28,6 +30,8 @@ class MyRace {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         window.addEventListener('keydown', this.handleKeyDown);
 
+        // static element
+        this.startLine = new MyStartLine();
 
         this.init();
         
@@ -89,6 +93,7 @@ class MyRace {
         this.app.scene.add(this.track);
         this.app.scene.add(this.playerCar);
         this.app.scene.add(this.opponentCar);
+        this.app.scene.add(this.startLine);
     }
 
     /**
@@ -115,13 +120,30 @@ class MyRace {
         this.app.scene.add(tubeMesh)
 
     }
+    antiCheatUpdate(currentPlayerPos) {
+        if (currentPlayerPos.x >= 0 && currentPlayerPos.z >= 0) {
+            this.cheatCheck[0] = true
+        }
+        else if (currentPlayerPos.x < 0 && currentPlayerPos.z >= 0) {
+            this.cheatCheck[1] = true
+        }
+        else if (currentPlayerPos.x < 0 && currentPlayerPos.z < 0) {
+            this.cheatCheck[2] = true
+        }
+        else
+            this.cheatCheck[3] = true
+    }
 
     updateLap() {
         const currentPlayerPos = this.playerCar.getPosition()
         const currentOpponentPos = this.opponentCar.getPosition()
-
-        if (this.prevPlayerPos.z < 0 && currentPlayerPos.z >= 0) {
-            this.playerLaps++;
+        this.antiCheatUpdate(currentPlayerPos)
+        
+        if (this.prevPlayerPos.z < 0 && currentPlayerPos.z >= 0 &&
+            currentPlayerPos.x >= 35 && currentPlayerPos.x <= 65 &&
+            this.cheatCheck.every((element) => element === true)) {
+                this.playerLaps++;
+                this.cheatCheck.fill(false);
         }
         else if (this.prevOpponentPos.z < 0 && currentOpponentPos.z >= 0) {
             this.opponentLaps++;

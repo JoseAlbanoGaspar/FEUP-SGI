@@ -34,12 +34,7 @@ class MyContents  {
         this.state = "start"
         this.playerCarColor = "#ff0000"
         this.opponentCarColor = "#0000ff"
-        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
-        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
-        this.track = new MyTrack();
-        this.track.mesh.name = "mytrack";
-        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
-       
+
     }
 
     /**
@@ -243,6 +238,10 @@ class MyContents  {
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Color, Intensity
         directionalLight.position.set(0, 20, 0); // Set light direction
+        
+        // --------------------------------------------------------------
+        //    INITIALIZING LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
+        // --------------------------------------------------------------
 
         // temporary directional light
         directionalLight.castShadow = true;
@@ -250,9 +249,23 @@ class MyContents  {
         directionalLight.shadow.mapSize.height = 1024;
         directionalLight.shadow.camera.near = 0.5;
         directionalLight.shadow.camera.far = 500;
-        this.app.scene.add(directionalLight)        
+        this.app.scene.add(directionalLight);
+
+        // Adding hemisphere light
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x080820, 1);
+        hemisphereLight.position.set(0, 20, 0);
+        this.app.scene.add(hemisphereLight);
         
-        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "000000", emissive: 1, shininess: 3});
+        // ground
+
+        const textureLoader = new THREE.TextureLoader();
+        
+        const grass = textureLoader.load('textures/grass.jpg')
+        grass.wrapS = THREE.RepeatWrapping;
+        grass.wrapT = THREE.RepeatWrapping;
+        grass.repeat.set(8, 8);
+
+        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", map: grass});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
 
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
@@ -260,12 +273,22 @@ class MyContents  {
         rectangle.name = "myplane"
         this.app.scene.add(rectangle)
 
+        // --------------------------------------------------------------
+        //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
+        // --------------------------------------------------------------
+
+        // INITIALIZE RACE
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.playerCarColor, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
+        this.track = new MyTrack();
+        this.track.mesh.name = "mytrack";
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+
+        this.initializeParkingLots()
 
         let init = new MyPicking(this.app)
         init.addNotPickeableObject(this.track.mesh.name)
         init.addNotPickeableObject(rectangle.name)
-
-        this.initializeParkingLots()
 
         init.addNotPickeableObject(this.playerPark.getName())
         console.log(init.getNotPickeableObject())
@@ -274,6 +297,7 @@ class MyContents  {
         this.drawPowerUps()
         this.colisionWithObstacle()
         this.stateGame(this.state)
+
 
         //shaders
 
