@@ -39,6 +39,10 @@ class MyPicking {
         return this.notPickableObjIds
     }
 
+    getOriginalColor() {
+        return this.originalColor
+    }
+
     /*
     * Update the color of selected object
     *
@@ -84,6 +88,8 @@ class MyPicking {
                 console.log("Object cannot be picked !")
             }
             else {
+                this.originalColor = obj.material.color
+                console.log(this.originalColor)
                 this.changeColorOfFirstPickedObj(obj)
                 this.intersectedObj = obj
                 this.changePositionObj()
@@ -95,22 +101,11 @@ class MyPicking {
     }
 
     changePositionObj() {
-        this.intersectedObj.position.set(this.pointer.x, this.pointer.y)
+        console.log("Intersected", this.pointer)
+        this.app.scene.remove(this.intersectedObj.mesh)
+        this.intersectedObj.position.set(this.pointer.x, 1, this.pointer.y)
         this.intersectedObj = null
     }
-
-
-    /**
-     * Print to console information about the intersected objects
-     */
-    transverseRaycastProperties(intersects) {
-        for (var i = 0; i < intersects.length; i++) {
-
-            console.log(intersects[i]);
-
-        }
-    }
-
 
     onPointerMove(event) {
 
@@ -118,17 +113,12 @@ class MyPicking {
         this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-        //console.log("Position x: " + this.pointer.x + " y: " + this.pointer.y);
-
-        //2. set the picking ray from the camera position and mouse coordinates
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
-        //3. compute intersections
         var intersects = this.raycaster.intersectObjects(this.app.scene.children);
         
         this.pickingHelper(intersects)
 
-        //this.transverseRaycastProperties(intersects)
     }
 
 

@@ -174,27 +174,26 @@ class MyCar extends THREE.Object3D {
       }
   }
 
-    handleKeyDown(event) {
-        const keyCode = event.code;
-      
-        switch (keyCode) {
-          case 'KeyW': // Move car forward
-            if (!this.front) this.front = true
-            break;
-          case 'KeyS': // Move car backward
-            if (!this.back) this.back = true
-            break;
-          case 'KeyA': // Rotate car left
-            this.left = true
-            break;
-          case 'KeyD': // Rotate car right
-            this.right = true
-            break;
-          default:
-            break;
-        }
+  handleKeyDown(event) {
+      const keyCode = event.code;
+    
+      switch (keyCode) {
+        case 'KeyW': // Move car forward
+          if (!this.front) this.front = true
+          break;
+        case 'KeyS': // Move car backward
+          if (!this.back) this.back = true
+          break;
+        case 'KeyA': // Rotate car left
+          this.left = true
+          break;
+        case 'KeyD': // Rotate car right
+          this.right = true
+          break;
+        default:
+          break;
       }
-
+    }
 
     handleKeyUp(event) {
         const keyCode = event.code;
@@ -306,6 +305,58 @@ class MyCar extends THREE.Object3D {
         this.velocity *= 0.95
       }
       
+    }
+
+    // Car velocity reduce during 5 seconds
+    reduceVelocity() {
+      const duration = 5000
+      const reductionRate = 0.1
+      
+      const startTime = Date.now();
+      const intervalId = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          
+          const reducedVelocity = this.velocity * (1 - reductionRate * (elapsed / duration));
+          this.velocity = reducedVelocity;
+          if (elapsed >= duration) {
+              clearInterval(intervalId);
+          }
+      }, 50); 
+    }
+
+    // Car velocity increase during 5 seconds
+    increaseVelocity() {
+      const duration = 5000;
+      const increaseRate = 0.1;
+
+      const startTime = Date.now();
+      const intervalId = setInterval(() => {
+      
+          const elapsed = Date.now() - startTime;
+
+          const increasedVelocity = this.velocity * (1 + increaseRate * (elapsed / duration));
+          this.velocity = increasedVelocity;
+
+          if (elapsed >= duration) {
+              clearInterval(intervalId);
+          }
+      }, 50);
+    }
+
+    //Car stops during 5 seconds
+    stop() {
+      const duration = 5000;
+
+      const startTime = Date.now();
+      const intervalId = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+
+          this.velocity = 0;
+
+          if (elapsed >= duration) {
+              clearInterval(intervalId);
+          }
+      }, 50);
     }
 
     /**
