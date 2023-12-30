@@ -244,8 +244,8 @@ class MyContents  {
 
         this.initializeParkingLots()
 
-        let init = new MyPicking(this.app)
-        init.addNotPickeableObject(this.track.mesh.name)
+        let init = new MyPicking(this.app, "car")
+        //init.addNotPickeableObject(this.track.mesh.name)
         init.addNotPickeableObject(rectangle.name)
 
         init.addNotPickeableObject(this.playerPark.getName())

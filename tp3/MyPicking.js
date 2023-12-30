@@ -8,8 +8,9 @@ class MyPicking {
          constructs the object
          @param {MyApp} app The application object
       */
-    constructor(app) {
+    constructor(app, type) {
         this.app = app;
+        this.type = type
 
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
@@ -18,6 +19,8 @@ class MyPicking {
         this.pointer = new THREE.Vector2()
         this.intersectedObj = null
         this.pickingColor = "0xff0000"
+
+        this.firstClick = false
 
         // define the objects ids that are not to be pickeable
         this.notPickableObjIds = []
@@ -82,17 +85,36 @@ class MyPicking {
     pickingHelper(intersects) {
         if (intersects.length > 0) {
             const obj = intersects[0].object
+            const position = intersects[0].point
+            console.log(position)
             console.log("picked ", obj)
             if (this.notPickableObjIds.includes(obj.name)) {
                 this.restoreColorOfFirstPickedObj()
                 console.log("Object cannot be picked !")
             }
             else {
-                this.originalColor = obj.material.color
-                console.log(this.originalColor)
-                this.changeColorOfFirstPickedObj(obj)
-                this.intersectedObj = obj
-                this.changePositionObj()
+                
+                switch (this.type) {
+                    case "car":
+                        this.originalColor = obj.material.color
+                        this.changeColorOfFirstPickedObj(obj)
+                        break;
+                
+                    case "obstacle":
+                        if(this.first) {
+                            this.first = false
+                            this.changePositionObj(position)
+                        }
+        
+                        else {
+                            this.intersectedObj = obj
+                            this.first = true
+                            this.changeColorOfFirstPickedObj(obj)
+                        }
+                    default:
+                        break;
+                }
+            
             }
                 
         } else {
@@ -100,10 +122,8 @@ class MyPicking {
         }
     }
 
-    changePositionObj() {
-        console.log("Intersected", this.pointer)
-        this.app.scene.remove(this.intersectedObj.mesh)
-        this.intersectedObj.position.set(this.pointer.x, 1, this.pointer.y)
+    changePositionObj(position) {
+        this.intersectedObj.position.set(position.x, 2, position.z)
         this.intersectedObj = null
     }
 
