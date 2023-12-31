@@ -77,6 +77,12 @@ class MyCar extends THREE.Object3D {
           window.addEventListener('keydown', this.handleKeyDown);
           window.addEventListener('keyup', this.handleKeyUp);
         }
+
+        //powerUp
+        this.powerUpTimer = new THREE.Clock(false);
+        this.POWER_UP_DURATION = 5;
+        this.powerUpIncrease = 1; // this factor increases to increase velocity and decreases to reduce velocity
+
     }
 
     getPosition(){
@@ -230,18 +236,18 @@ class MyCar extends THREE.Object3D {
 
     updateVelocity() {
       // back and forward
-      if (this.front && this.velocity <= this.MAX_VELOCITY - this.deltaInc ) { // car moving forward
+      if (this.front && this.velocity <= this.MAX_VELOCITY * this.powerUpIncrease - this.deltaInc ) { // car moving forward
         this.velocity += this.deltaInc;
-        if (this.velocity > this.MAX_VELOCITY) this.velocity = this.MAX_VELOCITY
+        if (this.velocity > this.MAX_VELOCITY * this.powerUpIncrease) this.velocity = this.MAX_VELOCITY * this.powerUpIncrease
       }
       else if (!this.front && this.velocity > 0) { // player released w
           this.velocity -= this.deltaFric;
           if (this.velocity < 0) this.velocity = 0; // make the car stop
       }
 
-      if (this.back && this.velocity >= - (this.MAX_VELOCITY - this.deltaInc)) { // car moving backwards
+      if (this.back && this.velocity >= - (this.MAX_VELOCITY * this.powerUpIncrease - this.deltaInc)) { // car moving backwards
           this.velocity -= this.deltaInc;
-          if (this.velocity < - this.MAX_VELOCITY) this.velocity = - this.MAX_VELOCITY
+          if (this.velocity < - this.MAX_VELOCITY * this.powerUpIncrease) this.velocity = - this.MAX_VELOCITY * this.powerUpIncrease
 
       }
       else if (!this.back && this.velocity < 0) {
@@ -255,6 +261,7 @@ class MyCar extends THREE.Object3D {
       else if (this.front && this.velocity < 0) {
         this.velocity += this.deltaInc
       }
+
     }
 
     updateSteering() {
@@ -292,7 +299,7 @@ class MyCar extends THREE.Object3D {
       this.deltaFric = this.FRICTION * t
       this.deltaSteer = this.STEERING_ACCELERATION * t
       this.deltaSteerFric = this.STEERING_FRICTION * t
-      this.deltaBreak = this.BREAKING * t;
+      this.deltaBreak = this.BREAKING * t
     }
 
     updateIfOutTrack() {
@@ -302,62 +309,37 @@ class MyCar extends THREE.Object3D {
       
     }
 
-    // Car velocity reduce during 5 seconds
     reduceVelocity() {
-      const duration = 5000
-      const reductionRate = 0.1
-      
-      const startTime = Date.now();
-      const intervalId = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          
-          const reducedVelocity = this.velocity * (1 - reductionRate * (elapsed / duration));
-          this.velocity = reducedVelocity;
-          if (elapsed >= duration) {
-              clearInterval(intervalId);
-          }
-      }, 50); 
+      this.powerUpTimer = new THREE.Clock()
+      this.powerUpIncrease = 0.001;
     }
 
-    // Car velocity increase during 5 seconds
     increaseVelocity() {
-      const duration = 5000;
-      const increaseRate = 0.05;
-
-      const startTime = Date.now();
-      const intervalId = setInterval(() => {
-      
-          const elapsed = Date.now() - startTime;
-
-          const increasedVelocity = this.velocity * (1 + increaseRate * (elapsed / duration));
-          this.velocity = increasedVelocity;
-
-          if (elapsed >= duration) {
-              clearInterval(intervalId);
-          }
-      }, 50);
+      this.powerUpTimer = new THREE.Clock()
+      this.powerUpIncrease = 1.1;
     }
 
     //Car stops during 5 seconds
     stop() {
-      const duration = 5000;
+      this.powerUpTimer = new THREE.Clock()
+      this.powerUpIncrease = 0;
+    }
 
-      const startTime = Date.now();
-      const intervalId = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-
-          this.velocity = 0;
-
-          if (elapsed >= duration) {
-              clearInterval(intervalId);
-          }
-      }, 50);
+    updatePowerUpIncrease() {
+      const elapsed = this.powerUpTimer.getElapsedTime()
+      console.log("elapsed: ", elapsed)
+      if (elapsed > this.POWER_UP_DURATION){
+        this.powerUpIncrease = 1
+        console.log("reseted")
+        this.powerUpTimer = new THREE.Clock(false);
+      }
     }
 
     /**
      * 
      */
     update(t) {
+        this.updatePowerUpIncrease()
         this.updateDeltas(t)
         this.updateIfOutTrack()
         this.updateVelocity()
@@ -366,7 +348,6 @@ class MyCar extends THREE.Object3D {
         this.updateWheelRotationVelocity()
         this.updateCarPosition()
         this.updateWheelDirection()
-
     }
 
 }
