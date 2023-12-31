@@ -21,18 +21,36 @@ class MyPicking {
         this.pickingColor = "0xff0000"
 
         this.firstClick = false
+        this.clicked = false
 
         // define the objects ids that are not to be pickeable
         this.notPickableObjIds = []
+        this.pickableObjIds = []
       
-        document.addEventListener(
-            "pointerdown",
-            this.onPointerClick.bind(this)
-        );
+    }
+
+    async pick(){
+        return new Promise((resolve) => {
+            const handler = (event) => {
+                this.onPointerClick(event);
+                if(!this.clicked) return;
+                //document.removeEventListener("pointerdown", handler);
+                this.clicked = false;
+                resolve();
+            };
+            document.addEventListener("pointerdown", handler);
+        }).then(() => {
+
+        }
+        )
     }
 
     addNotPickeableObject(obj) {
         this.notPickableObjIds.push(obj)
+    }
+
+    addPickableObjects(obj){
+        this.pickableObjIds.push(obj)
     }
 
     getNotPickeableObject(){
@@ -41,6 +59,10 @@ class MyPicking {
 
     getOriginalColor() {
         return this.originalColor
+    }
+
+    getIntersectedObject() {
+        return this.intersectedObjName
     }
 
     /*
@@ -58,7 +80,7 @@ class MyPicking {
     changeColorOfFirstPickedObj(obj) {
         if (this.lastPickedObj != obj) {
             if (this.lastPickedObj)
-                this.lastPickedObj.material.color.setHex(this.lastPickedObj.currentHex);
+                this.lastPickedObj.material.color = this.lastPickedObj.currentHex;
             this.lastPickedObj = obj;
             this.lastPickedObj.currentHex = this.lastPickedObj.material.color.getHex();
             this.lastPickedObj.material.color.setHex(this.pickingColor);
@@ -80,12 +102,12 @@ class MyPicking {
     *
     */
     pickingHelper(intersects) {
+        this.restoreColorOfFirstPickedObj()
         if (intersects.length > 0) {
+            
             const obj = intersects[0].object
             const position = intersects[0].point
-            console.log(position)
             
-            console.log("picked ", obj)
             if (this.notPickableObjIds.includes(obj.name)) {
                 this.restoreColorOfFirstPickedObj()
                 console.log("Object cannot be picked !")
@@ -95,19 +117,23 @@ class MyPicking {
                 switch (this.type) {
 
                     case "button":
-                        console.log(obj.name)
+                        //console.log(obj.name)
                         this.changeColorOfFirstPickedObj(obj)
-                        this.intersectedObjName = obj.name
+                        this.intersectedObjName = obj
+                        this.clicked = true
+                        break;
 
                     case "car":
                         this.originalColor = obj.material.color
-                        this.changeColorOfFirstPickedObj(obj)
+                        //this.changeColorOfFirstPickedObj(obj)
+                        this.clicked = true
                         break;
                 
                     case "obstacle":
                         if(this.firstClick) {
                             this.firstClick = false
                             this.changePositionObj(position)
+                            this.clicked = true
                         }
         
                         else {
@@ -115,14 +141,13 @@ class MyPicking {
                             this.firstClick = true
                             this.changeColorOfFirstPickedObj(obj)
                         }
+                        break;
                     default:
                         break;
                 }
-            
+                
             }
                 
-        } else {
-            this.restoreColorOfFirstPickedObj()
         }
     }
 
@@ -140,7 +165,8 @@ class MyPicking {
 
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
-        var intersects = this.raycaster.intersectObjects(this.app.scene.children);
+        //this.app.scene.children
+        var intersects = this.raycaster.intersectObjects(this.pickableObjIds);
         
         this.pickingHelper(intersects)
 
