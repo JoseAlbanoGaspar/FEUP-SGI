@@ -46,9 +46,6 @@ class MyCar extends THREE.Object3D {
         this.direction = direction;
         this.rotation.y = direction;
 
-        // time elapsed
-        this.prevElapsedTime = Date.now()
-
         //pivot for back axis rotation
         this.car = new THREE.Group()
         this.pivot = new THREE.Group()
@@ -292,13 +289,11 @@ class MyCar extends THREE.Object3D {
     }
 
     updateDeltas(t) {
-      let elapsedTime = (t - this.prevElapsedTime ) / 1000 // time in seconds
-      this.deltaInc = this.ACCELERATION * elapsedTime
-      this.deltaFric = this.FRICTION * elapsedTime
-      this.deltaSteer = this.STEERING_ACCELERATION * elapsedTime
-      this.deltaSteerFric = this.STEERING_FRICTION * elapsedTime
-      this.deltaBreak = this.BREAKING * elapsedTime;
-      this.prevElapsedTime = t
+      this.deltaInc = this.ACCELERATION * t
+      this.deltaFric = this.FRICTION * t
+      this.deltaSteer = this.STEERING_ACCELERATION * t
+      this.deltaSteerFric = this.STEERING_FRICTION * t
+      this.deltaBreak = this.BREAKING * t;
     }
 
     updateIfOutTrack() {

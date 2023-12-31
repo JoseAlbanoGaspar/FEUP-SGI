@@ -120,6 +120,7 @@ class MyRace {
         this.app.scene.add(tubeMesh)
 
     }
+    
     antiCheatUpdate(currentPlayerPos) {
         if (currentPlayerPos.x >= 0 && currentPlayerPos.z >= 0) {
             this.cheatCheck[0] = true
@@ -189,10 +190,10 @@ class MyRace {
         
         this.updateTimers()
          
-        this.playerCar.update(Date.now())
-
         const delta = this.app.clock.getDelta()
         this.mixer.update(delta)
+        this.playerCar.update(delta)
+
 
         for (const wheelMixer of this.wheelsMixers) 
             wheelMixer.update(delta)
