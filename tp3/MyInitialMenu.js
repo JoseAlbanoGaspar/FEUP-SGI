@@ -17,6 +17,8 @@ class MyInitialMenu extends THREE.Object3D {
         this.app.scene.add(this.buttonInit)
 
     }
+
+
 }
 
 export { MyInitialMenu };

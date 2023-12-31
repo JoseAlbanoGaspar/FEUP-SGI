@@ -5,11 +5,11 @@ import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
 import { MyObstacle } from './MyObstacle.js';
 import { MyPowerUps } from './MyPowerUps.js';
-import { MyInitialScreen } from './MyInitialScreen.js';
-import { MyInterruptScreen } from './MyInterruptScreen.js';
 import { MyRace } from './MyRace.js';
 import { MyPicking } from './MyPicking.js';
 import { MyShader } from './MyShader.js';
+import { MyInitialMenu } from './MyInitialMenu.js';
+import { MyGameMenu } from './MyGameMenu.js';
 
 /**
  *  This class contains the contents of out application
@@ -32,8 +32,6 @@ class MyContents  {
         this.powerUps = []
         this.initialized = false
         this.state = "start"
-        //this.playerCarColor = "#ff0000"
-        this.opponentCarColor = "#0000ff"
     }
 
     /**
@@ -56,7 +54,7 @@ class MyContents  {
         
         this.opponentPark = new MyParkingLot()
         this.opponentPark.position.set(145, 0, 80);
-        const carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, this.opponentCarColor, true)
+        const carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#0000ff", true)
         const carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
         const carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
@@ -102,13 +100,9 @@ class MyContents  {
     colisionWithPowerUps() {
         for (let powerUp in this.powerUps){
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
-            //console.log("distance ", distance)
-            if (distance <= 2){
-                this.app.scene.remove(this.powerUps[powerUp])
-                this.powerUps.splice(powerUp)
-                
+            if (distance <= 2){                
+                this.race.pauseGame()
                 this.playerCar.increaseVelocity()
-                
             }
         }
     }
@@ -121,7 +115,7 @@ class MyContents  {
     }
 
     drawPowerUps() {
-        const powerups = new MyPowerUps(this.app, 45, 10)
+        const powerups = new MyPowerUps(this.app, 20, 80)
         this.powerUps.push(powerups)
         return powerups
     }
@@ -129,25 +123,33 @@ class MyContents  {
     stateGame() {
         switch (this.state) {
             case "start":
-                //MyInitalPage
-                console.log("INITIAL ", this.state)
-                let init = new MyInitialScreen(this.app)
-                this.state = init.startGame()
+                let init = new MyInitialMenu(this.app)
+                
                 break;
-            
+            case "choosePlayerCar":
+                //this.choosePlayerCar()
+                this.state = "chooseOpponentCar"
+
+            case "chooseOpponentCar":
+                //this.chooseOpponentCar()
+                this.state = "gameMenu"
+                
+            case "gameMenu":
+                //gameMenu
+                new MyGameMenu(this.app)
+                    
             case "game":
                 //MyGame
+                //new MyGameMenu(this.app)
                 console.log("GAME ", this.state)
                 break;
 
             case "pause":
                 //pause screen
-                let pause = new MyInterruptScreen(this.state)
                 break;    
                 
             case "end":
                 //MyEndPage
-                endGame()
                 break;    
         
             default:
@@ -157,10 +159,25 @@ class MyContents  {
         }
     }
 
-    initialState(color) {
-        console.log("COLOUR ")
+    choosePlayerCar() {
+        let pickingPlayer = new MyPicking(this.app, "car")
+        pickingPlayer.addNotPickeableObject(this.track.mesh.name)
+        pickingPlayer.addNotPickeableObject(this.playerPark.getName())
+    
+        this.colorPlayer = pickingPlayer.getOriginalColor()
+    }
+
+    chooseOpponentCar(){
+        let pickingOpponent = new MyPicking(this.app, "car")
+        pickingOpponent.addNotPickeableObject(this.track.mesh.name)
+        pickingOpponent.addNotPickeableObject(this.opponentCar.getName())
+
+        this.colorOpponent = pickingOpponent.getOriginalColor()
+    }
+
+    initialState() {
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, "#00ff00", true);
-        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.opponentCarColor, false);
+        this.opponentCar = new MyCar(this.app, 56, 0, 0, "#0000ff", false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
     }
 
@@ -244,18 +261,12 @@ class MyContents  {
 
         this.initializeParkingLots()
 
-        let init = new MyPicking(this.app, "car")
+        let init = new MyPicking(this.app, "obstacle")
         //init.addNotPickeableObject(this.track.mesh.name)
         init.addNotPickeableObject(rectangle.name)
-
         init.addNotPickeableObject(this.playerPark.getName())
-        //console.log(init.getNotPickeableObject())
-
-        //a cor não está a ser passada bem
-        //rever a máquina de estados e acrescentar os que faltam
-        let color = init.getOriginalColor()
-        console.log("COLOUR, ", color)
-        this.initialState(color)
+    
+        this.initialState()
 
         this.drawObstacle()
         this.drawPowerUps()

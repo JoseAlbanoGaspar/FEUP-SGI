@@ -46,6 +46,10 @@ class MyPicking {
         return this.originalColor
     }
 
+    getIntersectObjec() {
+        return this.intersectedObj
+    }
+
     /*
     * Update the color of selected object
     *
@@ -95,20 +99,27 @@ class MyPicking {
             else {
                 
                 switch (this.type) {
+
+                    case "button":
+                        console.log(obj.name)
+                        this.changeColorOfFirstPickedObj(obj)
+                        this.intersectedObjName = obj.name
+
                     case "car":
                         this.originalColor = obj.material.color
                         this.changeColorOfFirstPickedObj(obj)
                         break;
                 
                     case "obstacle":
-                        if(this.first) {
-                            this.first = false
+                        if(this.firstClick) {
+                            this.firstClick = false
                             this.changePositionObj(position)
+                            return
                         }
         
                         else {
                             this.intersectedObj = obj
-                            this.first = true
+                            this.firstClick = true
                             this.changeColorOfFirstPickedObj(obj)
                         }
                     default:

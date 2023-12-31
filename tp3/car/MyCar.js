@@ -327,7 +327,7 @@ class MyCar extends THREE.Object3D {
     // Car velocity increase during 5 seconds
     increaseVelocity() {
       const duration = 5000;
-      const increaseRate = 0.1;
+      const increaseRate = 0.05;
 
       const startTime = Date.now();
       const intervalId = setInterval(() => {
