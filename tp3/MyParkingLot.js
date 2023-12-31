@@ -16,11 +16,17 @@ class MyParkingLot extends THREE.Object3D {
 
         const geometry = new THREE.PlaneGeometry(70, 40, 70, 70);
 
-        const rectangle = new THREE.Mesh(geometry, planeMaterial);
-        rectangle.rotation.x = 3 * Math.PI / 2;
+        this.rectangle = new THREE.Mesh(geometry, planeMaterial);
+        this.rectangle.name = "mypark"
 
-        rectangle.rotation.z = Math.PI / 2;
-        this.add(rectangle);
+        this.rectangle.rotation.x = 3 * Math.PI / 2;
+
+        this.rectangle.rotation.z = Math.PI / 2;
+        this.add(this.rectangle);
+    }
+
+    getName(){
+        return this.rectangle.name
     }
 }
 
