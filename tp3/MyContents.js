@@ -142,13 +142,15 @@ class MyContents  {
             case "chooseOpponentCar":
                 this.oldState = "chooseOpponentCar"
                 await this.chooseOpponentCar()
-                this.state = "chooseObstacle"
+                this.state = "gameMenu"
                 break;
                 
             case "gameMenu":
                 this.oldState = "gameMenu"
                 //gameMenu
-                new MyGameMenu(this.app)
+                console.log("MENU AQUI")
+                let menu = new MyGameMenu(this.app)
+                this.state = await menu.choose()
                 break;
                     
             case "game":
@@ -157,7 +159,7 @@ class MyContents  {
                 break;
 
             case "chooseObstacle":
-                this.state ="chooseObstacle"
+                this.oldState ="chooseObstacle"
                 await this.chooseObstacle()
                 this.state = "game"   
                 break; 

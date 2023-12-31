@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { MySpriteSheets } from './MySpritesheets.js';
+import { MyPicking } from './MyPicking.js';
 
 class MyGameMenu extends THREE.Object3D {
 
@@ -14,20 +15,20 @@ class MyGameMenu extends THREE.Object3D {
         //Levels of dificulties
         this.buttonEasy = new THREE.Mesh(geometry, planeMaterial);
         
-        this.buttonEasy.position.set(0, 120, 100)
+        this.buttonEasy.position.set(0, 120, 280)
         this.buttonEasy.name = "mybuttoneasy"
 
         this.createEasy()
         this.app.scene.add(this.buttonEasy)
 
         this.buttonMedium = new THREE.Mesh(geometry, planeMaterial)
-        this.buttonMedium.position.set(0, 80, 100)
+        this.buttonMedium.position.set(0, 80, 280)
         this.buttonMedium.name = "mybuttonmedium"
         this.createMedium()
         this.app.scene.add(this.buttonMedium)
 
         this.buttonHard = new THREE.Mesh(geometry, planeMaterial)
-        this.buttonHard.position.set(0, 40, 100)
+        this.buttonHard.position.set(0, 40, 280)
         this.buttonHard.name = "mybuttonhard"
         this.app.scene.add(this.buttonHard)
 
@@ -35,16 +36,16 @@ class MyGameMenu extends THREE.Object3D {
 
     createEasy() {
         const e = new MySpriteSheets(this.app, 34.5)
-        e.position.set(-12, 120, 102)
+        e.position.set(-12, 120, 282)
 
         const a = new MySpriteSheets(this.app, 30.8)
-        a.position.set(-4, 120, 102)
+        a.position.set(-4, 120, 282)
 
         const s = new MySpriteSheets(this.app, 47.6)
-        s.position.set(4, 120, 102)
+        s.position.set(4, 120, 282)
 
         const y = new MySpriteSheets(this.app, 83.1)
-        y.position.set(12, 120, 102)
+        y.position.set(12, 120, 282)
 
         this.app.scene.add(e)
         this.app.scene.add(a)
@@ -54,13 +55,13 @@ class MyGameMenu extends THREE.Object3D {
 
     createMedium() {
         const m = new MySpriteSheets(this.app, 42)
-        m.position.set(-12, 80, 102)
+        m.position.set(-12, 80, 282)
 
         const e = new MySpriteSheets(this.app, 34.4)
-        e.position.set(-4, 80, 102)
+        e.position.set(-4, 80, 282)
 
         const d = new MySpriteSheets(this.app, 33.5)
-        d.position.set(4, 80, 102)
+        d.position.set(4, 80, 282)
 
         this.app.scene.add(m)
         this.app.scene.add(e)
@@ -70,6 +71,17 @@ class MyGameMenu extends THREE.Object3D {
     createHard() {
         const h = new MySpriteSheets(this.app, )
         h.position.set(-12, 40, 42)
+    }
+
+    async choose() {
+        let pickingButtonMenu = new MyPicking(this.app, "button")
+        pickingButtonMenu.addPickableObjects(this.buttonEasy)
+        pickingButtonMenu.addPickableObjects(this.buttonMedium)
+        pickingButtonMenu.addPickableObjects(this.buttonHard)
+        await pickingButtonMenu.pick()
+        console.log("easy", pickingButtonMenu.getIntersectedObject().name)
+        if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy") return "game"
+       
     }
 }
 
