@@ -14,6 +14,7 @@ class MyInitialMenu extends THREE.Object3D {
         this.buttonInit.rotation.y = Math.PI/2
         this.buttonInit.position.set(0, 100, 0)
         this.buttonInit.name = "mybuttoninit"
+
         this.app.scene.add(this.buttonInit)
 
     }

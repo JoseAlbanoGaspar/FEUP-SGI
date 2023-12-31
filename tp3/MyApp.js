@@ -189,7 +189,7 @@ class MyApp  {
      */
     setContents(contents) {
         this.contents = contents;
-        window.addEventListener('pointermove', this.onPointerMove)
+        window.addEventListener('pointerclick', this.onPointerClick)
     }
 
     /**

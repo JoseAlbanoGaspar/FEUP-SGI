@@ -25,12 +25,9 @@ class MyPicking {
         // define the objects ids that are not to be pickeable
         this.notPickableObjIds = []
       
-        //register events
-
         document.addEventListener(
-            //"pointermove",
             "pointerdown",
-            this.onPointerMove.bind(this)
+            this.onPointerClick.bind(this)
         );
     }
 
@@ -44,10 +41,6 @@ class MyPicking {
 
     getOriginalColor() {
         return this.originalColor
-    }
-
-    getIntersectObjec() {
-        return this.intersectedObj
     }
 
     /*
@@ -91,6 +84,7 @@ class MyPicking {
             const obj = intersects[0].object
             const position = intersects[0].point
             console.log(position)
+            
             console.log("picked ", obj)
             if (this.notPickableObjIds.includes(obj.name)) {
                 this.restoreColorOfFirstPickedObj()
@@ -114,7 +108,6 @@ class MyPicking {
                         if(this.firstClick) {
                             this.firstClick = false
                             this.changePositionObj(position)
-                            return
                         }
         
                         else {
@@ -135,10 +128,11 @@ class MyPicking {
 
     changePositionObj(position) {
         this.intersectedObj.position.set(position.x, 2, position.z)
+        this.app.contents.obstacles.push(this.intersectedObj)
         this.intersectedObj = null
     }
 
-    onPointerMove(event) {
+    onPointerClick(event) {
 
         //of the screen is the origin
         this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;

@@ -10,6 +10,7 @@ import { MyPicking } from './MyPicking.js';
 import { MyShader } from './MyShader.js';
 import { MyInitialMenu } from './MyInitialMenu.js';
 import { MyGameMenu } from './MyGameMenu.js';
+import { MySpriteSheets } from './MySpritesheets.js';
 
 /**
  *  This class contains the contents of out application
@@ -60,9 +61,12 @@ class MyContents  {
 
         this.obstaclesPark = new MyParkingLot()
         this.obstaclesPark.position.set(145, 0, 0);
-        new MyObstacle(this.app, 145, 2, 3)
-        new MyObstacle(this.app, 145, 2, 16)
-        new MyObstacle(this.app, 145, 2, -10)
+        let obst1 = new MyObstacle(this.app, 145, 2, 3)
+        obst1.name = "obs1"
+        let obst2 = new MyObstacle(this.app, 145, 2, 16)
+        obst2.name = "obs2"
+        let obst3 = new MyObstacle(this.app, 145, 2, -10)
+        obst3.name = "obs3"
 
         this.app.scene.add(this.playerPark)
         this.app.scene.add(this.opponentPark)
@@ -93,6 +97,7 @@ class MyContents  {
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
                 this.playerCar.reduceVelocity()
+                console.log("colidiu com ", this.obstacles[obstacle].name)
             }
         }
     }
@@ -124,6 +129,7 @@ class MyContents  {
         switch (this.state) {
             case "start":
                 let init = new MyInitialMenu(this.app)
+                this.createStart()
                 
                 break;
             case "choosePlayerCar":
@@ -169,6 +175,7 @@ class MyContents  {
 
     chooseOpponentCar(){
         let pickingOpponent = new MyPicking(this.app, "car")
+        pickingOpponent.pick()
         pickingOpponent.addNotPickeableObject(this.track.mesh.name)
         pickingOpponent.addNotPickeableObject(this.opponentCar.getName())
 
@@ -179,6 +186,29 @@ class MyContents  {
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, "#00ff00", true);
         this.opponentCar = new MyCar(this.app, 56, 0, 0, "#0000ff", false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+    }
+
+    createStart(){
+        const s = new MySpriteSheets(this.app, 47.5)
+        s.position.set(1, 100, 16)
+
+        const t = new MySpriteSheets(this.app, 48.5)
+        t.position.set(1, 100, 8)
+
+        const a = new MySpriteSheets(this.app, 30.8)
+        a.position.set(1, 100, 0)
+
+        const r = new MySpriteSheets(this.app, 46.7)
+        r.position.set(1, 100, -8)
+
+        const t2 = new MySpriteSheets(this.app, 48.5)
+        t2.position.set(1, 100, -16)
+
+        this.app.scene.add(s)
+        this.app.scene.add(t)
+        this.app.scene.add(a)
+        this.app.scene.add(r)
+        this.app.scene.add(t2)
     }
 
     /**
@@ -244,7 +274,7 @@ class MyContents  {
         rectangle.name = "myplane"
         this.app.scene.add(rectangle)
 
-        const outdoorMaterial = new THREE.MeshBasicMaterial({color: "#ffffff"})
+        const outdoorMaterial = new THREE.MeshBasicMaterial({color: "#ff00ff"})
         const outdoor = new THREE.Mesh(geometry, outdoorMaterial)
         outdoor.position.set(-this.TRACK_SIZE/2, 32, 1)
         outdoor.rotation.y = Math.PI/2
