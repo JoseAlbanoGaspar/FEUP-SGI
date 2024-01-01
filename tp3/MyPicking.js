@@ -22,6 +22,7 @@ class MyPicking {
 
         this.firstClick = false
         this.clicked = false
+        this.pickedObs = false
 
         // define the objects ids that are not to be pickeable
         this.notPickableObjIds = []
@@ -36,7 +37,12 @@ class MyPicking {
                 if(!this.clicked) return;
                 //teve que se tirar porque senão a cor não mudava
                 //document.removeEventListener("pointerdown", handler);
-                this.clicked = false;
+                
+                // if(this.pickedObs) {
+                //     document.removeEventListener("pointerdown", handler);
+                //     this.pickedObs = false
+                // }
+                 this.clicked = false;
                 resolve();
             };
             document.addEventListener("pointerdown", handler);
@@ -46,16 +52,16 @@ class MyPicking {
         )
     }
 
-    addNotPickeableObject(obj) {
-        this.notPickableObjIds.push(obj)
-    }
-
     addPickableObjects(obj){
         this.pickableObjIds.push(obj)
     }
 
-    getNotPickeableObject(){
-        return this.notPickableObjIds
+    getPickeableObject(){
+        return this.pickableObjIds
+    }
+
+    addNotPickableObject(obj) {
+        this.notPickableObjIds.push(obj)
     }
 
     getOriginalColor() {
@@ -80,14 +86,26 @@ class MyPicking {
     */
     changeColorOfFirstPickedObj(obj) {
         if (this.lastPickedObj != obj) {
-            if (this.lastPickedObj)
-                this.lastPickedObj.material.color = this.lastPickedObj.currentHex;
+            if (this.lastPickedObj){
+                 this.lastPickedObj.material.color = this.lastPickedObj.currentHex;
+            }
+           
             this.lastPickedObj = obj;
             this.lastPickedObj.currentHex = this.lastPickedObj.material.color.getHex();
             this.lastPickedObj.material.color.setHex(this.pickingColor);
         }
     }
 
+    changeObjSize(obj) {
+        this.lastPickedObj = obj
+        this.lastPickedObj.scale.set(1.5, 1.5, 1.5)
+    }
+
+    restoreSize() {
+        if(this.lastPickedObj)
+            this.lastPickedObj.scale.set(1, 1, 1)
+        this.lastPickedObj = null    
+    }
     /*
      * Restore the original color of the intersected object
      *
@@ -103,7 +121,8 @@ class MyPicking {
     *
     */
     pickingHelper(intersects) {
-        this.restoreColorOfFirstPickedObj()
+        //this.restoreColorOfFirstPickedObj()
+        this.restoreSize()
         if (intersects.length > 0) {
             
             const obj = intersects[0].object
@@ -118,7 +137,8 @@ class MyPicking {
                 switch (this.type) {
 
                     case "button":
-                        this.changeColorOfFirstPickedObj(obj)
+                        //this.changeColorOfFirstPickedObj(obj)
+                        this.changeObjSize(obj)
                         this.intersectedObjName = obj
                         this.clicked = true
                         break;
@@ -134,12 +154,14 @@ class MyPicking {
                             this.firstClick = false
                             this.changePositionObj(position)
                             this.clicked = true
+                            this.pickedObs = true
                         }
         
                         else {
                             this.intersectedObj = obj
                             this.firstClick = true
-                            this.changeColorOfFirstPickedObj(obj)
+                            this.changeObjSize(obj)
+                            //this.changeColorOfFirstPickedObj(obj)
                         }
                         break;
                     default:

@@ -10,6 +10,8 @@ import { MyPicking } from './MyPicking.js';
 import { MyShader } from './MyShader.js';
 import { MyInitialMenu } from './MyInitialMenu.js';
 import { MyGameMenu } from './MyGameMenu.js';
+import { MyOutdoor } from './MyOutdoor.js';
+import { MyEndDisplay } from './MyEndDisplay.js';
 
 /**
  *  This class contains the contents of out application
@@ -57,6 +59,10 @@ class MyContents  {
         this.obst3 = new MyObstacle(this.app, 145, 2, -10)
         this.obst3.name = "obs3"
 
+        this.obstacles.push(this.obst1)
+        this.obstacles.push(this.obst2)
+        this.obstacles.push(this.obst3)
+
         this.app.scene.add(this.playerPark)
         this.app.scene.add(this.opponentPark)
         this.app.scene.add(this.obstaclesPark)
@@ -70,14 +76,6 @@ class MyContents  {
         this.app.scene.add(this.carOpponent3)
         
     }
-
-    // drawObstacle() {
-    //     const obs = new MyObstacle(this.app, 45, 1, 3)
-    //     const obs1 = new MyObstacle(this.app, -45, 1, 3)
-    //     this.obstacles.push(obs)
-    //     this.obstacles.push(obs1)
-    //     return obs
-    // }
 
     drawPowerUps() {
         const powerups = new MyPowerUps(this.app, 20, 80)
@@ -120,18 +118,21 @@ class MyContents  {
     async stateGame() {
         switch (this.state) {
             case "start":
+                this.app.setActiveCamera("Initial")
                 let st = new MyInitialMenu(this.app)
                 this.state = await st.start()
                 this.oldState = "start"
                 break;
 
             case "choosePlayerCar":
+                this.app.setActiveCamera("PlayerPark")
                 this.oldState = "choosePlayerCar"
                 await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
                 break;
 
             case "chooseOpponentCar":
+                //this.app.setActiveCamera("OpponentPark")
                 this.oldState = "chooseOpponentCar"
                 await this.chooseOpponentCar()
                 this.initialState()
@@ -139,6 +140,7 @@ class MyContents  {
                 break;
                 
             case "gameMenu":
+                //this.app.setActiveCamera("GameMenu")
                 this.oldState = "gameMenu"
                 let menu = new MyGameMenu(this.app)
                 this.state = await menu.choose()
@@ -165,6 +167,7 @@ class MyContents  {
                 
             case "end":
                 this.state = "end"
+                new MyEndDisplay(this.app)
                 break;    
         
             default:
@@ -208,6 +211,9 @@ class MyContents  {
         pickingObstacle.addPickableObjects(this.track)
 
         await pickingObstacle.pick()
+
+        pickingObstacle.addNotPickableObject(this.track.name)
+        return
     
     }
 
@@ -281,12 +287,7 @@ class MyContents  {
         rectangle.name = "myplane"
         this.app.scene.add(rectangle)
 
-        const outdoorMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
-        const outdoor = new THREE.Mesh(geometry, outdoorMaterial)
-        outdoor.position.set(-this.TRACK_SIZE/2, 32, 1)
-        outdoor.rotation.y = Math.PI/2
-        outdoor.scale.set(1, 0.3, 1)
-        this.app.scene.add(outdoor)
+        let outdoor = new MyOutdoor(this.app)
 
         // --------------------------------------------------------------
         //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
@@ -363,9 +364,7 @@ class MyContents  {
         }
     }
 
-
     //-----------------END OF SHADER FUNCTIONS ----------------------
-
 
     /**
      * updates the contents
