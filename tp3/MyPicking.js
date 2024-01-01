@@ -35,7 +35,7 @@ class MyPicking {
             const handler = (event) => {
                 this.onPointerClick(event);
                 if(!this.clicked) return;
-                //teve que se tirar porque senão a cor não mudava
+                
                 //document.removeEventListener("pointerdown", handler);
                 
                 // if(this.pickedObs) {

@@ -122,13 +122,15 @@ class MyContents  {
                 let st = new MyInitialMenu(this.app)
                 this.state = await st.start()
                 this.oldState = "start"
+                this.app.setActiveCamera("PlayerPark")
                 break;
 
             case "choosePlayerCar":
-                this.app.setActiveCamera("PlayerPark")
+                //this.app.setActiveCamera("PlayerPark")
                 this.oldState = "choosePlayerCar"
                 await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
+                this.app.setActiveCamera("OpponentPark")
                 break;
 
             case "chooseOpponentCar":

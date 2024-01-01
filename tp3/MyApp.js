@@ -128,7 +128,6 @@ class MyApp  {
     setActiveCamera(cameraName) {   
         this.activeCameraName = cameraName
         this.activeCamera = this.cameras[this.activeCameraName]
-        console.log("Active", this.activeCamera, cameraName)
 
     }
 

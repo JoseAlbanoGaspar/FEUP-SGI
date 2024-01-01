@@ -47,12 +47,10 @@ class MyOutdoor extends THREE.Object3D {
         console.log(start)
         
         for(let i = 0; i < start.length; i++) {
-            console.log("Outdoor class", start[i])
             let temp = aux.drawCharacter(start[i])
             console.log("temp", temp)
             temp.position.set(x, y, z)
             this.words.push(temp)
-            //this.app.scene.add(temp)
             z = z-8
         }
 
