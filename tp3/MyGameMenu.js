@@ -30,6 +30,7 @@ class MyGameMenu extends THREE.Object3D {
         this.buttonHard = new THREE.Mesh(geometry, planeMaterial)
         this.buttonHard.position.set(0, 40, 280)
         this.buttonHard.name = "mybuttonhard"
+        this.createHard()
         this.app.scene.add(this.buttonHard)
 
     }
@@ -55,22 +56,48 @@ class MyGameMenu extends THREE.Object3D {
 
     createMedium() {
         const m = new MySpriteSheets(this.app, 42)
-        m.position.set(-12, 80, 282)
+        m.position.set(-20, 80, 282)
 
         const e = new MySpriteSheets(this.app, 34.4)
-        e.position.set(-4, 80, 282)
+        e.position.set(-12, 80, 282)
 
         const d = new MySpriteSheets(this.app, 33.5)
-        d.position.set(4, 80, 282)
+        d.position.set(-4, 80, 282)
+
+        const i = new MySpriteSheets(this.app, 38.3)
+        i.position.set(4, 80, 282)
+
+        const u = new MySpriteSheets(this.app, 80.3)
+        u.position.set(12, 80, 281)
+
+        const m1 = new MySpriteSheets(this.app, 42)
+        m1.position.set(20, 80, 282)
 
         this.app.scene.add(m)
         this.app.scene.add(e)
         this.app.scene.add(d)
+        this.app.scene.add(i)
+        this.app.scene.add(u)
+        this.app.scene.add(m1)
     }
 
     createHard() {
-        const h = new MySpriteSheets(this.app, )
-        h.position.set(-12, 40, 42)
+        const h = new MySpriteSheets(this.app, 37.4)
+        h.position.set(-12, 40, 282)
+
+        const a = new MySpriteSheets(this.app, 30.8)
+        a.position.set(-4, 40, 282)
+
+        const r = new MySpriteSheets(this.app, 46.7)
+        r.position.set(4, 40, 282)
+
+        const d = new MySpriteSheets(this.app, 33.5)
+        d.position.set(12, 40, 282)
+
+        this.app.scene.add(h)
+        this.app.scene.add(a)
+        this.app.scene.add(r)
+        this.app.scene.add(d)
     }
 
     async choose() {
@@ -79,7 +106,6 @@ class MyGameMenu extends THREE.Object3D {
         pickingButtonMenu.addPickableObjects(this.buttonMedium)
         pickingButtonMenu.addPickableObjects(this.buttonHard)
         await pickingButtonMenu.pick()
-        console.log("easy", pickingButtonMenu.getIntersectedObject().name)
         if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy") return "game"
        
     }

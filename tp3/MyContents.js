@@ -82,12 +82,18 @@ class MyContents  {
         
     }
 
-    drawObstacle() {
-        const obs = new MyObstacle(this.app, 45, 1, 3)
-        const obs1 = new MyObstacle(this.app, -45, 1, 3)
-        this.obstacles.push(obs)
-        this.obstacles.push(obs1)
-        return obs
+    // drawObstacle() {
+    //     const obs = new MyObstacle(this.app, 45, 1, 3)
+    //     const obs1 = new MyObstacle(this.app, -45, 1, 3)
+    //     this.obstacles.push(obs)
+    //     this.obstacles.push(obs1)
+    //     return obs
+    // }
+
+    drawPowerUps() {
+        const powerups = new MyPowerUps(this.app, 20, 80)
+        this.powerUps.push(powerups)
+        return powerups
     }
 
     colisionWithObstacle() {
@@ -97,16 +103,15 @@ class MyContents  {
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
                 this.playerCar.reduceVelocity()
-                console.log("colidiu com ", this.obstacles[obstacle].name)
             }
         }
     }
   
-    colisionWithPowerUps() {
+    async colisionWithPowerUps() {
         for (let powerUp in this.powerUps){
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
-            if (distance <= 2){                
-                this.race.pauseGame()
+            if (distance <= 2){   
+                this.state = "chooseObstacle"         
                 this.playerCar.increaseVelocity()
             }
         }
@@ -117,12 +122,6 @@ class MyContents  {
         if(distance <= 5){
             this.playerCar.stop()
         }
-    }
-
-    drawPowerUps() {
-        const powerups = new MyPowerUps(this.app, 20, 80)
-        this.powerUps.push(powerups)
-        return powerups
     }
 
     async stateGame() {
@@ -142,36 +141,37 @@ class MyContents  {
             case "chooseOpponentCar":
                 this.oldState = "chooseOpponentCar"
                 await this.chooseOpponentCar()
+                this.initialState()
                 this.state = "gameMenu"
                 break;
                 
             case "gameMenu":
                 this.oldState = "gameMenu"
-                //gameMenu
-                console.log("MENU AQUI")
                 let menu = new MyGameMenu(this.app)
                 this.state = await menu.choose()
                 break;
                     
             case "game":
-                this.state ="game"
+                this.OldStatestate ="game"
                 //MyGame
                 break;
 
             case "chooseObstacle":
                 this.oldState ="chooseObstacle"
+                this.race.pauseGame()
                 await this.chooseObstacle()
-                this.state = "game"   
+                this.race.resumeGame()
+                this.state = "game"
+              
                 break; 
 
             case "pause":
                 this.state = "pause"
-                //pause screen
+
                 break;    
                 
             case "end":
                 this.state = "end"
-                //MyEndPage
                 break;    
         
             default:
@@ -192,8 +192,7 @@ class MyContents  {
     
         this.colorPlayer = pickingPlayer.getOriginalColor()
 
-        //this.colisionWithObstacle()
-        //this.initialState()
+        return
         
     }
 
@@ -206,18 +205,17 @@ class MyContents  {
         await pickingOpponent.pick()
 
         this.colorOpponent = pickingOpponent.getOriginalColor()
-        this.initialState()
     }
 
     async chooseObstacle() {
         let pickingObstacle = new MyPicking(this.app, "obstacle")
-        //init.addNotPickeableObject(this.track.mesh.name)
         pickingObstacle.addPickableObjects(this.obst1)
         pickingObstacle.addPickableObjects(this.obst2)
         pickingObstacle.addPickableObjects(this.obst3)
         pickingObstacle.addPickableObjects(this.track)
 
-        pickingObstacle.pick()
+        await pickingObstacle.pick()
+    
     }
 
     initialState() {
@@ -225,7 +223,6 @@ class MyContents  {
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
         this.drawPowerUps()
-        //this.state = "game"
     }
 
     /**
@@ -308,17 +305,8 @@ class MyContents  {
 
         this.initializeParkingLots()
 
-        // let pickingObstacle = new MyPicking(this.app, "obstacle")
-        // //init.addNotPickeableObject(this.track.mesh.name)
-        // pickingObstacle.addPickableObjects(this.obst1)
-        // pickingObstacle.addPickableObjects(this.obst2)
-        // pickingObstacle.addPickableObjects(this.obst3)
-        // pickingObstacle.addPickableObjects(this.track)
-        //this.initialState()
-
-        this.drawObstacle()
+        //this.drawObstacle()
         this.stateGame(this.state)
-
 
         //shaders
 

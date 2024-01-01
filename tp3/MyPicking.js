@@ -118,7 +118,6 @@ class MyPicking {
                 switch (this.type) {
 
                     case "button":
-                        //console.log(obj.name)
                         this.changeColorOfFirstPickedObj(obj)
                         this.intersectedObjName = obj
                         this.clicked = true
