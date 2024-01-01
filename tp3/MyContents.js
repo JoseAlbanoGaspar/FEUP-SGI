@@ -35,17 +35,6 @@ class MyContents  {
         this.oldState = null
     }
 
-    /**
-     * this function must be called for each group to enable shadows for each mesh
-     */
-    applyShadow(child) {
-        if (child instanceof THREE.Mesh) {
-            // Enable shadows for each mesh within the group
-            child.castShadow = true; // for casting shadows
-            child.receiveShadow = true; // for receiving shadows
-          }
-    }
-
     initializeParkingLots() {
         this.playerPark = new MyParkingLot()
         this.playerPark.position.set(145, 0, -80);
@@ -108,11 +97,15 @@ class MyContents  {
     }
   
     async colisionWithPowerUps() {
-        for (let powerUp in this.powerUps){
-            let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].position);
-            if (distance <= 2){   
-                this.state = "chooseObstacle"         
+        for (let powerUp in this.powerUps){       
+            let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
+            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){                
+                this.state = "chooseObstacle"  
                 this.playerCar.increaseVelocity()
+                this.powerUps[powerUp].disableCollision()
+            }
+            else if (distance > 2) {
+                this.powerUps[powerUp].enableCollision()
             }
         }
     }

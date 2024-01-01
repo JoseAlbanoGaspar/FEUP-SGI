@@ -6,6 +6,7 @@ class MyPowerUps extends THREE.Object3D {
         super()
         this.app = app
 
+        this.collided = false;
         const material = new THREE.MeshPhongMaterial({color: "#0000ff"})
         const box = new THREE.IcosahedronGeometry(2, 0)
         const powerups = new THREE.Mesh(box, material)
@@ -15,9 +16,25 @@ class MyPowerUps extends THREE.Object3D {
         powerups.position.set(x, 2, z)
 
         this.app.scene.add(powerups)
-        return powerups
+        this.mesh = powerups
+    }
 
+    getObject() {
+        return this.mesh;
+    }
+
+    previouslyCollided() {
+        return this.collided
+    }
+
+    disableCollision() {
+        this.collided = true
+    }
+
+    enableCollision() {
+        this.collided = false
     }
 }
+
 
 export { MyPowerUps };
