@@ -108,6 +108,7 @@ class MyContents  {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
         if(distance <= 5){
             this.playerCar.stop()
+            console.log("colided")
         }
     }
 
