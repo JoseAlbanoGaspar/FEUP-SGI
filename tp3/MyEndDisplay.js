@@ -22,10 +22,9 @@ class MyEndDisplay extends THREE.Object3D {
         sprite.createWord("winner", 820, 30, 95, true)
         sprite.createWord("loser", 820, 20, 95, true)
 
-        sprite.createNumbers(this.app.contents.race.getPlayerLap(), 820, 50, -40, true)
-        sprite.createNumbers(this.app.contents.race.getOpponentLap(), 820, 40, -40, true)
-
         sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true)
+        sprite.createNumbers(p_time.toString().split(".")[0], 820, 40, -40, true)
+        
         
         if(winner === 0) {
             sprite.createWord("player", 820, 30, -40, true)

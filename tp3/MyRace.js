@@ -183,8 +183,9 @@ class MyRace {
     }
 
     updateTimers() {
-        this.playerTime += this.timer.getDelta()
-        this.opponentTime += this.timer.getDelta()
+        const elapsedTime = this.timer.getDelta()
+        this.playerTime += elapsedTime
+        this.opponentTime += elapsedTime
     }
 
     checkWinner() {

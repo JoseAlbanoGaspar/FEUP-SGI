@@ -84,8 +84,6 @@ class MyContents  {
         for (let obstacle in this.obstacles){
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
             if(distance <= 3){
-                const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
-                this.obstacles[obstacle].material = newMaterial
                 this.playerCar.reduceVelocity()
             }
         }
@@ -163,13 +161,11 @@ class MyContents  {
                 
             case "end":
                 this.oldState = "end"
-                console.log(this.winner, this.loser)
                 let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.race.getPlayerTime(), this.race.getOpponentTime())
                 this.state = await end.choose()
                 break;    
         
             default:
-                //exit()
                 console.log("nvjhbrvbnvrhj")
                 break;
         }

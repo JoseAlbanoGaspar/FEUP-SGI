@@ -41,6 +41,8 @@ class MyInitialMenu extends THREE.Object3D {
        
     }
 
+    //guardar a letra para construir a variavel, guardar a sprite criada num array
+    //para pedir essa variavel no final
     // Function to handle keydown events
     handleKeyDown(event) {
         switch (event.key.toLowerCase()) {
