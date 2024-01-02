@@ -59,7 +59,7 @@ class MyFirework {
      * compute explosion
      * @param {*} vector 
      */
-    explode(origin, n, rangeBegin, rangeEnd) {
+    explode(vector) {
 
        
         this.app.scene.remove( this.points )

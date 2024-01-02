@@ -14,33 +14,62 @@ class MyPicking {
 
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
-        this.raycaster.far = 100
+        this.raycaster.far = 200
 
         this.pointer = new THREE.Vector2()
         this.intersectedObj = null
         this.pickingColor = "0xff0000"
 
         this.firstClick = false
+        this.clicked = false
+        this.pickedObs = false
 
         // define the objects ids that are not to be pickeable
         this.notPickableObjIds = []
+        this.pickableObjIds = []
       
-        document.addEventListener(
-            "pointerdown",
-            this.onPointerClick.bind(this)
-        );
     }
 
-    addNotPickeableObject(obj) {
+    async pick(){
+        return new Promise((resolve) => {
+            const handler = (event) => {
+                this.onPointerClick(event);
+                if(!this.clicked) return;
+                
+                //document.removeEventListener("pointerdown", handler);
+                
+                if(this.pickedObs) {
+                    this.pickedObs = false
+                    return
+                }
+                 this.clicked = false;
+                resolve();
+            };
+            document.addEventListener("pointerdown", handler);
+        }).then(() => {
+
+        }
+        )
+    }
+
+    addPickableObjects(obj){
+        this.pickableObjIds.push(obj)
+    }
+
+    getPickeableObject(){
+        return this.pickableObjIds
+    }
+
+    addNotPickableObject(obj) {
         this.notPickableObjIds.push(obj)
-    }
-
-    getNotPickeableObject(){
-        return this.notPickableObjIds
     }
 
     getOriginalColor() {
         return this.originalColor
+    }
+
+    getIntersectedObject() {
+        return this.intersectedObjName
     }
 
     /*
@@ -57,14 +86,26 @@ class MyPicking {
     */
     changeColorOfFirstPickedObj(obj) {
         if (this.lastPickedObj != obj) {
-            if (this.lastPickedObj)
-                this.lastPickedObj.material.color.setHex(this.lastPickedObj.currentHex);
+            if (this.lastPickedObj){
+                 this.lastPickedObj.material.color = this.lastPickedObj.currentHex;
+            }
+           
             this.lastPickedObj = obj;
             this.lastPickedObj.currentHex = this.lastPickedObj.material.color.getHex();
             this.lastPickedObj.material.color.setHex(this.pickingColor);
         }
     }
 
+    changeObjSize(obj) {
+        this.lastPickedObj = obj
+        this.lastPickedObj.scale.set(1.5, 1.5, 1.5)
+    }
+
+    restoreSize() {
+        if(this.lastPickedObj)
+            this.lastPickedObj.scale.set(1, 1, 1)
+        this.lastPickedObj = null    
+    }
     /*
      * Restore the original color of the intersected object
      *
@@ -80,12 +121,13 @@ class MyPicking {
     *
     */
     pickingHelper(intersects) {
+        //this.restoreColorOfFirstPickedObj()
+        this.restoreSize()
         if (intersects.length > 0) {
+            
             const obj = intersects[0].object
             const position = intersects[0].point
-            console.log(position)
             
-            console.log("picked ", obj)
             if (this.notPickableObjIds.includes(obj.name)) {
                 this.restoreColorOfFirstPickedObj()
                 console.log("Object cannot be picked !")
@@ -95,34 +137,37 @@ class MyPicking {
                 switch (this.type) {
 
                     case "button":
-                        console.log(obj.name)
-                        this.changeColorOfFirstPickedObj(obj)
-                        this.intersectedObjName = obj.name
+                        this.changeObjSize(obj)
+                        this.intersectedObjName = obj
+                        this.clicked = true
+                        break;
 
                     case "car":
                         this.originalColor = obj.material.color
-                        this.changeColorOfFirstPickedObj(obj)
+                        this.clicked = true
                         break;
                 
                     case "obstacle":
                         if(this.firstClick) {
                             this.firstClick = false
                             this.changePositionObj(position)
+                            this.clicked = true
+                            this.pickedObs = true
                         }
         
                         else {
                             this.intersectedObj = obj
                             this.firstClick = true
-                            this.changeColorOfFirstPickedObj(obj)
+                            this.changeObjSize(obj)
+                            this.addPickableObjects(this.app.contents.track)
                         }
+                        break;
                     default:
                         break;
                 }
-            
+                
             }
                 
-        } else {
-            this.restoreColorOfFirstPickedObj()
         }
     }
 
@@ -140,7 +185,8 @@ class MyPicking {
 
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
-        var intersects = this.raycaster.intersectObjects(this.app.scene.children);
+        //this.app.scene.children
+        var intersects = this.raycaster.intersectObjects(this.pickableObjIds);
         
         this.pickingHelper(intersects)
 

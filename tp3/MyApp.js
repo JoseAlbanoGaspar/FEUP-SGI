@@ -76,56 +76,38 @@ class MyApp  {
 
         // Create a basic perspective camera
         const perspective1 = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        perspective1.position.set(250,250,25)
+        perspective1.position.set(120,120,20)
         this.cameras['Perspective'] = perspective1
 
-        // Create my perspective camera
-        const perspective2 = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        perspective2.position.set(-10,5,6)
-        this.cameras['MyPerspective'] = perspective2
+        // Create my initial camera
+        const initialCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        initialCamera.position.set(500,0,0)
+        this.cameras['Initial'] = initialCamera
 
-        // defines the frustum size for the orthographic cameras
-        const left = -this.frustumSize / 2 * aspect
-        const right = this.frustumSize /2 * aspect 
-        const top = this.frustumSize / 2 
-        const bottom = -this.frustumSize / 2
-        const near = -this.frustumSize /2
-        const far =  this.frustumSize
+        // Create my parking player camera
+        const playerCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        playerCamera.position.set(185, 10, -90)
+        this.cameras['PlayerPark'] = playerCamera
 
-        // create a left view orthographic camera
-        const orthoLeft = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoLeft.up = new THREE.Vector3(0,1,0);
-        orthoLeft.position.set(-this.frustumSize /4,0,0) 
-        orthoLeft.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Left'] = orthoLeft
+        // Create my parking opponent camera
+        const opponentCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        opponentCamera.position.set(185, 10, 90)
+        this.cameras['OpponentPark'] = opponentCamera
 
-        // create a left view orthographic camera
-        const orthoRight = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoRight.up = new THREE.Vector3(0,1,0);
-        orthoRight.position.set(this.frustumSize /4,0,0) 
-        orthoRight.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Right'] = orthoRight
+        // Create my gameMenu camera
+        const gameMenuCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        gameMenuCamera.position.set(0, 0, 580)
+        this.cameras['GameMenu'] = gameMenuCamera
 
-        // create a top view orthographic camera
-        const orthoTop = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoTop.up = new THREE.Vector3(0,0,1);
-        orthoTop.position.set(0, this.frustumSize /4, 0) 
-        orthoTop.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Top'] = orthoTop
+        // Create my obstacle camera
+        const obstacleCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        obstacleCamera.position.set(200, 0, 0)
+        this.cameras['ObstaclePark'] = obstacleCamera
 
-        // create a front view orthographic camera
-        const orthoFront = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoFront.up = new THREE.Vector3(0,1,0);
-        orthoFront.position.set(0,0, this.frustumSize /4) 
-        orthoFront.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Front'] = orthoFront
-        
-        // create a front view orthographic camera
-        const orthoBack = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoBack.up = new THREE.Vector3(0,1,0);
-        orthoBack.position.set(0,0, -this.frustumSize /4) 
-        orthoBack.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Back'] = orthoBack
+        //Create my end display camera
+        const endDisplayCamera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000 )
+        endDisplayCamera.position.set(910, 0, 0)
+        this.cameras['EndDisplay'] = endDisplayCamera
         
     }
 
@@ -136,6 +118,7 @@ class MyApp  {
     setActiveCamera(cameraName) {   
         this.activeCameraName = cameraName
         this.activeCamera = this.cameras[this.activeCameraName]
+
     }
 
     getActiveCamera() {

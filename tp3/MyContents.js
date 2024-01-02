@@ -10,6 +10,8 @@ import { MyPicking } from './MyPicking.js';
 import { MyShader } from './MyShader.js';
 import { MyInitialMenu } from './MyInitialMenu.js';
 import { MyGameMenu } from './MyGameMenu.js';
+import { MyOutdoor } from './MyOutdoor.js';
+import { MyEndDisplay } from './MyEndDisplay.js';
 import { MySpriteSheets } from './MySpritesheets.js';
 
 /**
@@ -33,50 +35,47 @@ class MyContents  {
         this.powerUps = []
         this.initialized = false
         this.state = "start"
+        this.oldState = null
     }
 
     initializeParkingLots() {
-        this.playerPark = new MyParkingLot()
-        this.playerPark.position.set(145, 0, -80);
-        const car1 = new MyCar(this.app, 145, -90, Math.PI, "#ff0000", true)
-        const car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
-        const car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
+        this.playerPark = new MyParkingLot(145, -80)
+        this.car1 = new MyCar(this.app, 145, -90, Math.PI, "#ff0000", true)
+        this.car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
+        this.car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
         
-        this.opponentPark = new MyParkingLot()
-        this.opponentPark.position.set(145, 0, 80);
-        const carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#0000ff", true)
-        const carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
-        const carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
+        this.opponentPark = new MyParkingLot(145, 80)
+        this.carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#0000ff", true)
+        this.carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
+        this.carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
-        this.obstaclesPark = new MyParkingLot()
-        this.obstaclesPark.position.set(145, 0, 0);
-        let obst1 = new MyObstacle(this.app, 145, 2, 3)
-        obst1.name = "obs1"
-        let obst2 = new MyObstacle(this.app, 145, 2, 16)
-        obst2.name = "obs2"
-        let obst3 = new MyObstacle(this.app, 145, 2, -10)
-        obst3.name = "obs3"
+        this.obstaclesPark = new MyParkingLot(145, 0)
+        this.obst1 = new MyObstacle(this.app, 145, 2, 3, "obs1")
+        this.obst2 = new MyObstacle(this.app, 145, 2, 16, "obs2")
+        this.obst3 = new MyObstacle(this.app, 145, 2, -10, "obs3")
+
+        this.obstacles.push(this.obst1)
+        this.obstacles.push(this.obst2)
+        this.obstacles.push(this.obst3)
 
         this.app.scene.add(this.playerPark)
         this.app.scene.add(this.opponentPark)
         this.app.scene.add(this.obstaclesPark)
 
-        this.app.scene.add(car1)
-        this.app.scene.add(car2)
-        this.app.scene.add(car3)
+        this.app.scene.add(this.car1)
+        this.app.scene.add(this.car2)
+        this.app.scene.add(this.car3)
       
-        this.app.scene.add(carOpponent1)
-        this.app.scene.add(carOpponent2)
-        this.app.scene.add(carOpponent3)
+        this.app.scene.add(this.carOpponent1)
+        this.app.scene.add(this.carOpponent2)
+        this.app.scene.add(this.carOpponent3)
         
     }
 
-    drawObstacle() {
-        const obs = new MyObstacle(this.app, 45, 1, 3)
-        const obs1 = new MyObstacle(this.app, -45, 1, 3)
-        this.obstacles.push(obs)
-        this.obstacles.push(obs1)
-        return obs
+    drawPowerUps() {
+        const powerups = new MyPowerUps(this.app, 20, 80)
+        this.powerUps.push(powerups)
+        return powerups
     }
 
     colisionWithObstacle() {
@@ -86,16 +85,16 @@ class MyContents  {
                 const newMaterial = new THREE.MeshPhongMaterial({color: "#808080"})
                 this.obstacles[obstacle].material = newMaterial
                 this.playerCar.reduceVelocity()
-                console.log("colidiu com ", this.obstacles[obstacle].name)
             }
         }
     }
   
-    colisionWithPowerUps() {
-        for (let powerUp in this.powerUps){
+    async colisionWithPowerUps() {
+        for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
-            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){                
-                this.race.pauseGame()
+            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){               
+                this.collidedObs = true
+                this.state = "chooseObstacle"  
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
             }
@@ -112,96 +111,103 @@ class MyContents  {
         }
     }
 
-    drawPowerUps() {
-        const powerups = new MyPowerUps(this.app, 20, 80)
-        this.powerUps.push(powerups)
-        return powerups
-    }
-
-    stateGame() {
+    async stateGame() {
         switch (this.state) {
             case "start":
-                let init = new MyInitialMenu(this.app)
-                this.createStart()
-                
+                let st = new MyInitialMenu(this.app)
+                this.state = await st.start()
+                this.oldState = "start"
+                this.app.setActiveCamera("PlayerPark")
                 break;
+
             case "choosePlayerCar":
-                //this.choosePlayerCar()
+                this.oldState = "choosePlayerCar"
+                await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
+                this.app.setActiveCamera("OpponentPark")
+                break;
 
             case "chooseOpponentCar":
-                //this.chooseOpponentCar()
+                this.oldState = "chooseOpponentCar"
+                await this.chooseOpponentCar()
+                this.app.setActiveCamera("GameMenu")
+                this.initialState()
                 this.state = "gameMenu"
+                break;
                 
             case "gameMenu":
-                //gameMenu
-                new MyGameMenu(this.app)
+                this.oldState = "gameMenu"
+                let menu = new MyGameMenu(this.app)
+                this.state = await menu.choose()
+                this.app.setActiveCamera("Perspective")
+                break;
                     
             case "game":
-                //MyGame
-                //new MyGameMenu(this.app)
-                console.log("GAME ", this.state)
+                //this.OldStatestate ="game"
                 break;
 
+            case "chooseObstacle":
+                this.oldState ="chooseObstacle"
+                this.race.pauseGame()
+                await this.chooseObstacle()
+                this.race.resumeGame()
+                this.state = "game"
+                break; 
+
             case "pause":
-                //pause screen
+                this.state = "pause"
                 break;    
                 
             case "end":
-                //MyEndPage
+                this.oldState = "end"
+                let end = new MyEndDisplay(this.app)
+                this.state = await end.choose()
                 break;    
         
             default:
-                //default exist the game
-                exit()
+                //exit()
+                console.log("nvjhbrvbnvrhj")
                 break;
         }
     }
 
-    choosePlayerCar() {
+    async choosePlayerCar() {
         let pickingPlayer = new MyPicking(this.app, "car")
-        pickingPlayer.addNotPickeableObject(this.track.mesh.name)
-        pickingPlayer.addNotPickeableObject(this.playerPark.getName())
+        pickingPlayer.addPickableObjects(this.car1)
+        pickingPlayer.addPickableObjects(this.car2)
+        pickingPlayer.addPickableObjects(this.car3)
+
+        await pickingPlayer.pick()
     
         this.colorPlayer = pickingPlayer.getOriginalColor()
     }
 
-    chooseOpponentCar(){
+    async chooseOpponentCar(){
         let pickingOpponent = new MyPicking(this.app, "car")
-        pickingOpponent.pick()
-        pickingOpponent.addNotPickeableObject(this.track.mesh.name)
-        pickingOpponent.addNotPickeableObject(this.opponentCar.getName())
+        pickingOpponent.addPickableObjects(this.carOpponent1)
+        pickingOpponent.addPickableObjects(this.carOpponent2)
+        pickingOpponent.addPickableObjects(this.carOpponent3)
+
+        await pickingOpponent.pick()
 
         this.colorOpponent = pickingOpponent.getOriginalColor()
     }
 
-    initialState() {
-        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, "#00ff00", true);
-        this.opponentCar = new MyCar(this.app, 56, 0, 0, "#0000ff", false);
-        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+    async chooseObstacle() {
+        
+        let pickingObstacle = new MyPicking(this.app, "obstacle")
+        pickingObstacle.addPickableObjects(this.obst1)
+        pickingObstacle.addPickableObjects(this.obst2)
+        pickingObstacle.addPickableObjects(this.obst3)
+
+        await pickingObstacle.pick()
     }
 
-    createStart(){
-        const s = new MySpriteSheets(this.app, 47.5)
-        s.position.set(1, 100, 16)
-
-        const t = new MySpriteSheets(this.app, 48.5)
-        t.position.set(1, 100, 8)
-
-        const a = new MySpriteSheets(this.app, 30.8)
-        a.position.set(1, 100, 0)
-
-        const r = new MySpriteSheets(this.app, 46.7)
-        r.position.set(1, 100, -8)
-
-        const t2 = new MySpriteSheets(this.app, 48.5)
-        t2.position.set(1, 100, -16)
-
-        this.app.scene.add(s)
-        this.app.scene.add(t)
-        this.app.scene.add(a)
-        this.app.scene.add(r)
-        this.app.scene.add(t2)
+    initialState() {
+        this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.colorPlayer, true);
+        this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+        this.drawPowerUps()
     }
 
     initMountains() {
@@ -236,18 +242,6 @@ class MyContents  {
 
         const pointLight = new THREE.PointLight( 0xffffff, 1000, 0 );
         pointLight.position.set( 0, 20, 0 );
-        // shadows
-        pointLight.castShadow = true;
-        pointLight.shadow.mapSize.width = this.mapSize;
-        pointLight.shadow.mapSize.height = this.mapSize;
-        pointLight.shadow.camera.near = 0.5;
-        pointLight.shadow.camera.far = 100;
-        //this.app.scene.add( pointLight );
-
-        // add a point light helper for the previous point light
-        const sphereSize = 0.5;
-        const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-        //this.app.scene.add( pointLightHelper );
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Color, Intensity
         directionalLight.position.set(0, 20, 0); // Set light direction
@@ -270,7 +264,6 @@ class MyContents  {
         this.app.scene.add(hemisphereLight);
         
         // ground
-
         const textureLoader = new THREE.TextureLoader();
         
         const grass = textureLoader.load('textures/grass.jpg')
@@ -280,42 +273,26 @@ class MyContents  {
 
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", map: grass});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
-
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
         rectangle.name = "myplane"
         this.app.scene.add(rectangle)
 
-        const outdoorMaterial = new THREE.MeshBasicMaterial({color: "#ff00ff"})
-        const outdoor = new THREE.Mesh(geometry, outdoorMaterial)
-        outdoor.position.set(-this.TRACK_SIZE/2, 32, 1)
-        outdoor.rotation.y = Math.PI/2
-        outdoor.scale.set(1, 0.3, 1)
-        this.app.scene.add(outdoor)
+        new MyOutdoor(this.app)
+        this.sprite = new MySpriteSheets(this.app)
 
         // --------------------------------------------------------------
         //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
         // --------------------------------------------------------------
 
-        // INITIALIZE RACE
+        // INITIALIZE SCENE
         this.track = new MyTrack();
         this.track.mesh.name = "mytrack";
-
+        this.app.setActiveCamera("Initial")
         this.initializeParkingLots()
 
-        let init = new MyPicking(this.app, "obstacle")
-        //init.addNotPickeableObject(this.track.mesh.name)
-        init.addNotPickeableObject(rectangle.name)
-        init.addNotPickeableObject(this.playerPark.getName())
-    
-        this.initialState()
-        this.initMountains();
-
-        this.drawObstacle()
-        this.drawPowerUps()
-        this.colisionWithObstacle()
+        this.initMountains()
         this.stateGame(this.state)
-
 
         //shaders
 
@@ -397,9 +374,7 @@ class MyContents  {
         }
     }
 
-
     //-----------------END OF SHADER FUNCTIONS ----------------------
-
 
     /**
      * updates the contents
@@ -408,12 +383,18 @@ class MyContents  {
      */
 
     update() {
+        if(this.state !== this.oldState) this.stateGame(this.state)
 
-        this.stateGame(this.state)
-        this.race.update();
-        this.colisionWithObstacle();
-        this.colisionWithPowerUps();
-        this.colisionWithOtherCar();
+        if(this.state === "game") {
+            this.race.update(Date.now());
+            this.colisionWithObstacle();
+            this.colisionWithPowerUps();
+            this.colisionWithOtherCar();
+
+            //tentar colocar apenas quando a volta muda
+            this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -40, true)
+            this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -40, true)
+        }
 
         // update shaders
         for (const currentShader in this.shaders)
