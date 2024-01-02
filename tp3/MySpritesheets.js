@@ -56,9 +56,6 @@ class MySpriteSheets extends THREE.Object3D {
         let max_velocity = [42, 30.8, 82.2, 0, 80.3, 34.6, 41.1, 43.9, 32.7, 38.3, 48.5, 83.1]
         this.characters.set("max_velocity", max_velocity)
 
-        let min_velocity = [42, 38.3, 43, 0, 80.3, 34.6, 41.1, 43.9, 32.7, 38.3, 48.5, 83.1]
-        this.characters.set("min_velocity", min_velocity)
-
     }
 
     storeNumbers() {
@@ -108,6 +105,12 @@ class MySpriteSheets extends THREE.Object3D {
 
         let level = [41.1, 34.5, 80.2, 34.5, 41.1]
         this.characters.set("level", level)
+
+        let player = [44.8, 41.1, 30.8, 83.1, 34.5, 46.7]
+        this.characters.set("player", player)
+
+        let opponent = [43.9, 44.8, 44.8, 43.9, 43, 34.4, 43, 48.5]
+        this.characters.set("opponent", opponent)
     }
 
     drawCharacter(currentTile) {
@@ -121,10 +124,8 @@ class MySpriteSheets extends THREE.Object3D {
         const offsetY = (this.tileVert - Math.floor(currentTile/this.tileHoriz) - 1) / this.tileVert
 
         this.spritesheetsTex.offset.set(offsetX, offsetY)
-        //material using a spritesheets
         const material = new THREE.SpriteMaterial({ map: this.spritesheetsTex })
         
-        //sprite using the material
         const characterSprite = new THREE.Sprite(material)
         characterSprite.scale.set(10, 10, 10)
 
@@ -145,14 +146,15 @@ class MySpriteSheets extends THREE.Object3D {
 
     createNumbers(number, x, y, z) {
         //For only one digit number
-        let stringNumber = number.toString()
-        let num = this.characters.get(stringNumber)
-        let temp = this.drawCharacter(num[0])
-        temp.position.set(x, y, z)
-    
-        this.app.scene.add(temp)
-
-        //Falta fazer para qualquer numero
+            let stringNumber = number.toString().split('')
+            console.log(stringNumber)
+            for (let i = 0; i < stringNumber.length; i++){
+                let num = this.characters.get(stringNumber[i])
+                let temp = this.drawCharacter(num)
+                temp.position.set(x, y, z)
+                this.app.scene.add(temp)
+                z = z-8
+            }
     }
 
 }

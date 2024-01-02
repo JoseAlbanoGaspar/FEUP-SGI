@@ -13,7 +13,7 @@ class MyRace {
         this.initialized = false; // true after init() function and used on update()
 
         // lap counter
-        this.LAP_NUM = 3;
+        this.LAP_NUM = 1;
         this.playerLaps = 0;
         this.prevPlayerPos = this.playerCar.getPosition();
         this.opponentLaps = 0;
@@ -95,6 +95,14 @@ class MyRace {
 
     getOpponentLap() {
         return this.opponentLaps
+    }
+
+    getPlayerTime() {
+        return this.playerTime
+    }
+
+    getOpponentTime() {
+        return this.opponentTime
     }
 
     display() {
@@ -205,10 +213,10 @@ class MyRace {
 
         this.updateLap()
         
-        if (this.gameOver()) {
-            const winner = this.checkWinner()
-            console.log("game ended: ", winner)
-        }
+        // if (this.gameOver()) {
+        //     const winner = this.checkWinner()
+        //     console.log("game ended: ", winner)
+        // }
     }
 }
 

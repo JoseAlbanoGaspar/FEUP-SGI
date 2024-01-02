@@ -327,10 +327,10 @@ class MyCar extends THREE.Object3D {
 
     updatePowerUpIncrease() {
       const elapsed = this.powerUpTimer.getElapsedTime()
-      console.log("elapsed: ", elapsed)
+      //console.log("elapsed: ", elapsed)
       if (elapsed > this.POWER_UP_DURATION){
         this.powerUpIncrease = 1
-        console.log("reseted")
+        //console.log("reseted")
         this.powerUpTimer = new THREE.Clock(false);
       }
     }

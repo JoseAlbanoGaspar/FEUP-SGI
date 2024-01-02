@@ -36,6 +36,8 @@ class MyContents  {
         this.initialized = false
         this.state = "start"
         this.oldState = null
+        this.oldLapP = null
+        this.oldLapO = null
     }
 
     initializeParkingLots() {
@@ -143,7 +145,7 @@ class MyContents  {
                 break;
                     
             case "game":
-                //this.OldStatestate ="game"
+                this.oldState = "game"
                 break;
 
             case "chooseObstacle":
@@ -160,7 +162,8 @@ class MyContents  {
                 
             case "end":
                 this.oldState = "end"
-                let end = new MyEndDisplay(this.app)
+                console.log(this.winner, this.loser)
+                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.race.getPlayerTime(), this.race.getOpponentTime())
                 this.state = await end.choose()
                 break;    
         
@@ -391,9 +394,20 @@ class MyContents  {
             this.colisionWithPowerUps();
             this.colisionWithOtherCar();
 
-            //tentar colocar apenas quando a volta muda
-            this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -40, true)
-            this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -40, true)
+            if(this.race.gameOver()) {
+                this.state = "end"
+                console.log("op", this.race.getOpponentTime())
+            }
+
+            if(this.oldLapP !== this.race.getPlayerLap()) {
+                this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -40, true)
+                this.oldLapP = this.race.getPlayerLap()
+            }
+    
+            if(this.oldLapO !== this.race.getOpponentLap()){
+                this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -40, true)
+                this.oldLapO = this.race.getOpponentLap()
+            }
         }
 
         // update shaders

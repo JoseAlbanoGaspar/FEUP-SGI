@@ -5,7 +5,7 @@ import { MyFirework } from './MyFirework.js';
 
 class MyEndDisplay extends THREE.Object3D {
 
-    constructor(app) {
+    constructor(app, winner, p_time, o_time) {
         super()
         this.app = app;
 
@@ -25,6 +25,17 @@ class MyEndDisplay extends THREE.Object3D {
         sprite.createNumbers(this.app.contents.race.getPlayerLap(), 820, 50, -40, true)
         sprite.createNumbers(this.app.contents.race.getOpponentLap(), 820, 40, -40, true)
 
+        sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true)
+        
+        if(winner === 0) {
+            sprite.createWord("player", 820, 30, -40, true)
+            sprite.createWord("opponent", 820, 20, -40, true)
+        }
+
+        else {
+            sprite.createWord("opponent", 820, 30, -40, true)
+            sprite.createWord("player", 820, 20, -40, true)
+        }
         const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" });
         const plane = new THREE.PlaneGeometry(50, 20, 60, 70);
 
@@ -58,8 +69,8 @@ class MyEndDisplay extends THREE.Object3D {
         }
 
         else {
-            this.app.setActiveCamera("PlayerPark")
-            return "choosePlayerCar"
+            this.app.setActiveCamera("Perspective")
+            return "game"
         }
        
     }
