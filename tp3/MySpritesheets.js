@@ -145,16 +145,15 @@ class MySpriteSheets extends THREE.Object3D {
     }
 
     createNumbers(number, x, y, z) {
-        //For only one digit number
-            let stringNumber = number.toString().split('')
-            console.log(stringNumber)
-            for (let i = 0; i < stringNumber.length; i++){
-                let num = this.characters.get(stringNumber[i])
-                let temp = this.drawCharacter(num)
-                temp.position.set(x, y, z)
-                this.app.scene.add(temp)
-                z = z-8
-            }
+        let stringNumber = number.toString().split('')
+        
+        for (let i = 0; i < stringNumber.length; i++){
+            let num = this.characters.get(stringNumber[i])
+            let temp = this.drawCharacter(num)
+            temp.position.set(x, y, z)
+            this.app.scene.add(temp)
+            z = z-8
+        }
     }
 
 }

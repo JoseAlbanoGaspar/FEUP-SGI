@@ -82,7 +82,7 @@ class MyCar extends THREE.Object3D {
         this.powerUpTimer = new THREE.Clock(false);
         this.POWER_UP_DURATION = 5;
         this.powerUpIncrease = 1; // this factor increases to increase velocity and decreases to reduce velocity
-
+        this.stopFlag = false
     }
 
     getPosition(){
@@ -291,7 +291,8 @@ class MyCar extends THREE.Object3D {
     }
 
     updateCarPosition() {
-      this.position.set(this.position.x + this.velocity * Math.cos(this.direction), this.position.y , this.position.z + this.velocity * Math.sin(this.direction));
+      if (!this.stopFlag)
+        this.position.set(this.position.x + this.velocity * Math.cos(this.direction), this.position.y , this.position.z + this.velocity * Math.sin(this.direction));
     }
 
     updateDeltas(t) {
@@ -322,6 +323,7 @@ class MyCar extends THREE.Object3D {
     //Car stops during 5 seconds
     stop() {
       this.powerUpTimer = new THREE.Clock()
+      this.stopFlag = true;
       this.powerUpIncrease = 0;
     }
 
@@ -330,7 +332,8 @@ class MyCar extends THREE.Object3D {
       //console.log("elapsed: ", elapsed)
       if (elapsed > this.POWER_UP_DURATION){
         this.powerUpIncrease = 1
-        //console.log("reseted")
+        this.stopFlag = false
+        console.log("reseted")
         this.powerUpTimer = new THREE.Clock(false);
       }
     }
