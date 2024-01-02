@@ -27,17 +27,105 @@ class MyInitialMenu extends THREE.Object3D {
         this.app.scene.add(menu)
         this.app.scene.add(this.buttonInit)
 
+        this.keyDownHandler = this.handleKeyDown.bind(this);
+        document.addEventListener('keydown', this.keyDownHandler);
+
     }
 
     async start() {
         let pickingButton = new MyPicking(this.app, "button")
         pickingButton.addPickableObjects(this.buttonInit)
         await pickingButton.pick()
-        
+        document.removeEventListener('keydown', this.keyDownHandler)
         if(pickingButton.getIntersectedObject().name === "mybuttoninit") return "choosePlayerCar"
        
     }
 
-}
+    // Function to handle keydown events
+    handleKeyDown(event) {
+        switch (event.key.toLowerCase()) {
+            case 'a':
+                console.log("a pressed");
+                break;
+            case 'b':
+                console.log("b pressed");
+                break;
+            case 'c':
+                console.log("c pressed");
+                break;
+            case 'd':
+                console.log("d pressed");
+                break;
+            case 'e':
+                console.log("e pressed");
+                break;
+            case 'f':
+                console.log("f pressed");
+                break;
+            case 'g':
+                console.log("g pressed");
+                break;
+            case 'h':
+                console.log("h pressed");
+                break;
+            case 'i':
+                console.log("i pressed");
+                break;
+            case 'j':
+                console.log("j pressed");
+                break;
+            case 'k':
+                console.log("k pressed");
+                break;
+            case 'l':
+                console.log("l pressed");
+                break;
+            case 'm':
+                console.log("m pressed");
+                break;
+            case 'n':
+                console.log("n pressed");
+                break;
+            case 'o':
+                console.log("o pressed");
+                break;
+            case 'p':
+                console.log("p pressed");
+                break;
+            case 'q':
+                console.log("q pressed");
+                break;
+            case 'r':
+                console.log("r pressed");
+                break;
+            case 's':
+                console.log("s pressed");
+                break;
+            case 't':
+                console.log("t pressed");
+                break;
+            case 'u':
+                console.log("u pressed");
+                break;
+            case 'v':
+                console.log("v pressed");
+                break;
+            case 'w':
+                console.log("w pressed");
+                break;
+            case 'x':
+                console.log("x pressed");
+                break;
+            case 'y':
+                console.log("y pressed");
+                break;
+            case 'z':
+                console.log("z pressed");
+                break;
+            default:
+                break;
+            }
+        }
+    }
 
 export { MyInitialMenu };

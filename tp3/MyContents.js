@@ -115,8 +115,8 @@ class MyContents  {
         switch (this.state) {
             case "start":
                 let st = new MyInitialMenu(this.app)
-                this.state = await st.start()
                 this.oldState = "start"
+                this.state = await st.start()
                 this.app.setActiveCamera("PlayerPark")
                 break;
 
