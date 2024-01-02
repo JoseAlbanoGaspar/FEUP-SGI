@@ -15,50 +15,14 @@ class MyOutdoor extends THREE.Object3D {
         outdoor.position.set(-125, 32, 1)
         outdoor.rotation.y = Math.PI/2
         outdoor.scale.set(1, 0.5, 1)
-        this.createWord("start")
-        this.createWord2("time")
-        //this.createState()
+        let sprite = new MySpriteSheets(this.app)
+        sprite.createWord("time", -122, 78, 110, true)
+        sprite.createWord("p_round", -122, 68, 110, true)
+        sprite.createWord("o_round", -122, 58, 110, true)
+        sprite.createWord("max_velocity", -122, 48, 110, true)
+        sprite.createWord("min_velocity", -122, 38, 110, true)
         this.app.scene.add(outdoor)
 
-    }
-
-    createWord(word) {
-        let x = -122, y = 78, z = 110
-        let aux = new MySpriteSheets(this.app)
-        let start = aux.getCharacters().get(word)
-        console.log(start)
-        
-        for(let i = 0; i < start.length; i++) {
-            console.log("Outdoor class", start[i])
-            let temp = aux.drawCharacter(start[i])
-            console.log("temp", temp)
-            temp.position.set(x, y, z)
-            this.words.push(temp)
-            this.app.scene.add(temp)
-            z = z-8
-        }
-    
-    }
-
-    createWord2(word) {
-        let x = -122, y = 68, z = 110
-        const aux = new MySpriteSheets(this.app)
-        let start = aux.getCharacters().get(word)
-        console.log(start)
-        
-        for(let i = 0; i < start.length; i++) {
-            let temp = aux.drawCharacter(start[i])
-            console.log("temp", temp)
-            temp.position.set(x, y, z)
-            this.words.push(temp)
-            z = z-8
-        }
-
-        console.log(this.words)
-        for(let j = 0; j < this.words.length; j++){
-            this.app.scene.add(this.words[j])
-        }
-    
     }
 
     // createTime() {

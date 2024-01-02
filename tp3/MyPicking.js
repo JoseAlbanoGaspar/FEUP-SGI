@@ -14,7 +14,7 @@ class MyPicking {
 
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
-        this.raycaster.far = 100
+        this.raycaster.far = 200
 
         this.pointer = new THREE.Vector2()
         this.intersectedObj = null

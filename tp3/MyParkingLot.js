@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class MyParkingLot extends THREE.Object3D {
-    constructor() {
+    constructor(x, z) {
         super();
         this.type = 'Group';
 
@@ -20,8 +20,9 @@ class MyParkingLot extends THREE.Object3D {
         this.rectangle.name = "mypark"
 
         this.rectangle.rotation.x = 3 * Math.PI / 2;
-
         this.rectangle.rotation.z = Math.PI / 2;
+        this.rectangle.position.set(x, 0, z)
+
         this.add(this.rectangle);
     }
 

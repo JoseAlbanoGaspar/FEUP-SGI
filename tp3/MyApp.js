@@ -79,29 +79,9 @@ class MyApp  {
         perspective1.position.set(250,250,25)
         this.cameras['Perspective'] = perspective1
 
-        // Create my perspective camera
-        const perspective2 = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        perspective2.position.set(-10,5,6)
-        this.cameras['MyPerspective'] = perspective2
-
-        // defines the frustum size for the orthographic cameras
-        const left = -this.frustumSize / 2 * aspect
-        const right = this.frustumSize /2 * aspect 
-        const top = this.frustumSize / 2 
-        const bottom = -this.frustumSize / 2
-        const near = -this.frustumSize /2
-        const far =  this.frustumSize
-
-
-        // Create a target object (for example, a mesh or an empty object)
-        const targetObject = new THREE.Object3D();
-        targetObject.position.set(0,100, 0); // Set the position of the target object
-        //this.scene.add(targetObject)
-
         // Create my initial camera
         const initialCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        initialCamera.position.set(460,100,0)
-        //initialCamera.lookAt(targetObject.position)
+        initialCamera.position.set(500,0,0)
         this.cameras['Initial'] = initialCamera
 
         // Create my parking player camera
@@ -116,8 +96,13 @@ class MyApp  {
 
         // Create my gameMenu camera
         const gameMenuCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        gameMenuCamera.position.set(0, 120, 480)
+        gameMenuCamera.position.set(0, 0, 580)
         this.cameras['GameMenu'] = gameMenuCamera
+
+        // Create my obstacle camera
+        const obstacleCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
+        obstacleCamera.position.set(200, 0, 0)
+        this.cameras['ObstaclePark'] = obstacleCamera
         
     }
 

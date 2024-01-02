@@ -38,20 +38,17 @@ class MyContents  {
     }
 
     initializeParkingLots() {
-        this.playerPark = new MyParkingLot()
-        this.playerPark.position.set(145, 0, -80);
+        this.playerPark = new MyParkingLot(145, -80)
         this.car1 = new MyCar(this.app, 145, -90, Math.PI, "#ff0000", true)
         this.car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
         this.car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
         
-        this.opponentPark = new MyParkingLot()
-        this.opponentPark.position.set(145, 0, 80);
+        this.opponentPark = new MyParkingLot(145, 80)
         this.carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#0000ff", true)
         this.carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
         this.carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
-        this.obstaclesPark = new MyParkingLot()
-        this.obstaclesPark.position.set(145, 0, 0);
+        this.obstaclesPark = new MyParkingLot(145, 0)
         this.obst1 = new MyObstacle(this.app, 145, 2, 3)
         this.obst1.name = "obs1"
         this.obst2 = new MyObstacle(this.app, 145, 2, 16)
@@ -97,7 +94,7 @@ class MyContents  {
     async colisionWithPowerUps() {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
-            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){                
+            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){               
                 this.state = "chooseObstacle"  
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
@@ -126,7 +123,6 @@ class MyContents  {
                 break;
 
             case "choosePlayerCar":
-                //this.app.setActiveCamera("PlayerPark")
                 this.oldState = "choosePlayerCar"
                 await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
@@ -134,23 +130,22 @@ class MyContents  {
                 break;
 
             case "chooseOpponentCar":
-                //this.app.setActiveCamera("OpponentPark")
                 this.oldState = "chooseOpponentCar"
                 await this.chooseOpponentCar()
+                this.app.setActiveCamera("GameMenu")
                 this.initialState()
                 this.state = "gameMenu"
                 break;
                 
             case "gameMenu":
-                //this.app.setActiveCamera("GameMenu")
                 this.oldState = "gameMenu"
                 let menu = new MyGameMenu(this.app)
                 this.state = await menu.choose()
+                this.app.setActiveCamera("Perspective")
                 break;
                     
             case "game":
-                this.OldStatestate ="game"
-                //MyGame
+                //this.OldStatestate ="game"
                 break;
 
             case "chooseObstacle":
@@ -159,12 +154,10 @@ class MyContents  {
                 await this.chooseObstacle()
                 this.race.resumeGame()
                 this.state = "game"
-              
                 break; 
 
             case "pause":
                 this.state = "pause"
-
                 break;    
                 
             case "end":

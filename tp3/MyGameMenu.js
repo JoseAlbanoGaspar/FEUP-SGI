@@ -10,35 +10,35 @@ class MyGameMenu extends THREE.Object3D {
 
         let texture = new THREE.TextureLoader().load("textures/background-menus.jpg")
         const backgroundColor = new THREE.MeshBasicMaterial({ map: texture})
-        const background = new THREE.PlaneGeometry( 500, 500, 100, 100 );
-
+        const background = new THREE.PlaneGeometry( 350, 350, 100, 100 );
         const backgroundMesh = new THREE.Mesh(background, backgroundColor)
-        backgroundMesh.position.set(0, 100, 398)
+        backgroundMesh.position.set(0, 0, 398)
         this.app.scene.add(backgroundMesh)
 
-        const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ffff" });
-
+        const easyMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" })
+        const mediumMaterial = new THREE.MeshBasicMaterial({ color: "#ffff00" })
+        const hardMaterial = new THREE.MeshBasicMaterial({ color: "#ff0000" })
         const geometry = new THREE.PlaneGeometry(60, 30, 60, 70);
 
-        //Levels of dificulties
-        this.buttonEasy = new THREE.Mesh(geometry, planeMaterial);
-        
-        this.buttonEasy.position.set(0, 180, 400)
-        this.buttonEasy.name = "mybuttoneasy"
+        let sprite = new MySpriteSheets(this.app)
 
-        this.createEasy()
+        //Levels of dificulties
+        this.buttonEasy = new THREE.Mesh(geometry, easyMaterial);
+        this.buttonEasy.position.set(0, 80, 400)
+        this.buttonEasy.name = "mybuttoneasy"
+        sprite.createWord("easy", -12, 80, 402, false)
         this.app.scene.add(this.buttonEasy)
 
-        this.buttonMedium = new THREE.Mesh(geometry, planeMaterial)
-        this.buttonMedium.position.set(0, 140, 400)
+        this.buttonMedium = new THREE.Mesh(geometry, mediumMaterial)
+        this.buttonMedium.position.set(0, 40, 400, false)
         this.buttonMedium.name = "mybuttonmedium"
-        this.createMedium()
+        sprite.createWord("medium", -20, 40, 402, false)
         this.app.scene.add(this.buttonMedium)
 
-        this.buttonHard = new THREE.Mesh(geometry, planeMaterial)
-        this.buttonHard.position.set(0, 100, 400)
+        this.buttonHard = new THREE.Mesh(geometry, hardMaterial)
+        this.buttonHard.position.set(0, 0, 400)
         this.buttonHard.name = "mybuttonhard"
-        this.createHard()
+        sprite.createWord("hard", -12, 0, 402, false)
         this.app.scene.add(this.buttonHard)
 
     }
@@ -114,7 +114,10 @@ class MyGameMenu extends THREE.Object3D {
         pickingButtonMenu.addPickableObjects(this.buttonMedium)
         pickingButtonMenu.addPickableObjects(this.buttonHard)
         await pickingButtonMenu.pick()
-        if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy") return "game"
+        if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy" ||
+            pickingButtonMenu.getIntersectedObject().name === "mybuttonmedium" ||
+            pickingButtonMenu.getIntersectedObject().name === "mybuttonhard") 
+            return "game"
        
     }
 }

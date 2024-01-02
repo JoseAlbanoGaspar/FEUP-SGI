@@ -11,7 +11,7 @@ class MyInitialMenu extends THREE.Object3D {
         const plane = new THREE.PlaneGeometry( 200, 200, 100, 100 );
         const menuMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
         const menu = new THREE.Mesh(plane, menuMaterial)
-        menu.position.set(398, 100, 0)
+        menu.position.set(398, 0, 0)
         menu.rotation.y = Math.PI/2
 
         const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" });
@@ -19,28 +19,15 @@ class MyInitialMenu extends THREE.Object3D {
 
         this.buttonInit = new THREE.Mesh(geometry, planeMaterial);
         this.buttonInit.rotation.y = Math.PI/2
-        this.buttonInit.position.set(400, 100, 0)
+        this.buttonInit.position.set(400, 0, 0)
         this.buttonInit.name = "mybuttoninit"
 
+        let sprite = new MySpriteSheets(this.app)
+        sprite.createWord("start", 401, 0, 16, true)
+        sprite.createWord("level", 401, 10, 16, true)
         this.app.scene.add(menu)
         this.app.scene.add(this.buttonInit)
 
-    }
-
-    createWord(word) {
-
-        let x = 401, y = 100, z = 16
-        const aux = new MySpriteSheets(this.app)
-        let start = aux.getCharacters().get(word)
-        
-        for(let i = 0; i < start.length; i++) {
-            let temp = aux.drawCharacter(start[i])
-            temp.position.set(x, y, z)
-            z = z-8
-            this.app.scene.add(temp)
-        }
-        return
-    
     }
 
     async start() {
