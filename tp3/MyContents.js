@@ -204,6 +204,25 @@ class MyContents  {
         this.app.scene.add(t2)
     }
 
+    initMountains() {
+        const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff"});
+        const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE / 2, this.TRACK_SIZE , 100, 100 );
+
+        const rectangle = new THREE.Mesh(geometry, planeMaterial)
+        rectangle.rotation.x = 3 * Math.PI / 2
+        rectangle.rotation.z =  Math.PI / 2
+        rectangle.position.set(0, -30, -187) 
+        this.app.scene.add(rectangle)
+
+        const rectangle2 = rectangle.clone()
+        rectangle2.position.set(0, -30, 187)
+        rectangle2.rotation.z =3 * Math.PI / 2 
+        this.app.scene.add(rectangle2)
+        this.mountains = []
+        this.mountains.push(rectangle)
+        this.mountains.push(rectangle2)
+    }
+
     /**
      * initializes the contents
      */
@@ -290,6 +309,7 @@ class MyContents  {
         init.addNotPickeableObject(this.playerPark.getName())
     
         this.initialState()
+        this.initMountains();
 
         this.drawObstacle()
         this.drawPowerUps()
@@ -303,23 +323,37 @@ class MyContents  {
         const texture1  = new THREE.TextureLoader().load('textures/obstacle.png' )
         texture1.wrapS = THREE.RepeatWrapping;
         texture1.wrapT = THREE.RepeatWrapping;
+
+        const texture2  = new THREE.TextureLoader().load('textures/terrain.jpg' )
+        texture2.wrapS = THREE.RepeatWrapping;
+        texture2.wrapT = THREE.RepeatWrapping;
+
+        const texture3  = new THREE.TextureLoader().load('textures/heightmap.jpg' )
+        texture3.wrapS = THREE.RepeatWrapping;
+        texture3.wrapT = THREE.RepeatWrapping;
         
         this.shaderSamplers = {
-            'obstacle' : texture1
+            'obstacle' : texture1,
+            'mountain' : texture2,
+            'heightmap': texture3
         }
 
         /**
          * Usage:
          *  index 0 - shader for pulsing obstacles
-         *  index 1 - TBD
+         *  index 1 - shader for mountains
          *  index 2 - TBD 
          *  ...
          */
         this.shaders = [
-                new MyShader(this.app, "Color mix shading", "Uses two flat colors and color mix to shade the object",
+                new MyShader(this.app, "Pulsing Obstacle", "Used to animate obstacles",
                     "shaders/pulsing.vert", "shaders/pulsing.frag", {
                         timeFactor: {type: 'f', value: 0.0 },
                         uSampler: {type: 'sampler2D', value: texture1 }
+                }),
+                new MyShader(this.app, 'Mountain', "generates mountain", "shaders/mountain.vert", "shaders/mountain.frag", {
+                    uSampler1: {type: 'sampler2D', value: texture2 },
+                    uSampler2: {type: 'sampler2D', value: texture3 }
                 })
             ]
         
@@ -339,7 +373,11 @@ class MyContents  {
          // set initial shader on obstacles
         for (const obstacle in this.obstacles) {
             this.setCurrentShader(this.shaders[0], this.obstacles[obstacle])
-        }        
+        } 
+        
+        for (const mountain in this.mountains) {
+            this.setCurrentShader(this.shaders[1], this.mountains[mountain])
+        }
          // set initial shader
          //this.onSelectedShaderChanged(this.selectedShaderIndex);
  
