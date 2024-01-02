@@ -83,6 +83,7 @@ class MyCar extends THREE.Object3D {
         this.POWER_UP_DURATION = 5;
         this.powerUpIncrease = 1; // this factor increases to increase velocity and decreases to reduce velocity
         this.stopFlag = false
+        this.invertCommands = 1
     }
 
     getPosition(){
@@ -267,17 +268,17 @@ class MyCar extends THREE.Object3D {
     updateSteering() {
       // left and right
       if (this.left && !this.right ) {
-          this.steering -= this.deltaSteer
-          if (this.steering < - this.MAX_STEERING) this.steering = - this.MAX_STEERING
+          this.steering -= this.deltaSteer * this.invertCommands
+          if (this.steering < - this.MAX_STEERING * this.invertCommands) this.steering = - this.MAX_STEERING * this.invertCommands
       }
       else if (!this.left && this.right) {
-        this.steering += this.deltaSteer
-        if (this.steering > this.MAX_STEERING) this.steering = this.MAX_STEERING
+        this.steering += this.deltaSteer * this.invertCommands
+        if (this.steering > this.MAX_STEERING * this.invertCommands) this.steering = this.MAX_STEERING * this.invertCommands
       }
 
       if (this.velocity != 0 && !this.left && !this.right) {
-          if (this.steering > this.deltaSteer*2) this.steering -= this.deltaSteerFric 
-          else if (this.steering < - this.deltaSteer*2) this.steering += this.deltaSteerFric
+          if (this.steering > this.deltaSteer*2 * this.invertCommands) this.steering -= this.deltaSteerFric * this.invertCommands
+          else if (this.steering < - this.deltaSteer*2* this.invertCommands) this.steering += this.deltaSteerFric * this.invertCommands
           else this.steering = 0
       }
     }
@@ -298,8 +299,8 @@ class MyCar extends THREE.Object3D {
     updateDeltas(t) {
       this.deltaInc = this.ACCELERATION * t
       this.deltaFric = this.FRICTION * t
-      this.deltaSteer = this.STEERING_ACCELERATION * t
-      this.deltaSteerFric = this.STEERING_FRICTION * t
+      this.deltaSteer = this.STEERING_ACCELERATION * t * this.invertCommands
+      this.deltaSteerFric = this.STEERING_FRICTION * t * this.invertCommands
       this.deltaBreak = this.BREAKING * t
     }
 
@@ -312,7 +313,8 @@ class MyCar extends THREE.Object3D {
 
     reduceVelocity() {
       this.powerUpTimer = new THREE.Clock()
-      this.powerUpIncrease = 0.001;
+      this.invertCommands = -1
+      //this.powerUpIncrease = 0.001;
     }
 
     increaseVelocity() {
@@ -332,6 +334,7 @@ class MyCar extends THREE.Object3D {
       //console.log("elapsed: ", elapsed)
       if (elapsed > this.POWER_UP_DURATION){
         this.powerUpIncrease = 1
+        this.invertCommands = 1
         this.stopFlag = false
         console.log("reseted")
         this.powerUpTimer = new THREE.Clock(false);
