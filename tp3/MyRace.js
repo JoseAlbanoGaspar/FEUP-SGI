@@ -186,6 +186,11 @@ class MyRace {
  
     }
 
+    deleteCars() {
+        this.app.scene.remove(this.playerCar);
+        this.app.scene.remove(this.opponentCar);
+    }
+
     gameOver() {
         return this.playerLaps == this.LAP_NUM && this.opponentLaps == this.LAP_NUM
     }
@@ -207,6 +212,7 @@ class MyRace {
         
         if (this.gameOver()) {
             const winner = this.checkWinner()
+            this.deleteCars()
             console.log("game ended: ", winner)
         }
     }
