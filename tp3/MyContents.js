@@ -217,16 +217,149 @@ class MyContents  {
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2
         rectangle.rotation.z =  Math.PI / 2
-        rectangle.position.set(0, -30, -187) 
+        rectangle.position.set(0, -25, -187) 
         this.app.scene.add(rectangle)
 
         const rectangle2 = rectangle.clone()
-        rectangle2.position.set(0, -30, 187)
+        rectangle2.position.set(0, -25, 187)
         rectangle2.rotation.z =3 * Math.PI / 2 
         this.app.scene.add(rectangle2)
         this.mountains = []
         this.mountains.push(rectangle)
         this.mountains.push(rectangle2)
+    }
+
+    initFence() {
+        const geometry = new THREE.BoxGeometry(200, 2.5, 2.5);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: new THREE.TextureLoader().load('textures/fence.jpg')});
+        const cube = new THREE.Mesh(geometry, material);
+
+        const cube2 = cube.clone()
+        cube2.position.set(0, 5, 0)
+
+        const geometry1 = new THREE.BoxGeometry(2.5, 20, 2.5);
+        const post = new THREE.Mesh(geometry1, material);
+
+        const post1 = post.clone()
+        post1.position.set(50, 0, 0)
+
+        const post2 = post.clone()
+        post2.position.set(-50, 0, 0)
+
+        const post3 = post.clone()
+        post3.position.set(100, 0, 0)
+
+        const post4 = post.clone()
+        post4.position.set(-100, 0, 0)
+
+        const fence = new THREE.Group()
+        fence.add(cube)
+        fence.add(cube2)
+        fence.add(post)
+        fence.add(post1)
+        fence.add(post2)
+        fence.add(post3)
+        fence.add(post4)
+        fence.position.set(0, 10, -110)
+
+        const fence2 = fence.clone()
+        fence2.position.set(0, 10, 110)
+
+        this.app.scene.add(fence)
+        this.app.scene.add(fence2)
+    }
+
+    initSkyBox() {
+         
+        const width = 500
+        const height = 500
+        const depth = 500
+        const textureLoader = new THREE.TextureLoader()
+
+        //back plane
+        const geometry = new THREE.PlaneGeometry( width, height )
+        const materialObject = new THREE.MeshBasicMaterial({
+            emissive: 1 })
+
+        const textureMaterial = textureLoader.load('textures/panorama4.jpg')
+        materialObject.map = textureMaterial
+        
+        const back_plane = new THREE.Mesh(geometry, materialObject)
+
+        back_plane.position.set(0, 0, -depth/2)
+
+        //front plane
+        const geometry1 = new THREE.PlaneGeometry( width, height )
+        const materialObject1 = new THREE.MeshBasicMaterial({ 
+            emissive: 1})
+        materialObject1.map = textureMaterial
+        
+        const front_plane = new THREE.Mesh(geometry1, materialObject1)
+        front_plane.rotation.y = Math.PI
+        front_plane.position.set(0, 0, depth/2)
+
+        //left plane
+        const geometry2 = new THREE.PlaneGeometry( depth, height )
+        const materialObject2 = new THREE.MeshBasicMaterial({ 
+            emissive: 1})
+
+        materialObject2.map = textureMaterial
+        
+        const left_plane = new THREE.Mesh(geometry2, materialObject2)
+        left_plane.rotation.y = Math.PI /2
+        left_plane.position.set(-depth/2, 0, 0)
+
+        //right plane
+        const geometry3 = new THREE.PlaneGeometry( depth, height )
+
+        const materialObject3 = new THREE.MeshBasicMaterial({
+            emissive: 1})
+        materialObject3.map = textureMaterial
+        const right_plane = new THREE.Mesh(geometry3, materialObject3)
+        right_plane.rotation.y = 3*Math.PI /2
+        right_plane.position.set(depth/2, 0, 0)
+
+        //top plane
+        const geometry4 = new THREE.PlaneGeometry( width, depth )
+
+        const materialObject4 = new THREE.MeshBasicMaterial({ 
+            emissive: 1})
+        
+        const textureMaterialTop = textureLoader.load('textures/sky.jpg')
+        materialObject4.map = textureMaterialTop
+        
+        const top_plane = new THREE.Mesh(geometry4, materialObject4)
+        top_plane.rotation.x = Math.PI/2
+        top_plane.position.set(0, height/2, 0)
+
+        //bottom plane
+        const geometry5 = new THREE.PlaneGeometry( width, depth )
+
+        const materialObject5 = new THREE.MeshBasicMaterial({color: 0xffffff, 
+            emissive: 1})
+        const textureMaterialBottom = textureLoader.load('textures/grass.jpg')
+        textureMaterialBottom.wrapS = THREE.RepeatWrapping;
+        textureMaterialBottom.wrapT = THREE.RepeatWrapping;
+        textureMaterialBottom.repeat.set(16, 16);
+
+        
+
+        materialObject5.map = textureMaterialBottom
+ 
+        const bottom_plane = new THREE.Mesh(geometry5, materialObject5)
+        bottom_plane.rotation.x = 3*Math.PI/2
+        bottom_plane.position.set(0, -height/2, 0)
+
+        let group = new THREE.Group()
+        group.add(back_plane)
+        group.add(front_plane)
+        group.add(left_plane)
+        group.add(right_plane)
+        group.add(top_plane)
+        group.add(bottom_plane)
+
+        group.position.set(0, 249, 0)
+        this.app.scene.add(group)
     }
 
     /**
@@ -280,6 +413,9 @@ class MyContents  {
 
         new MyOutdoor(this.app)
         this.sprite = new MySpriteSheets(this.app)
+
+        this.initSkyBox()
+        this.initFence()
 
         // --------------------------------------------------------------
         //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
