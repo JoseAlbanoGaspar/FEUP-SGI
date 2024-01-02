@@ -76,7 +76,7 @@ class MyApp  {
 
         // Create a basic perspective camera
         const perspective1 = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        perspective1.position.set(250,250,25)
+        perspective1.position.set(120,120,20)
         this.cameras['Perspective'] = perspective1
 
         // Create my initial camera
@@ -103,6 +103,11 @@ class MyApp  {
         const obstacleCamera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
         obstacleCamera.position.set(200, 0, 0)
         this.cameras['ObstaclePark'] = obstacleCamera
+
+        //Create my end display camera
+        const endDisplayCamera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000 )
+        endDisplayCamera.position.set(910, 0, 0)
+        this.cameras['EndDisplay'] = endDisplayCamera
         
     }
 

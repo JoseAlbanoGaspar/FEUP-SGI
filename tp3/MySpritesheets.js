@@ -143,6 +143,18 @@ class MySpriteSheets extends THREE.Object3D {
         }
     }
 
+    createNumbers(number, x, y, z) {
+        //For only one digit number
+        let stringNumber = number.toString()
+        let num = this.characters.get(stringNumber)
+        let temp = this.drawCharacter(num[0])
+        temp.position.set(x, y, z)
+    
+        this.app.scene.add(temp)
+
+        //Falta fazer para qualquer numero
+    }
+
 }
 
 export { MySpriteSheets }

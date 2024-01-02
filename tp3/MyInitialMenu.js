@@ -8,7 +8,7 @@ class MyInitialMenu extends THREE.Object3D {
         super()
         this.app = app;
 
-        const plane = new THREE.PlaneGeometry( 200, 200, 100, 100 );
+        const plane = new THREE.PlaneGeometry( 400, 200, 100, 100 );
         const menuMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
         const menu = new THREE.Mesh(plane, menuMaterial)
         menu.position.set(398, 0, 0)
@@ -24,7 +24,6 @@ class MyInitialMenu extends THREE.Object3D {
 
         let sprite = new MySpriteSheets(this.app)
         sprite.createWord("start", 401, 0, 16, true)
-        sprite.createWord("level", 401, 10, 16, true)
         this.app.scene.add(menu)
         this.app.scene.add(this.buttonInit)
 

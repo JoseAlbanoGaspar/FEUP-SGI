@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { MyAnimation } from './MyAnimation.js';
-import { MyFirework } from './MyFirework.js';
 import { MyStartLine } from './MyStartLine.js';
 
 class MyRace {
@@ -31,7 +30,6 @@ class MyRace {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         window.addEventListener('keydown', this.handleKeyDown);
 
-        this.fireworks = []
         // static element
         this.startLine = new MyStartLine();
 
@@ -89,6 +87,14 @@ class MyRace {
             steeringAction.play();
             this.wheelsMixers.push(steeringMixer);
         }
+    }
+
+    getPlayerLap() {
+        return this.playerLaps
+    }
+
+    getOpponentLap() {
+        return this.opponentLaps
     }
 
     display() {
@@ -177,23 +183,6 @@ class MyRace {
             return 0 // player won
         }
         else if (this.LAP_NUM != this.playerLaps && this.LAP_NUM == this.opponentLaps) {
-            // if(Math.random()  < 0.05 ) {
-            //     this.fireworks.push(new MyFirework(this.app, this))
-            //     console.log("firework added")
-            // }
-    
-            // // for each fireworks 
-            // for( let i = 0; i < this.fireworks.length; i++ ) {
-            //     // is firework finished?
-            //     if (this.fireworks[i].done) {
-            //         // remove firework 
-            //         this.fireworks.splice(i,1) 
-            //         console.log("firework removed")
-            //         continue 
-            //     }
-            //     // otherwise upsdate  firework
-            //     this.fireworks[i].update()
-            // }
             return 1 // opponent won
         }
         else if (this.LAP_NUM == this.playerLaps && this.LAP_NUM == this.opponentLaps) {

@@ -38,10 +38,10 @@ class MyPicking {
                 
                 //document.removeEventListener("pointerdown", handler);
                 
-                // if(this.pickedObs) {
-                //     document.removeEventListener("pointerdown", handler);
-                //     this.pickedObs = false
-                // }
+                if(this.pickedObs) {
+                    this.pickedObs = false
+                    return
+                }
                  this.clicked = false;
                 resolve();
             };
@@ -137,7 +137,6 @@ class MyPicking {
                 switch (this.type) {
 
                     case "button":
-                        //this.changeColorOfFirstPickedObj(obj)
                         this.changeObjSize(obj)
                         this.intersectedObjName = obj
                         this.clicked = true
@@ -145,7 +144,6 @@ class MyPicking {
 
                     case "car":
                         this.originalColor = obj.material.color
-                        //this.changeColorOfFirstPickedObj(obj)
                         this.clicked = true
                         break;
                 
@@ -161,7 +159,7 @@ class MyPicking {
                             this.intersectedObj = obj
                             this.firstClick = true
                             this.changeObjSize(obj)
-                            //this.changeColorOfFirstPickedObj(obj)
+                            this.addPickableObjects(this.app.contents.track)
                         }
                         break;
                     default:

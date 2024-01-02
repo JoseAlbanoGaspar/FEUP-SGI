@@ -10,7 +10,7 @@ class MyGameMenu extends THREE.Object3D {
 
         let texture = new THREE.TextureLoader().load("textures/background-menus.jpg")
         const backgroundColor = new THREE.MeshBasicMaterial({ map: texture})
-        const background = new THREE.PlaneGeometry( 350, 350, 100, 100 );
+        const background = new THREE.PlaneGeometry( 600, 350, 100, 100 );
         const backgroundMesh = new THREE.Mesh(background, backgroundColor)
         backgroundMesh.position.set(0, 0, 398)
         this.app.scene.add(backgroundMesh)

@@ -12,6 +12,7 @@ import { MyInitialMenu } from './MyInitialMenu.js';
 import { MyGameMenu } from './MyGameMenu.js';
 import { MyOutdoor } from './MyOutdoor.js';
 import { MyEndDisplay } from './MyEndDisplay.js';
+import { MySpriteSheets } from './MySpritesheets.js';
 
 /**
  *  This class contains the contents of out application
@@ -49,12 +50,9 @@ class MyContents  {
         this.carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
         this.obstaclesPark = new MyParkingLot(145, 0)
-        this.obst1 = new MyObstacle(this.app, 145, 2, 3)
-        this.obst1.name = "obs1"
-        this.obst2 = new MyObstacle(this.app, 145, 2, 16)
-        this.obst2.name = "obs2"
-        this.obst3 = new MyObstacle(this.app, 145, 2, -10)
-        this.obst3.name = "obs3"
+        this.obst1 = new MyObstacle(this.app, 145, 2, 3, "obs1")
+        this.obst2 = new MyObstacle(this.app, 145, 2, 16, "obs2")
+        this.obst3 = new MyObstacle(this.app, 145, 2, -10, "obs3")
 
         this.obstacles.push(this.obst1)
         this.obstacles.push(this.obst2)
@@ -95,6 +93,7 @@ class MyContents  {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
             if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){               
+                this.collidedObs = true
                 this.state = "chooseObstacle"  
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
@@ -115,7 +114,6 @@ class MyContents  {
     async stateGame() {
         switch (this.state) {
             case "start":
-                this.app.setActiveCamera("Initial")
                 let st = new MyInitialMenu(this.app)
                 this.state = await st.start()
                 this.oldState = "start"
@@ -161,12 +159,12 @@ class MyContents  {
                 break;    
                 
             case "end":
-                this.state = "end"
-                new MyEndDisplay(this.app)
+                this.oldState = "end"
+                let end = new MyEndDisplay(this.app)
+                this.state = await end.choose()
                 break;    
         
             default:
-                //default exist the game
                 //exit()
                 console.log("nvjhbrvbnvrhj")
                 break;
@@ -182,9 +180,6 @@ class MyContents  {
         await pickingPlayer.pick()
     
         this.colorPlayer = pickingPlayer.getOriginalColor()
-
-        return
-        
     }
 
     async chooseOpponentCar(){
@@ -199,17 +194,13 @@ class MyContents  {
     }
 
     async chooseObstacle() {
+        
         let pickingObstacle = new MyPicking(this.app, "obstacle")
         pickingObstacle.addPickableObjects(this.obst1)
         pickingObstacle.addPickableObjects(this.obst2)
         pickingObstacle.addPickableObjects(this.obst3)
-        pickingObstacle.addPickableObjects(this.track)
 
         await pickingObstacle.pick()
-
-        pickingObstacle.addNotPickableObject(this.track.name)
-        return
-    
     }
 
     initialState() {
@@ -232,18 +223,6 @@ class MyContents  {
 
         const pointLight = new THREE.PointLight( 0xffffff, 1000, 0 );
         pointLight.position.set( 0, 20, 0 );
-        // shadows
-        pointLight.castShadow = true;
-        pointLight.shadow.mapSize.width = this.mapSize;
-        pointLight.shadow.mapSize.height = this.mapSize;
-        pointLight.shadow.camera.near = 0.5;
-        pointLight.shadow.camera.far = 100;
-        //this.app.scene.add( pointLight );
-
-        // add a point light helper for the previous point light
-        const sphereSize = 0.5;
-        const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-        //this.app.scene.add( pointLightHelper );
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Color, Intensity
         directionalLight.position.set(0, 20, 0); // Set light direction
@@ -266,7 +245,6 @@ class MyContents  {
         this.app.scene.add(hemisphereLight);
         
         // ground
-
         const textureLoader = new THREE.TextureLoader();
         
         const grass = textureLoader.load('textures/grass.jpg')
@@ -276,25 +254,23 @@ class MyContents  {
 
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", map: grass});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE, this.TRACK_SIZE, 100, 100 );
-
         const rectangle = new THREE.Mesh(geometry, planeMaterial)
         rectangle.rotation.x = 3 * Math.PI / 2 
         rectangle.name = "myplane"
         this.app.scene.add(rectangle)
 
-        let outdoor = new MyOutdoor(this.app)
+        new MyOutdoor(this.app)
+        this.sprite = new MySpriteSheets(this.app)
 
         // --------------------------------------------------------------
         //    END OF LIGHTS AND STATIC ELEMENTS OF THE SCENARIO
         // --------------------------------------------------------------
 
-        // INITIALIZE RACE
+        // INITIALIZE SCENE
         this.track = new MyTrack();
         this.track.mesh.name = "mytrack";
-
+        this.app.setActiveCamera("Initial")
         this.initializeParkingLots()
-
-        //this.drawObstacle()
         this.stateGame(this.state)
 
         //shaders
@@ -375,6 +351,10 @@ class MyContents  {
             this.colisionWithObstacle();
             this.colisionWithPowerUps();
             this.colisionWithOtherCar();
+
+            //tentar colocar apenas quando a volta muda
+            this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -40, true)
+            this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -40, true)
         }
 
         // update shaders
