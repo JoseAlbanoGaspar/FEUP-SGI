@@ -150,6 +150,7 @@ class MyRace {
         }
         else if (this.prevOpponentPos.z < 0 && currentOpponentPos.z >= 0) {
             this.opponentLaps++;
+            
         }
 
         this.prevPlayerPos = currentPlayerPos.clone()
@@ -210,7 +211,7 @@ class MyRace {
         this.updateTimers()
          
         const delta = this.app.clock.getDelta()
-        this.mixer.update(delta)
+        if (this.opponentLaps != this.LAP_NUM) this.mixer.update(delta)
         this.playerCar.update(delta)
 
 
