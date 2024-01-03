@@ -24,7 +24,7 @@ class MyPicking {
         this.clicked = false
         this.pickedObs = false
 
-        // define the objects ids that are not to be pickeable
+        // define the objects ids that are and are not to be pickeable
         this.notPickableObjIds = []
         this.pickableObjIds = []
       
@@ -36,20 +36,16 @@ class MyPicking {
                 this.onPointerClick(event);
                 if(!this.clicked) return;
                 
-                //document.removeEventListener("pointerdown", handler);
-                
                 if(this.pickedObs) {
                     this.pickedObs = false
                     return
                 }
-                 this.clicked = false;
+
+                this.clicked = false;
                 resolve();
             };
             document.addEventListener("pointerdown", handler);
-        }).then(() => {
-
-        }
-        )
+        }).then(() => {})
     }
 
     addPickableObjects(obj){
@@ -73,55 +69,29 @@ class MyPicking {
     }
 
     /*
-    * Update the color of selected object
+    * Change the size of the intersected object
     *
     */
-    updatePickingColor(value) {
-        this.pickingColor = value.replace('#', '0x');
-    }
-
-    /*
-    * Change the color of the first intersected object
-    *
-    */
-    changeColorOfFirstPickedObj(obj) {
-        if (this.lastPickedObj != obj) {
-            if (this.lastPickedObj){
-                 this.lastPickedObj.material.color = this.lastPickedObj.currentHex;
-            }
-           
-            this.lastPickedObj = obj;
-            this.lastPickedObj.currentHex = this.lastPickedObj.material.color.getHex();
-            this.lastPickedObj.material.color.setHex(this.pickingColor);
-        }
-    }
-
     changeObjSize(obj) {
         this.lastPickedObj = obj
         this.lastPickedObj.scale.set(1.5, 1.5, 1.5)
     }
 
+    /*
+    * Restore the original size of the intersected object
+    *
+    */
     restoreSize() {
         if(this.lastPickedObj)
             this.lastPickedObj.scale.set(1, 1, 1)
         this.lastPickedObj = null    
     }
-    /*
-     * Restore the original color of the intersected object
-     *
-     */
-    restoreColorOfFirstPickedObj() {
-        if (this.lastPickedObj)
-            this.lastPickedObj.material.color.setHex(this.lastPickedObj.currentHex);
-        this.lastPickedObj = null;
-    }
-
+    
     /*
     * Helper to visualize the intersected object
     *
     */
     pickingHelper(intersects) {
-        //this.restoreColorOfFirstPickedObj()
         this.restoreSize()
         if (intersects.length > 0) {
             
@@ -171,12 +141,18 @@ class MyPicking {
         }
     }
 
+    /**
+     * Changes the position of the object based on the new position deteted
+     */
     changePositionObj(position) {
         this.intersectedObj.position.set(position.x, 2, position.z)
         this.app.contents.obstacles.push(this.intersectedObj)
         this.intersectedObj = null
     }
 
+    /**
+     * Handle click event
+     */
     onPointerClick(event) {
 
         //of the screen is the origin
@@ -185,7 +161,6 @@ class MyPicking {
 
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
-        //this.app.scene.children
         var intersects = this.raycaster.intersectObjects(this.pickableObjIds);
         
         this.pickingHelper(intersects)

@@ -15,6 +15,7 @@ class MyOutdoor extends THREE.Object3D {
         outdoor.position.set(-125, 40, 1)
         outdoor.rotation.y = Math.PI/2
         outdoor.scale.set(1, 0.5, 1)
+        
         let sprite = new MySpriteSheets(this.app)
         this.app.scene.add(sprite.createWord("time", -122, 88, 110, true))
         this.app.scene.add(sprite.createWord("p_round", -122, 78, 110, true))

@@ -47,11 +47,17 @@ class MyTrack extends THREE.Object3D {
         this.add(this.buildCurve());
     }
 
+    /**
+     * loads image and computes the coordinates of pixels that are inside the track
+     */
     async load() {
         const texture = await this.loadImage('textures/trackMap.png');
         await this.mapCoordinates(texture);
     }
 
+    /**
+     * Load the image and processes it
+     */
     loadImage(url) {
         return new Promise((resolve, reject) => {
             const loader = new THREE.TextureLoader();
@@ -72,6 +78,9 @@ class MyTrack extends THREE.Object3D {
         return this.createCurveObjects();
     }
 
+    /**
+     * Get pixels coordinates that represent the interior of the track
+     */
     mapCoordinates(texture) {
         return new Promise((resolve, reject) => {
             // Assuming texture is already loaded and passed as an argument

@@ -65,7 +65,6 @@ class MyCar extends THREE.Object3D {
         this.initAxis()
         this.initCarLights()
         this.add(this.car)
-        console.log("car ", this.car.position)
 
         // used on car update to see if it is still on track
         this.whitePixels = trackPixels
@@ -164,6 +163,9 @@ class MyCar extends THREE.Object3D {
       this.pivot.add(wheel4)
     }
 
+    /**
+     * Maps the position x, z into the pixel format to check if the position is inside or outside the track
+     */
     mapCoordinatesToPixelIndex(x, z) {
       // Calculate the corresponding pixel position from the given x, y coordinates
       const half = this.trackSize / 2; // must return integer
@@ -175,15 +177,16 @@ class MyCar extends THREE.Object3D {
 
       // Check if the calculated index exists in the list of white pixels
       if (this.whitePixels.includes(index)) {
-          //console.log("inside", index, this.position.x, this.position.z)
           return true;
       } else {
           // If the pixel is not found, you might want to handle this case accordingly
-          //console.log('outside track');
           return false; // Or any other indication that the pixel wasn't found
       }
   }
 
+  /**
+   * handles movement of the car
+   */
   handleKeyDown(event) {
       const keyCode = event.code;
     
@@ -205,6 +208,9 @@ class MyCar extends THREE.Object3D {
       }
     }
 
+    /**
+     * handles movement of the car
+     */
     handleKeyUp(event) {
         const keyCode = event.code;
       
@@ -310,31 +316,48 @@ class MyCar extends THREE.Object3D {
       this.deltaBreak = this.BREAKING * t
     }
 
+    /**
+     * if the car is outside the track the velocity is reduced
+     */
     updateIfOutTrack() {
       if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, this.trackSize)) {
         this.velocity *= 0.95
       }
     }
 
+    /**
+     * This function is called upon a colision with an obstacle.
+     * It changes the directions of keys a and d for a given time (time choosen for colision efects: 5 sec)
+     */
     reduceVelocity() {
       this.powerUpTimer = new THREE.Clock()
       this.invertCommands = -1 // this inverts the keys a and d
       this.collided = true
     }
 
+    /**
+     * This function is called upon a collision with a powerup
+     * It increases the max velocity
+     */
     increaseVelocity() {
       this.powerUpTimer = new THREE.Clock()
       this.powerUpIncrease = 1.1;
       this.collided = true
     }
 
-    //Car stops during 5 seconds
+    /**
+     * This function is called upon a collision with the automatic car
+     * The player car stops for 5 seconds
+     */
     stop() {
       this.powerUpTimer = new THREE.Clock()
       this.stopFlag = true
       this.collided = true
     }
 
+    /**
+     * Checks the timer of the powerup / obstacle effect and resets if necessary
+     */
     updatePowerUpIncrease() {
       const elapsed = this.powerUpTimer.getElapsedTime()
       const s = elapsed.toString().split('.')[0]

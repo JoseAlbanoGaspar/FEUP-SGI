@@ -19,19 +19,30 @@ class MyPowerUps extends THREE.Object3D {
         this.app.scene.add(powerups)
         this.mesh = powerups
     }
-
+    /**
+     * Get the mesh
+     */
     getObject() {
         return this.mesh;
     }
 
+    /**
+     * Detects if the object was previously collided with the car
+     */
     previouslyCollided() {
         return this.collided
     }
 
+    /**
+     * Used to avoid multiple colision detections in consecutive frames
+     */
     disableCollision() {
         this.collided = true
     }
 
+    /**
+     * Used to avoid multiple colision detections in consecutive frames
+     */
     enableCollision() {
         this.collided = false
     }

@@ -45,6 +45,9 @@ class MyRace {
         //this.debugKeyFrames(); // only for debug purposes
     }
 
+    /**
+     * Loads the track - processes where is in/out of track via a top view photo and then transmits this information into the cars 
+     */
     async init() {
         await this.track.load(); // Wait for image processing to finish
         this.playerCar.setTrackPixels(this.track.getTrackPixels());
@@ -57,6 +60,9 @@ class MyRace {
         this.initialized = true; 
     }
 
+    /**
+     * handles pause
+     */
     handleKeyDown(event) {
         const keyCode = event.code;
         
@@ -72,6 +78,9 @@ class MyRace {
         }
       }
 
+      /**
+       * Start the movement of the automatic car
+       */
     starOpponentCarAnimation() {
         this.animationBuilder = new MyAnimation(this.route);
         // Create an AnimationMixer
@@ -112,6 +121,9 @@ class MyRace {
         return this.opponentTime
     }
 
+    /**
+     * Displays the contents for the race
+     */
     display() {
         this.app.scene.add(this.track);
         this.app.scene.add(this.playerCar);
@@ -120,7 +132,7 @@ class MyRace {
     }
 
     /**
-     * Build control points and a visual path for debug
+     * Build control points and a visual path for debug - not used on final version
      */
     debugKeyFrames() {
 
@@ -144,6 +156,12 @@ class MyRace {
 
     }
     
+    /**
+     * Verifies if the user is trying to cheat. For a lap to be considered well done
+     * the player must have been in all 4 quadrants at least one time.
+     * This, added to other measures like the reduced velocity of the car when it is 
+     * outside the track makes cheating impossible
+     */
     antiCheatUpdate(currentPlayerPos) {
         if (currentPlayerPos.x >= 0 && currentPlayerPos.z >= 0) {
             this.cheatCheck[0] = true
@@ -158,6 +176,9 @@ class MyRace {
             this.cheatCheck[3] = true
     }
 
+    /**
+     * Updates the laps
+     */
     updateLap() {
         const currentPlayerPos = this.playerCar.getPosition()
         const currentOpponentPos = this.opponentCar.getPosition()
@@ -178,18 +199,27 @@ class MyRace {
         
     }
 
+    /**
+     * Function to pause the game
+     */
     pauseGame() {
         this.isPaused = true;
         this.app.scene.add(this.sprite.createWord("pause", -122, 48, -60, true))
         this.timer.stop();
     }
 
+    /**
+     * Function to resume the game
+     */
     resumeGame() {
         this.isPaused = false;
         this.sprite.removeSprite("pause")
         this.timer.start();
     }
 
+    /**
+     * Update the timer of the cars (seconds since the beggining of the race)
+     */
     updateTimers() {
         const elapsed = this.timer.getDelta()
         if (this.playerLaps != this.LAP_NUM)
@@ -215,23 +245,33 @@ class MyRace {
         }
 
     }
-
+    /**
+     * verifies which car won
+     */
     checkWinner() {
         if (this.playerTime <= this.opponentTime) 
             return 0; // player won
         else return 1; // opponent won
- 
     }
 
+    /**
+     * delete cars from scene after the race ended
+     */
     deleteCars() {
         this.app.scene.remove(this.playerCar);
         this.app.scene.remove(this.opponentCar);
     }
 
+    /**
+     * checks if both players completed the race
+     */
     gameOver() {
         return this.playerLaps == this.LAP_NUM && this.opponentLaps == this.LAP_NUM
     }
 
+    /**
+     * restart race
+     */
     restart() {
         this.sprite.removeNumber("time"+this.countTime.toString())
         this.timer = 0
@@ -260,7 +300,6 @@ class MyRace {
         if (this.gameOver()) {
             const winner = this.checkWinner()
             this.deleteCars()
-            console.log("game ended: ", winner)
         }
     }
 }

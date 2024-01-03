@@ -8,6 +8,8 @@ class MyEndDisplay extends THREE.Object3D {
         super()
         this.app = app;
         this.mode = mode
+        this.winner = winner
+        this.playerName = playerName
 
         const texture = new THREE.TextureLoader().load("textures/celebration.png")
         let planegeometry = new THREE.PlaneGeometry(10, 10, 4, 4);
@@ -33,22 +35,13 @@ class MyEndDisplay extends THREE.Object3D {
 
         this.add(this.sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true))
         this.add(this.sprite.createNumbers(o_time.toString().split(".")[0], 820, 40, -40, true))
-        this.drawMode()
-        this.drawColor(color, 820, 10, -40)
-        console.log(colorOp)
-        this.drawColor(colorOp, 820, 0, -40)
-        if(winner === 0) {
-            this.add(this.sprite.createWord(playerName, 820, 30, -40, true))
-            this.add(this.sprite.createWord("opponent", 820, 20, -40, true))
-        }
-
-        else {
-            this.add(this.sprite.createWord("opponent", 820, 30, -40, true))
-            this.add(this.sprite.createWord(playerName, 820, 20, -40, true))
-        }
-
         this.add(this.sprite.createWord("car "+playerName, 820, 10, 95, true))
         this.add(this.sprite.createWord("car op", 820, 0, 95, true))
+
+        this.drawRank()
+        this.drawMode()
+        this.drawColor(color, 820, 10, -40)
+        this.drawColor(colorOp, 820, 0, -40)
 
         const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" });
         const plane = new THREE.PlaneGeometry(60, 20, 60, 70);
@@ -70,6 +63,24 @@ class MyEndDisplay extends THREE.Object3D {
         this.add(this.buttonInitRace)
     }
 
+    /**
+     * Generates the sprite for the winner and loser
+     */
+    drawRank() {
+        if(this.winner === 0) {
+            this.add(this.sprite.createWord(this.playerName, 820, 30, -40, true))
+            this.add(this.sprite.createWord("opponent", 820, 20, -40, true))
+        }
+
+        else {
+            this.add(this.sprite.createWord("opponent", 820, 30, -40, true))
+            this.add(this.sprite.createWord(this.playerName, 820, 20, -40, true))
+        }
+    }
+
+    /**
+     * Generates the sprite for the given levels of difficulty
+     */
     drawMode() {
         switch (this.mode) {
             case 0:
@@ -86,6 +97,9 @@ class MyEndDisplay extends THREE.Object3D {
         }
     }
 
+    /**
+     * Generates the sprites containing the name of the colors of the used cars to display
+     */
     drawColor(color, x, y, z) {
         switch (color) {
             case "ff00ff":
@@ -111,6 +125,9 @@ class MyEndDisplay extends THREE.Object3D {
         }
     }
 
+    /**
+     * Uses picking to select between restart the race and quit
+     */
     async choose() {
         let pickingButton = new MyPicking(this.app, "button")
         pickingButton.addPickableObjects(this.buttonRestart)

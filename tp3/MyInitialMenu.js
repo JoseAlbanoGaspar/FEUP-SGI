@@ -14,7 +14,6 @@ class MyInitialMenu extends THREE.Object3D {
         let texture = new THREE.TextureLoader().load("textures/initialMenu.jpg")
         const menuMaterial = new THREE.MeshBasicMaterial({ map: texture})
         const plane = new THREE.PlaneGeometry( 400, 250, 100, 100 );
-        //const menuMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
         const menu = new THREE.Mesh(plane, menuMaterial)
         menu.position.set(398, 0, 0)
         menu.rotation.y = Math.PI/2
@@ -46,6 +45,9 @@ class MyInitialMenu extends THREE.Object3D {
 
     }
 
+    /**
+     * Uses picking to choose when to start the game
+     */
     async start() {
         let pickingButton = new MyPicking(this.app, "button")
         pickingButton.addPickableObjects(this.buttonInit)
@@ -59,7 +61,9 @@ class MyInitialMenu extends THREE.Object3D {
         return this.playerName
     }
 
-    // Function to handle keydown events
+    /**
+     * Handler to allow user to enter his/her name on the app
+     */
     handleKeyDown(event) {
         switch (event.key.toLowerCase()) {
             case 'a':

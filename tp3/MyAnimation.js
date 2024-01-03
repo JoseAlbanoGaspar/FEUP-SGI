@@ -56,20 +56,17 @@ class MyAnimation {
             }
 
             const quaternion = new THREE.Quaternion().setFromAxisAngle(yAxis, angle);
-            //console.log(quaternion)
             quaternionKeyframeValues.push(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
         }
         quaternionKeyWheels.push(0,0,0,0);
 
 
-        console.log(quaternionKeyframeValues)
         const quaternionKF = new THREE.QuaternionKeyframeTrack(
             '.quaternion',
             keyframeIndices,
             quaternionKeyframeValues
         );
         
-        console.log(quaternionKeyWheels)
         const quaterionWheelsKF = new THREE.QuaternionKeyframeTrack(
             '.quaternion',
             keyframeIndices,

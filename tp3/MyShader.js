@@ -16,6 +16,9 @@ class MyShader {
         this.read(frag_url, false)
     }
 
+    /**
+     * updates the uniform key with the value value
+     */
     updateUniformsValue(key, value) {
         if (this.uniformValues[key]=== null || this.uniformValues[key] === undefined) {
             console.error("shader does not have uniform " + key)
@@ -27,6 +30,9 @@ class MyShader {
         }
     }
 
+    /**
+     * Function to read shader files (.vert and .frag)
+     */
     read(theUrl, isVertex) {
         let xmlhttp = null
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -54,6 +60,9 @@ class MyShader {
         xmlhttp.send()
     }
 
+    /**
+     * construct a shader
+     */
     buildShader() {
         // are both resources loaded? 
         if (this.vertexShader !== undefined && this.fragmentShader !== undefined) {
@@ -70,6 +79,9 @@ class MyShader {
         }
     }
 
+    /**
+     * checks if the shader has a uniform value called key
+     */
     hasUniform(key) {
         return this.uniformValues[key] !== undefined
     }

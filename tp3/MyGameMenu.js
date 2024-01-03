@@ -22,7 +22,7 @@ class MyGameMenu extends THREE.Object3D {
 
         let sprite = new MySpriteSheets(this.app)
 
-        //Levels of dificulties
+        //Levels of dificulties buttons
         this.buttonEasy = new THREE.Mesh(geometry, easyMaterial);
         this.buttonEasy.position.set(0, 80, 400)
         this.buttonEasy.name = "mybuttoneasy"
@@ -43,6 +43,9 @@ class MyGameMenu extends THREE.Object3D {
 
     }
 
+    /**
+     * This function allows the user to selected a difficulty level
+     */
     async choose() {
         let info = []
         let pickingButtonMenu = new MyPicking(this.app, "button")
@@ -53,13 +56,10 @@ class MyGameMenu extends THREE.Object3D {
         
         if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy") {
             info.push("game", 0)
-            
         }
-
         else if(pickingButtonMenu.getIntersectedObject().name === "mybuttonmedium") {
             info.push("game", 1)
         }
-
         else if(pickingButtonMenu.getIntersectedObject().name === "mybuttonhard") {
             info.push("game", 2)
         }

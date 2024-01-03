@@ -19,6 +19,9 @@ class MySpriteSheets extends THREE.Object3D {
 
     }
 
+    /**
+     * Stores in the map the index of the numbers in the spritesheets used
+     */
     storeNumbers() {
         this.characters.set("0", [14.9])
         this.characters.set("1", [15.9])
@@ -32,6 +35,9 @@ class MySpriteSheets extends THREE.Object3D {
         this.characters.set("9", [23.5])
     }
 
+    /**
+     * Stores in the map the index of the numbers in the spritesheets used
+     */
     storeLetters() {
         this.characters.set(" ", [0])
         this.characters.set("a", [30.8])
@@ -64,6 +70,9 @@ class MySpriteSheets extends THREE.Object3D {
         this.characters.set("ê", [97.1])
     }
 
+    /**
+     * From the given index returns the character that corresponds in the spritesheets
+     */
     drawCharacter(currentTile) {
 
         const textureLoader = new THREE.TextureLoader()
@@ -83,6 +92,10 @@ class MySpriteSheets extends THREE.Object3D {
         return characterSprite
     }
 
+    /**
+     * Creates a word that will be displayed from the indicated coordinates
+     * Stores this word in another map, where the key in the word given and the value the sprites that compose the word
+     */
     createWord(word, x, y, z, isHoriz) {
         const spgroup = new THREE.Group()
         let w = word.split('')
@@ -100,10 +113,13 @@ class MySpriteSheets extends THREE.Object3D {
         return spgroup
     }
 
+    /**
+     * Creates a number that will be displayed from the indicated coordinates
+     * Stores this number in another map, where the key in the key given and the value the sprites that compose the number
+     */
     createNumbers(number, x, y, z, key) {
         const spgroup = new THREE.Group()
         let stringNumber = number.toString().split('')
-        console.log(number)
         
         for (let i = 0; i < stringNumber.length; i++){
             let num = this.characters.get(stringNumber[i])
@@ -118,11 +134,17 @@ class MySpriteSheets extends THREE.Object3D {
         return spgroup
     }
 
+    /**
+     * Removes a word from the scene
+     */
     removeSprite(word) {
         let sp = this.wordsInScene.get(word)
         this.app.scene.remove(sp)
     }
 
+    /**
+     * Removes a number from the scene
+     */
     removeNumber(key) {
         let sp = this.numbersInScene.get(key)
         this.app.scene.remove(sp)

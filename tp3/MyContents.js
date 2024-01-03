@@ -45,7 +45,7 @@ class MyContents  {
     }
 
     /**
-     * create and displays the parking lots
+     * Create and displays the parking lots
      */
     initializeParkingLots() {
         this.playerPark = new MyParkingLot(145, -80)
@@ -91,7 +91,7 @@ class MyContents  {
     }
 
     /**
-     * detects collision with obs
+     * detects collision with obstacles
      */
     colisionWithObstacle() {
         for (let obstacle in this.obstacles){
@@ -102,6 +102,9 @@ class MyContents  {
         }
     }
   
+    /**
+     * Detects collision with powerups
+     */
     colisionWithPowerUps() {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
@@ -117,6 +120,9 @@ class MyContents  {
         }
     }
 
+    /**
+     * detecs collision with the automatic car
+     */
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
         if(distance <= 5){
@@ -124,6 +130,9 @@ class MyContents  {
         }
     }
 
+    /**
+     * Changes the state of the game
+     */
     async stateGame() {
         switch (this.state) {
             case "start":
@@ -187,6 +196,9 @@ class MyContents  {
         }
     }
 
+    /**
+     * Uses picking to choose the player car
+     */
     async choosePlayerCar() {
         let pickingPlayer = new MyPicking(this.app, "car")
         pickingPlayer.addPickableObjects(this.car1)
@@ -198,6 +210,9 @@ class MyContents  {
         this.colorPlayer = pickingPlayer.getOriginalColor()
     }
 
+    /**
+     * Uses picking to choose the automatic car
+     */
     async chooseOpponentCar(){
         let pickingOpponent = new MyPicking(this.app, "car")
         pickingOpponent.addPickableObjects(this.carOpponent1)
@@ -209,6 +224,9 @@ class MyContents  {
         this.colorOpponent = pickingOpponent.getOriginalColor()
     }
 
+    /**
+     * Uses picking to choose the obstacle and put it in a selected (by user) position
+     */
     async chooseObstacle() {
         let pickingObstacle = new MyPicking(this.app, "obstacle")
         pickingObstacle.addPickableObjects(this.obst1)
@@ -218,8 +236,10 @@ class MyContents  {
         await pickingObstacle.pick()
     }
 
+    /**
+     * initializes the game state
+     */
     initialState() {
-        console.log("op", this.colorOpponent.getHex().toString(16))
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.colorPlayer, true);
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track, this.mode);
@@ -229,6 +249,9 @@ class MyContents  {
         this.app.scene.add(this.sprite.createNumbers(120, -122, 58, -60, "v120"))
     }
 
+    /**
+     * generate mountains that are then animated with shaders
+     */
     initMountains() {
         const planeMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff"});
         const geometry = new THREE.PlaneGeometry( this.TRACK_SIZE / 2, this.TRACK_SIZE , 100, 100 );
@@ -248,6 +271,9 @@ class MyContents  {
         this.mountains.push(rectangle2)
     }
 
+    /**
+     * Generates the fences on the background
+     */
     initFence() {
         const fence = new MyFence()
         fence.position.set(0, 10, -110)
@@ -259,6 +285,9 @@ class MyContents  {
         this.app.scene.add(fence2)
     }
 
+    /**
+     * Generates the skybox
+     */
     initSkyBox() {        
         const skyBox = new MySkyBox()
         skyBox.position.set(0, 249, 0)
@@ -365,6 +394,9 @@ class MyContents  {
 
     //-------------- BEGIN OF SHADER FUNCTIONS ----------------------
 
+    /**
+     * Waits for all shaders to get initialized and sets them to the adequated objects
+     */
     waitForShaders() {
         for (let i=0; i<this.shaders.length; i++) {
             if (this.shaders[i].ready === false) {
@@ -382,6 +414,9 @@ class MyContents  {
         }
     }
 
+    /**
+     * Sets the shader to a object
+     */
     setCurrentShader(shader, selectedObject) {
         if (shader === null || shader === undefined) {
             return
@@ -393,6 +428,9 @@ class MyContents  {
         }
     }
 
+    /**
+     * Resets game
+     */
     restartGame() {
         for (let obs in this.obstacles) {
             if(this.obstacles[obs].name === "obs1") {
@@ -416,9 +454,7 @@ class MyContents  {
     //-----------------END OF SHADER FUNCTIONS ----------------------
 
     /**
-     * updates the contents
-     * this method is called from the render method of the app
-     * 
+     * Updates the numbers displayed in the outdoor based on the update of the laps
      */
     updateSpritesheets() {
         if(this.oldLapP !== this.race.getPlayerLap()) {
@@ -438,6 +474,11 @@ class MyContents  {
         }
     }
 
+    /**
+     * updates the contents
+     * this method is called from the render method of the app
+     * 
+     */
     update() {
         if(this.state !== this.oldState) this.stateGame(this.state)
 

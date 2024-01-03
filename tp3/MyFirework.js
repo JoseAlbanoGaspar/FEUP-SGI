@@ -32,10 +32,9 @@ class MyFirework {
     /**
      * compute particle launch
      */
-
      launch() {
         let x = THREE.MathUtils.randFloat(750, 800);
-        let y = THREE.MathUtils.randFloat(20, 150);
+        let y = THREE.MathUtils.randFloat(20, 100);
         let z = THREE.MathUtils.randFloat(-120, 120);
     
         let from = new THREE.Vector3(x, -10, z);
@@ -53,7 +52,6 @@ class MyFirework {
         this.points = new THREE.Points(this.geometry, this.material);
         this.app.scene.add(this.points);
     }
-    
 
     /**
      * compute explosion
