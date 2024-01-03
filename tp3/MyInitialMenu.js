@@ -32,15 +32,11 @@ class MyInitialMenu extends THREE.Object3D {
         this.input.position.set(400, -40, 0)
 
         this.sprite = new MySpriteSheets(this.app)
-        this.app.scene.add(this.sprite.createWord("feup turism", 401, 60, 40, true))
+        this.app.scene.add(this.sprite.createWord("feup turismo", 401, 60, 40, true))
         this.app.scene.add(this.sprite.createWord("start", 401, 0, 16, true))
 
         this.app.scene.add(this.sprite.createWord("inês gaspar", 401, -70, 170, true))
         this.app.scene.add(this.sprite.createWord("josé gaspar", 401, -70, -90, true))
-        //this.app.scene.add(st)
-        //let rt = this.sprite.createWord("restart", 401, -10, 16, true)
-        //this.app.scene.add(rt)
-        //this.sprite.removeSprite("restart")
         this.app.scene.add(menu)
         this.app.scene.add(this.buttonInit)
         this.app.scene.add(this.input)

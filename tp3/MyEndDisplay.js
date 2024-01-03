@@ -4,7 +4,7 @@ import { MyPicking } from "./MyPicking.js"
 
 class MyEndDisplay extends THREE.Object3D {
 
-    constructor(app, winner, playerName, p_time, o_time) {
+    constructor(app, winner, playerName, p_time, o_time, mode) {
         super()
         this.app = app;
 
@@ -16,6 +16,7 @@ class MyEndDisplay extends THREE.Object3D {
         display.scale.set(1, 0.5, 1)
 
         let sprite = new MySpriteSheets(this.app)
+        this.app.scene.add(sprite.createWord("level", 820, 60, 95, true))
         this.app.scene.add(sprite.createWord("p_time", 820, 50, 95, true))
         this.app.scene.add(sprite.createWord("o_time", 820, 40, 95, true))
         this.app.scene.add(sprite.createWord("winner", 820, 30, 95, true))
@@ -24,7 +25,19 @@ class MyEndDisplay extends THREE.Object3D {
         this.app.scene.add(sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true))
         this.app.scene.add(sprite.createNumbers(o_time.toString().split(".")[0], 820, 40, -40, true))
         
-        
+        switch (mode) {
+            case 0:
+                this.app.scene.add(sprite.createWord("easy", 820, 60, -40, true))
+                break;
+            case 1:
+                this.app.scene.add(sprite.createWord("medium", 820, 60, -40, true))
+                break;
+            case 2:
+                this.app.scene.add(sprite.createWord("hard", 820, 60, -40, true)) 
+                break;   
+            default:
+                break;
+        }
         if(winner === 0) {
             this.app.scene.add(sprite.createWord(playerName, 820, 30, -40, true))
             this.app.scene.add(sprite.createWord("opponent", 820, 20, -40, true))
@@ -60,20 +73,22 @@ class MyEndDisplay extends THREE.Object3D {
     }
 
     async choose() {
+        let info = ["restart"]
         let pickingButton = new MyPicking(this.app, "button")
         pickingButton.addPickableObjects(this.buttonRestart)
         pickingButton.addPickableObjects(this.buttonInitRace)
         await pickingButton.pick()
         
         if(pickingButton.getIntersectedObject().name === "mybuttonRestart") {
-            this.app.setActiveCamera("Perspective")
-            //CUIDADO PORQUE O JOGO COMEÇA SEM CARROS...
-            return "game"
+            this.app.setActiveCamera("PlayerPark")
+            info.push("choosePlayerCar")
+            return info
         }
 
         else {
             this.app.setActiveCamera("Initial")
-            return "start"
+            info.push("start")
+            return info
         }
     }
 

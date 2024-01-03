@@ -34,7 +34,6 @@ class MyFirework {
      */
 
      launch() {
-        console.log("chega aqui=====")
         let x = THREE.MathUtils.randFloat(700, 800);
         let y = THREE.MathUtils.randFloat(20, 200);
         let z = THREE.MathUtils.randFloat(-120, 120);
@@ -53,7 +52,6 @@ class MyFirework {
         this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.colors), 3));
         this.points = new THREE.Points(this.geometry, this.material);
         this.app.scene.add(this.points);
-        console.log("firework launched");
     }
     
 
@@ -91,7 +89,6 @@ class MyFirework {
         this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.vertices), 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.colors), 3));
         this.points = new THREE.Points(this.geometry, this.material);
-        console.log(this.points)
         this.app.scene.add( this.points );
         
     }

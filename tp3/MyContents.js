@@ -34,13 +34,13 @@ class MyContents  {
 
         this.obstacles = []
         this.powerUps = []
-        this.initialized = false
         this.state = "start"
         this.oldState = null
         this.oldLapP = 0
         this.oldLapO = 0
         this.typeCollision = ""
         this.fireworks = []
+        this.restarted = false
     }
 
     initializeParkingLots() {
@@ -136,6 +136,7 @@ class MyContents  {
                 break;
 
             case "choosePlayerCar":
+                if(this.restart === "restart") this.race.restart()
                 this.oldState = "choosePlayerCar"
                 await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
@@ -178,8 +179,9 @@ class MyContents  {
                 
             case "end":
                 this.oldState = "end"
-                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.playerName, this.race.getPlayerTime(), this.race.getOpponentTime())
-                this.state = await end.choose()
+                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.playerName, this.race.getPlayerTime(), this.race.getOpponentTime(), this.mode)
+                let infos = await end.choose()
+                this.state = infos[1]
                 break;    
         
             default:
@@ -227,7 +229,6 @@ class MyContents  {
         this.drawPowerUps()
         this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 78, -60, "pr" + this.race.getPlayerLap().toString()))
         this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 68, -60, "or" + this.race.getOpponentLap().toString()))
-        this.app.scene.add(this.sprite.createWord("play", -122, 48, -60, true))
         this.app.scene.add(this.sprite.createNumbers(120, -122, 58, -60, "v120"))
     }
 
@@ -568,13 +569,6 @@ class MyContents  {
                     break;
             }
         
-        }
-
-        if(this.race.isPaused) {
-            this.app.scene.add(this.sprite.createWord("pause", -122, 48, -60, true))
-        }
-        else {
-            this.sprite.removeSprite("pause")
         }
 
     }

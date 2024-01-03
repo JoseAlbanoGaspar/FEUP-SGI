@@ -37,6 +37,7 @@ class MyRace {
         //Display Time
         this.countTime = null
         this.sprite = new MySpriteSheets(this.app)
+        this.app.scene.add(this.sprite.createWord("play", -122, 48, -60, true))
 
         this.init();
         
@@ -178,11 +179,13 @@ class MyRace {
 
     pauseGame() {
         this.isPaused = true;
+        this.app.scene.add(this.sprite.createWord("pause", -122, 48, -60, true))
         this.timer.stop();
     }
 
     resumeGame() {
         this.isPaused = false;
+        this.sprite.removeSprite("pause")
         this.timer.start();
     }
 
@@ -225,6 +228,12 @@ class MyRace {
 
     gameOver() {
         return this.playerLaps == this.LAP_NUM && this.opponentLaps == this.LAP_NUM
+    }
+
+    restart() {
+        this.playerLaps = 0
+        this.opponentLaps = 0
+        this.countTime = null
     }
 
     update() {
