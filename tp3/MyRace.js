@@ -163,8 +163,7 @@ class MyRace {
                 this.cheatCheck.fill(false);
         }
         else if (this.prevOpponentPos.z < 0 && currentOpponentPos.z >= 0) {
-            this.opponentLaps++;
-            
+            this.opponentLaps++;            
         }
 
         this.prevPlayerPos = currentPlayerPos.clone()
@@ -183,8 +182,15 @@ class MyRace {
     }
 
     updateTimers() {
-        this.playerTime += this.timer.getDelta()
-        this.opponentTime += this.timer.getDelta()
+        const elapsed = this.timer.getDelta()
+        if (this.playerLaps != this.LAP_NUM)
+            this.playerTime += elapsed
+        
+        if (this.opponentLaps != this.LAP_NUM)
+            this.opponentTime += elapsed
+
+        console.log(this.playerTime)
+        console.log(this.opponentTime)
     }
 
     checkWinner() {
