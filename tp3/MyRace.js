@@ -14,7 +14,7 @@ class MyRace {
         this.initialized = false; // true after init() function and used on update()
 
         // lap counter
-        this.LAP_NUM = 1;
+        this.LAP_NUM = 3;
         this.playerLaps = 0;
         this.prevPlayerPos = this.playerCar.getPosition();
         this.opponentLaps = 0;
@@ -270,7 +270,7 @@ class MyRace {
     }
 
     /**
-     * restart race
+     * restart rac
      */
     restart() {
         this.sprite.removeNumber("time"+this.countTime.toString())
@@ -300,6 +300,7 @@ class MyRace {
         if (this.gameOver()) {
             const winner = this.checkWinner()
             this.deleteCars()
+            console.log("game ended: ", winner)
         }
     }
 }
