@@ -20,8 +20,7 @@ class MyOutdoor extends THREE.Object3D {
         this.app.scene.add(sprite.createWord("p_round", -122, 78, 110, true))
         this.app.scene.add(sprite.createWord("o_round", -122, 68, 110, true))
         this.app.scene.add(sprite.createWord("max_velocity", -122, 58, 110, true))
-        this.app.scene.add(sprite.createWord("max_velocity", -122, 48, 110, true))
-        this.app.scene.add(sprite.createWord("state", -122, 38, 110, true))
+        this.app.scene.add(sprite.createWord("state", -122, 48, 110, true))
         this.app.scene.add(outdoor)
 
     }

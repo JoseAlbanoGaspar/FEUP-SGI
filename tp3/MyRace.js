@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyAnimation } from './MyAnimation.js';
+import { MySpriteSheets } from './MySpritesheets.js';
 import { MyStartLine } from './MyStartLine.js';
 
 class MyRace {
@@ -32,6 +33,10 @@ class MyRace {
 
         // static element
         this.startLine = new MyStartLine();
+
+        //Display Time
+        this.countTime = null
+        this.sprite = new MySpriteSheets(this.app)
 
         this.init();
         
@@ -186,6 +191,22 @@ class MyRace {
         const elapsedTime = this.timer.getDelta()
         this.playerTime += elapsedTime
         this.opponentTime += elapsedTime
+
+        //ATENÇÃO QUE NO RESTART PODE DAR PROBLEMAS COM O COUNTTIME, TEM QUE SER REINICIADO
+        const s = this.playerTime.toString().split('.')[0]
+        if(s !== this.countTime) {
+            if(this.countTime === null) {
+              this.countTime = s
+              this.app.scene.add(this.sprite.createNumbers(s, -122, 88, -60, "time"+s.toString()))
+            }
+            else {
+              this.sprite.removeNumber("time"+this.countTime.toString())
+              this.app.scene.add(this.sprite.createNumbers(s, -122, 88, -60, "time"+s.toString()))
+              this.countTime = s
+            }
+            
+        }
+
     }
 
     checkWinner() {

@@ -12,6 +12,8 @@ class MySpriteSheets extends THREE.Object3D {
         this.characters = new Map()
         this.wordsInScene = new Map()
 
+        this.numbersInScene = new Map()
+
         this.storeNumbers()
         this.storeLetters()
 
@@ -58,6 +60,8 @@ class MySpriteSheets extends THREE.Object3D {
         this.characters.set("x", [82.2])
         this.characters.set("y", [83.1]) 
         this.characters.set("z", [84.1])
+        this.characters.set("é", [91.5])
+        this.characters.set("ê", [97.1])
     }
 
     drawCharacter(currentTile) {
@@ -96,28 +100,31 @@ class MySpriteSheets extends THREE.Object3D {
         return spgroup
     }
 
-    createNumbers(number, x, y, z) {
+    createNumbers(number, x, y, z, key) {
         const spgroup = new THREE.Group()
         let stringNumber = number.toString().split('')
+        console.log(number)
         
         for (let i = 0; i < stringNumber.length; i++){
             let num = this.characters.get(stringNumber[i])
             let temp = this.drawCharacter(num)
             temp.position.set(x, y, z)
             spgroup.add(temp)
-            this.app.scene.add(temp)
             spgroup.name = number.toString()
             z = z-8
         }
 
-        this.wordsInScene.set(number.toString(), spgroup)
+        this.numbersInScene.set(key, spgroup)
         return spgroup
     }
 
     removeSprite(word) {
-        console.log(this.wordsInScene.get(word))
         let sp = this.wordsInScene.get(word)
-        console.log(sp)
+        this.app.scene.remove(sp)
+    }
+
+    removeNumber(key) {
+        let sp = this.numbersInScene.get(key)
         this.app.scene.remove(sp)
     }
 

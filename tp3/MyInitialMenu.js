@@ -11,8 +11,10 @@ class MyInitialMenu extends THREE.Object3D {
         this.playerName = "";
         this.x = 401, this.y = -30, this.z = 16
 
-        const plane = new THREE.PlaneGeometry( 400, 200, 100, 100 );
-        const menuMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
+        let texture = new THREE.TextureLoader().load("textures/initialMenu.jpg")
+        const menuMaterial = new THREE.MeshBasicMaterial({ map: texture})
+        const plane = new THREE.PlaneGeometry( 400, 250, 100, 100 );
+        //const menuMaterial = new THREE.MeshBasicMaterial({color: "#808080"})
         const menu = new THREE.Mesh(plane, menuMaterial)
         menu.position.set(398, 0, 0)
         menu.rotation.y = Math.PI/2
@@ -30,7 +32,11 @@ class MyInitialMenu extends THREE.Object3D {
         this.input.position.set(400, -40, 0)
 
         this.sprite = new MySpriteSheets(this.app)
+        this.app.scene.add(this.sprite.createWord("feup turism", 401, 60, 40, true))
         this.app.scene.add(this.sprite.createWord("start", 401, 0, 16, true))
+
+        this.app.scene.add(this.sprite.createWord("inês gaspar", 401, -70, 170, true))
+        this.app.scene.add(this.sprite.createWord("josé gaspar", 401, -70, -90, true))
         //this.app.scene.add(st)
         //let rt = this.sprite.createWord("restart", 401, -10, 16, true)
         //this.app.scene.add(rt)
@@ -61,164 +67,92 @@ class MyInitialMenu extends THREE.Object3D {
     handleKeyDown(event) {
         switch (event.key.toLowerCase()) {
             case 'a':
-                this.app.scene.add(this.sprite.createWord("a", this.x, this.y, this.z, true))
-                this.playerName += "a"
-                this.z = this.z - 8
-                console.log("a pressed");
+                this.auxFunction("a")
                 break;
             case 'b':
-                this.app.scene.add(this.sprite.createWord("b", this.x, this.y, this.z, true))
-                this.playerName += "b"
-                this.z = this.z - 8
-                console.log("b pressed");
+               this.auxFunction("b")
                 break;
             case 'c':
-                this.app.scene.add(this.sprite.createWord("c", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("c")[0])
-                this.z += "c"
-                console.log("c pressed");
+                this.auxFunction("c")
                 break;
             case 'd':
-                this.app.scene.add(this.sprite.createWord("d", this.x, this.y, this.z, true))
-                this.playerName += "d"
-                this.z = this.z - 8
-                console.log("d pressed");
+                this.auxFunction("d")
                 break;
             case 'e':
-                this.app.scene.add(this.sprite.createWord("e", this.x, this.y, this.z, true))
-                this.playerName += "e"
-                this.z = this.z - 8
-                console.log("e pressed");
+                this.auxFunction("e")
                 break;
             case 'f':
-                this.app.scene.add(this.sprite.createWord("f", this.x, this.y, this.z, true))
-                this.playerName += "f"
-                this.z = this.z - 8
-                console.log("f pressed");
+                this.auxFunction("f")
                 break;
             case 'g':
-                this.app.scene.add(this.sprite.createWord("g", this.x, this.y, this.z, true))
-                this.playerName += "g"
-                this.z = this.z - 8
-                console.log("g pressed");
+                this.auxFunction("g")
                 break;
             case 'h':
-                this.app.scene.add(this.sprite.createWord("h", this.x, this.y, this.z, true))
-                this.playerName += "h"
-                this.z = this.z - 8
-                console.log("h pressed");
+                this.auxFunction("h")
                 break;
             case 'i':
-                this.app.scene.add(this.sprite.createWord("i", this.x, this.y, this.z, true))
-                this.playerName += "i"
-                this.z = this.z - 8
-                console.log("i pressed");
+                this.auxFunction("i")
                 break;
             case 'j':
-                this.app.scene.add(this.sprite.createWord("j", this.x, this.y, this.z, true))
-                this.playerName += "j"
-                this.z = this.z - 8
-                console.log("j pressed");
+                this.auxFunction("j")
                 break;
             case 'k':
-                this.app.scene.add(this.sprite.createWord("k", this.x, this.y, this.z, true))
-                this.playerName += "k"
-                this.z = this.z - 8
-                console.log("k pressed");
+                this.auxFunction("k")
                 break;
             case 'l':
-                this.app.scene.add(this.sprite.createWord("l", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("l")[0])
-                this.z = this.z - 8
-                console.log("l pressed");
+                this.auxFunction("l")
                 break;
             case 'm':
-                this.app.scene.add(this.sprite.createWord("m", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("m")[0])
-                this.z = this.z - 8
-                console.log("m pressed");
+                this.auxFunction("m")
                 break;
             case 'n':
-                this.app.scene.add(this.sprite.createWord("n", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("n")[0])
-                this.z = this.z - 8
-                console.log("n pressed");
+                this.auxFunction("n")
                 break;
             case 'o':
-                this.app.scene.add(this.sprite.createWord("o", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("o")[0])
-                this.z = this.z - 8
-                console.log("o pressed");
+                this.auxFunction("o")
                 break;
             case 'p':
-                this.app.scene.add(this.sprite.createWord("p", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("p")[0])
-                this.z = this.z - 8
-                console.log("p pressed");
+                this.auxFunction("p")
                 break;
             case 'q':
-                this.app.scene.add(this.sprite.createWord("q", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("q")[0])
-                this.z = this.z - 8
-                console.log("q pressed");
+                this.auxFunction("q")
                 break;
             case 'r':
-                this.app.scene.add(this.sprite.createWord("r", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("r")[0])
-                this.z = this.z - 8
-                console.log("r pressed");
+                this.auxFunction("r")
                 break;
             case 's':
-                this.app.scene.add(this.sprite.createWord("s", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("s")[0])
-                this.z = this.z - 8
-                console.log("s pressed");
+                this.auxFunction("s")
                 break;
             case 't':
-                this.app.scene.add(this.sprite.createWord("t", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("t")[0])
-                this.z = this.z - 8
-                console.log("t pressed");
+                this.auxFunction("t")
                 break;
             case 'u':
-                this.app.scene.add(this.sprite.createWord("u", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("u")[0])
-                this.z = this.z - 8
-                console.log("u pressed");
+                this.auxFunction("u")
                 break;
             case 'v':
-                this.app.scene.add(this.sprite.createWord("v", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("v")[0])
-                this.z = this.z - 8
-                console.log("v pressed");
+                this.auxFunction("v")
                 break;
             case 'w':
-                this.app.scene.add(this.sprite.createWord("w", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("w")[0])
-                this.z = this.z - 8
-                console.log("w pressed");
+                this.auxFunction("w")
                 break;
             case 'x':
-                this.app.scene.add(this.sprite.createWord("x", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("x")[0])
-                this.z = this.z - 8
-                console.log("x pressed");
+                this.auxFunction("x")
                 break;
             case 'y':
-                this.app.scene.add(this.sprite.createWord("y", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("y")[0])
-                this.z = this.z - 8
-                console.log("y pressed");
+                this.auxFunction("y")
                 break;
             case 'z':
-                this.app.scene.add(this.sprite.createWord("z", this.x, this.y, this.z, true))
-                this.playerName.push(this.sprite.characters.get("z")[0])
-                this.z = this.z - 8
-                console.log("z pressed");
+                this.auxFunction("z")
                 break;
             default:
                 break;
             }
+        }
+
+        auxFunction(char) {
+            this.app.scene.add(this.sprite.createWord(char, this.x, this.y, this.z, true))
+            this.playerName += char
+            this.z = this.z - 8
         }
     }
 

@@ -104,6 +104,7 @@ class MyContents  {
                 this.state = "chooseObstacle"  
                 this.app.scene.add(this.sprite.createWord("powerup collision", -122, 28, 110, true))
                 this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
+                this.app.scene.add(this.sprite.createNumbers("150", -122, 58, -60, "v150"))
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
             }
@@ -222,8 +223,10 @@ class MyContents  {
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
         this.drawPowerUps()
-        this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -60, true))
-        this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -60, true))
+        this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 78, -60, "pr" + this.race.getPlayerLap().toString()))
+        this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 68, -60, "or" + this.race.getOpponentLap().toString()))
+        this.app.scene.add(this.sprite.createWord("play", -122, 48, -60, true))
+        this.app.scene.add(this.sprite.createNumbers(120, -122, 58, -60, "v120"))
     }
 
     initMountains() {
@@ -427,7 +430,6 @@ class MyContents  {
 
         new MyOutdoor(this.app)
         this.sprite = new MySpriteSheets(this.app)
-        this.sprite.createNumbers("120", -122, 48, -60, true)
 
         this.initSkyBox()
         this.initFence()
@@ -517,7 +519,6 @@ class MyContents  {
         if (shader === null || shader === undefined) {
             return
         }
-        console.log("Selected shader '" + shader.name + "'")
   
         if (selectedObject !== null) {
             selectedObject.material = shader.material
@@ -535,16 +536,18 @@ class MyContents  {
 
     updateSpritesheets() {
         if(this.oldLapP !== this.race.getPlayerLap()) {
-            this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -60, true))
+            this.sprite.removeNumber("pr" + this.oldLapP.toString())
+            this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 78, -60, "pr" + this.race.getPlayerLap().toString()))
             this.oldLapP = this.race.getPlayerLap()
         }
 
         if(this.oldLapO !== this.race.getOpponentLap()){
-            this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -60, true)
+            this.sprite.removeNumber("or" + this.oldLapO.toString())
+            this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 68, -60, "or" + this.race.getOpponentLap().toString()))
             this.oldLapO = this.race.getOpponentLap()
         }
 
-        if(this.playerCar.elapsedFlag) {
+        if(!this.playerCar.collided) {
             this.sprite.removeSprite("elapsed time")
             switch (this.typeCollision) {
                 case "car":
@@ -557,11 +560,19 @@ class MyContents  {
                 
                 case "powerup":
                     this.sprite.removeSprite("powerup collision")
-                break;
+                    this.sprite.removeNumber("v150")
+                    break;
                 default:
                     break;
             }
         
+        }
+
+        if(this.race.isPaused) {
+            this.app.scene.add(this.sprite.createWord("pause", -122, 48, -60, true))
+        }
+        else {
+            this.sprite.removeSprite("pause")
         }
 
     }
@@ -578,33 +589,27 @@ class MyContents  {
             this.updateSpritesheets()
             if(this.race.gameOver()) {
                 this.state = "end"
-                this.changeCamera=true
             }
-
         }
 
         // update shaders
         for (const currentShader in this.shaders)
             if (this.shaders[currentShader] !== undefined && this.shaders[currentShader] !== null) {
                 this.shaders[currentShader].update(this.app.clock.getElapsedTime())
-                
         }
 
         if(this.state === "end") {
-            // add new fireworks every 5% of the calls
             if(Math.random()  < 0.1 ) {
                 this.fireworks.push(new MyFirework(this.app, this))
             }
 
             // for each fireworks 
             for( let i = 0; i < this.fireworks.length; i++ ) {
-                // is firework finished?
                 if (this.fireworks[i].done) {
-                    // remove firework 
                     this.fireworks.splice(i,1) 
                     continue 
                 }
-                // otherwise upsdate  firework
+                
                 this.fireworks[i].update()
             }
         }

@@ -86,7 +86,9 @@ class MyCar extends THREE.Object3D {
         this.stopFlag = false
         this.invertCommands = 1
         this.elapsedFlag = false
+        this.collided = false
 
+        this.secondsPassed = null
         this.sprite = new MySpriteSheets(this.app)
 
     }
@@ -319,29 +321,46 @@ class MyCar extends THREE.Object3D {
     reduceVelocity() {
       this.powerUpTimer = new THREE.Clock()
       this.invertCommands = -1
+      this.collided = true
       //this.powerUpIncrease = 0.001;
     }
 
     increaseVelocity() {
       this.powerUpTimer = new THREE.Clock()
       this.powerUpIncrease = 1.1;
+      this.collided = true
     }
 
     //Car stops during 5 seconds
     stop() {
       this.powerUpTimer = new THREE.Clock()
-      this.stopFlag = true;
       this.powerUpIncrease = 0;
+      this.collided = true
     }
 
     updatePowerUpIncrease() {
       const elapsed = this.powerUpTimer.getElapsedTime()
+      const s = elapsed.toString().split('.')[0]
+
+      if(s !== this.secondsPassed && this.collided) {
+        if(this.secondsPassed === null) {
+          this.secondsPassed = s
+          this.app.scene.add(this.sprite.createNumbers(s, -122, 18, -60, "elapsed"+s.toString()))
+        }
+        else {
+          this.sprite.removeNumber("elapsed"+this.secondsPassed.toString())
+          this.app.scene.add(this.sprite.createNumbers(s, -122, 18, -60, "elapsed"+s.toString()))
+          this.secondsPassed = s
+        }
+      }
+
       if (elapsed > this.POWER_UP_DURATION){
         this.powerUpIncrease = 1
         this.invertCommands = 1
         this.stopFlag = false
-        console.log("reseted")
-        this.elapsedFlag = true
+        this.sprite.removeNumber("elapsed"+this.secondsPassed.toString())
+        this.collided = false
+        this.secondsPassed = null
         this.powerUpTimer = new THREE.Clock(false);
       }
     }
