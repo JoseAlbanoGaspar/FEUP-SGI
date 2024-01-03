@@ -44,16 +44,27 @@ class MyGameMenu extends THREE.Object3D {
     }
 
     async choose() {
+        let info = []
         let pickingButtonMenu = new MyPicking(this.app, "button")
         pickingButtonMenu.addPickableObjects(this.buttonEasy)
         pickingButtonMenu.addPickableObjects(this.buttonMedium)
         pickingButtonMenu.addPickableObjects(this.buttonHard)
         await pickingButtonMenu.pick()
-        if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy" ||
-            pickingButtonMenu.getIntersectedObject().name === "mybuttonmedium" ||
-            pickingButtonMenu.getIntersectedObject().name === "mybuttonhard") 
-            return "game"
-       
+        
+        if(pickingButtonMenu.getIntersectedObject().name === "mybuttoneasy") {
+            info.push("game", 0)
+            
+        }
+
+        else if(pickingButtonMenu.getIntersectedObject().name === "mybuttonmedium") {
+            info.push("game", 1)
+        }
+
+        else if(pickingButtonMenu.getIntersectedObject().name === "mybuttonhard") {
+            info.push("game", 2)
+        }
+        
+        return info
     }
 }
 

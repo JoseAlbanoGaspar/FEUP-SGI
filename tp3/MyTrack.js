@@ -17,7 +17,8 @@ class MyTrack extends THREE.Object3D {
 
         this.routes = [
             new MyRoutes().route1(),
-            new MyRoutes().route2()
+            new MyRoutes().route2(),
+            new MyRoutes().route3()
         ]
 
         //updated with trackMap

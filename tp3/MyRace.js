@@ -4,12 +4,12 @@ import { MySpriteSheets } from './MySpritesheets.js';
 import { MyStartLine } from './MyStartLine.js';
 
 class MyRace {
-    constructor(app, playerCar, opponentCar, track) {
+    constructor(app, playerCar, opponentCar, track, mode) {
         this.app = app;
         this.playerCar = playerCar;
         this.opponentCar = opponentCar;
         this.track = track;
-        this.route = this.track.getRoutes()[0]; // choosing the route
+        this.route = this.track.getRoutes()[mode]; // choosing the route
         this.wheelsMixers = []; // keeps mixer for each wheel
         this.initialized = false; // true after init() function and used on update()
 
@@ -209,8 +209,6 @@ class MyRace {
             
         }
 
-        console.log(this.playerTime)
-        console.log(this.opponentTime)
     }
 
     checkWinner() {

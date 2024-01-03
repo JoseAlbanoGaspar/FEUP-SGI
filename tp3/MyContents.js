@@ -146,14 +146,16 @@ class MyContents  {
                 this.oldState = "chooseOpponentCar"
                 await this.chooseOpponentCar()
                 this.app.setActiveCamera("GameMenu")
-                this.initialState()
                 this.state = "gameMenu"
                 break;
                 
             case "gameMenu":
                 this.oldState = "gameMenu"
                 let menu = new MyGameMenu(this.app)
-                this.state = await menu.choose()
+                let info = await menu.choose()
+                this.state = info[0]
+                this.mode = info[1]
+                this.initialState()
                 this.app.setActiveCamera("Perspective")
                 break;
                     
@@ -221,7 +223,7 @@ class MyContents  {
     initialState() {
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.colorPlayer, true);
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
-        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
+        this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track, this.mode);
         this.drawPowerUps()
         this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 78, -60, "pr" + this.race.getPlayerLap().toString()))
         this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 68, -60, "or" + this.race.getOpponentLap().toString()))
