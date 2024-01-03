@@ -320,7 +320,7 @@ class MyCar extends THREE.Object3D {
 
     reduceVelocity() {
       this.powerUpTimer = new THREE.Clock()
-      this.invertCommands = -1
+      this.invertCommands = -1 // this inverts the keys a and d
       this.collided = true
       //this.powerUpIncrease = 0.001;
     }

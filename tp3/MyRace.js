@@ -168,8 +168,7 @@ class MyRace {
                 this.cheatCheck.fill(false);
         }
         else if (this.prevOpponentPos.z < 0 && currentOpponentPos.z >= 0) {
-            this.opponentLaps++;
-            
+            this.opponentLaps++;            
         }
 
         this.prevPlayerPos = currentPlayerPos.clone()
@@ -188,9 +187,12 @@ class MyRace {
     }
 
     updateTimers() {
-        const elapsedTime = this.timer.getDelta()
-        this.playerTime += elapsedTime
-        this.opponentTime += elapsedTime
+        const elapsed = this.timer.getDelta()
+        if (this.playerLaps != this.LAP_NUM)
+            this.playerTime += elapsed
+        
+        if (this.opponentLaps != this.LAP_NUM)
+            this.opponentTime += elapsed
 
         //ATENÇÃO QUE NO RESTART PODE DAR PROBLEMAS COM O COUNTTIME, TEM QUE SER REINICIADO
         const s = this.playerTime.toString().split('.')[0]
@@ -207,6 +209,8 @@ class MyRace {
             
         }
 
+        console.log(this.playerTime)
+        console.log(this.opponentTime)
     }
 
     checkWinner() {
