@@ -2,29 +2,28 @@ import * as THREE from 'three'
 
 class MyFirework {
 
-    constructor(app, scene) {
+    constructor(app) {
         this.app = app
-        this.scene = scene
 
         this.done     = false 
         this.dest     = [] 
         
-        this.vertices = null
-        this.colors   = null
+        this.vertices = []
+        this.colors   = []
         this.geometry = null
         this.points   = null
         
         this.material = new THREE.PointsMaterial({
-            size: 0.1,
-            color: 0xffffff,
+            size: 1,
+            color: this.colors,
             opacity: 1,
             vertexColors: true,
             transparent: true,
             depthTest: false,
         })
         
-        this.height = 20
-        this.speed = 60
+        this.height = 200
+        this.speed = 40
 
         this.launch() 
 
@@ -34,43 +33,73 @@ class MyFirework {
      * compute particle launch
      */
 
-    launch() {
-        let color = new THREE.Color()
-        color.setHSL( THREE.MathUtils.randFloat( 0.1, 0.9 ), 1, 0.9 )
-        let colors = [ color.r, color.g, color.b ]
-
-        let x = THREE.MathUtils.randFloat( -5, 5 ) 
-        let y = THREE.MathUtils.randFloat( this.height * 0.9, this.height * 1.1)
-        let z = THREE.MathUtils.randFloat( -5, 5 ) 
-        this.dest.push( x, y, z ) 
-        let vertices = [0,0,0]
-        
-        this.geometry = new THREE.BufferGeometry()
-        this.geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(vertices), 3 ) );
-        this.geometry.setAttribute( 'color', new THREE.BufferAttribute( new Float32Array(colors), 3 ) );
-        this.points = new THREE.Points( this.geometry, this.material )
-        this.points.castShadow = true;
-        this.points.receiveShadow = true;
-        this.app.scene.add( this.points )  
-        console.log("firework launched")
+     launch() {
+        console.log("chega aqui=====")
+        let x = THREE.MathUtils.randFloat(700, 800);
+        let y = THREE.MathUtils.randFloat(20, 200);
+        let z = THREE.MathUtils.randFloat(-120, 120);
+    
+        let from = new THREE.Vector3(x, -10, z);
+        this.dest.push(x, y, z);
+    
+        let color = new THREE.Color();
+        color.setHSL(THREE.MathUtils.randFloat(0.1, 0.9), 1, 0.5);
+        this.colors.push(...color);
+    
+        let vertices = from;
+    
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices.toArray()), 3));
+        this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.colors), 3));
+        this.points = new THREE.Points(this.geometry, this.material);
+        this.app.scene.add(this.points);
+        console.log("firework launched");
     }
+    
 
     /**
      * compute explosion
      * @param {*} vector 
      */
-    explode(vector) {
+    explode(pos) {
+        this.app.scene.remove( this.points );  
+        this.dest     = []; 
+        this.colors   = []; 
+        
+        for( var i = 0; i < 80; i++ )
+        {
+            var color = new THREE.Color()
+            color.setHSL( THREE.MathUtils.randFloat( 0.1, 0.9 ), 1, 0.5 )
+            this.colors.push( ...color )
+            
+            var from = [ 
+                THREE.MathUtils.randFloat( pos[0] - 30, pos[0] + 30 ), 
+                THREE.MathUtils.randFloat( pos[1] - 30, pos[1] + 30 ), 
+                THREE.MathUtils.randFloat( pos[2] - 30, pos[2] + 30 )
+            ]
+           
+            var to = [
+                THREE.MathUtils.randFloat( pos[0] - 50, pos[0] + 50 ), 
+                THREE.MathUtils.randFloat( pos[1] - 50, pos[1] + 50 ), 
+                THREE.MathUtils.randFloat( pos[2] - 50, pos[2] + 50 )
+            ]
+            this.vertices.push( ...from );
+            this.dest.push( ...to ); 
+        }
 
-       
-        this.app.scene.remove( this.points )
-        this.points.geometry.dispose()
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.vertices), 3));
+        this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.colors), 3));
+        this.points = new THREE.Points(this.geometry, this.material);
+        console.log(this.points)
+        this.app.scene.add( this.points );
+        
     }
     
     /**
      * cleanup
      */
     reset() {
-        console.log("firework reseted")
         this.app.scene.remove( this.points )  
         this.dest     = [] 
         this.vertices = null
@@ -95,7 +124,7 @@ class MyFirework {
             // lerp particle positions 
             let j = 0
             for( let i = 0; i < vertices.length; i+=3 ) {
-                vertices[i  ] += ( this.dest[i  ] - vertices[i  ] ) / this.speed
+                vertices[i] += ( this.dest[i] - vertices[i] ) / this.speed
                 vertices[i+1] += ( this.dest[i+1] - vertices[i+1] ) / this.speed
                 vertices[i+2] += ( this.dest[i+2] - vertices[i+2] ) / this.speed
             }
@@ -106,7 +135,8 @@ class MyFirework {
                 //is YY coordinate higher close to destination YY? 
                 if( Math.ceil( vertices[1] ) > ( this.dest[1] * 0.95 ) ) {
                     // add n particles departing from the location at (vertices[0], vertices[1], vertices[2])
-                    this.explode(vertices, 80, this.height * 0.05, this.height * 0.8) 
+                    let pos = [vertices[0], vertices[1], vertices[2]]
+                    this.explode(pos) 
                     return 
                 }
             }
@@ -114,7 +144,7 @@ class MyFirework {
             // are there a lot of particles (aka already exploded)?
             if( count > 1 ) {
                 // fade out exploded particles 
-                this.material.opacity -= 0.015 
+                this.material.opacity -= 0.02 
                 this.material.needsUpdate = true
             }
             

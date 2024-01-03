@@ -1,11 +1,10 @@
 import * as THREE from 'three'
 import { MySpriteSheets } from "./MySpritesheets.js"
 import { MyPicking } from "./MyPicking.js"
-import { MyFirework } from './MyFirework.js';
 
 class MyEndDisplay extends THREE.Object3D {
 
-    constructor(app, winner, p_time, o_time) {
+    constructor(app, winner, playerName, p_time, o_time) {
         super()
         this.app = app;
 
@@ -17,42 +16,46 @@ class MyEndDisplay extends THREE.Object3D {
         display.scale.set(1, 0.5, 1)
 
         let sprite = new MySpriteSheets(this.app)
-        sprite.createWord("p_time", 820, 50, 95, true)
-        sprite.createWord("o_time", 820, 40, 95, true)
-        sprite.createWord("winner", 820, 30, 95, true)
-        sprite.createWord("loser", 820, 20, 95, true)
+        this.app.scene.add(sprite.createWord("p_time", 820, 50, 95, true))
+        this.app.scene.add(sprite.createWord("o_time", 820, 40, 95, true))
+        this.app.scene.add(sprite.createWord("winner", 820, 30, 95, true))
+        this.app.scene.add(sprite.createWord("loser", 820, 20, 95, true))
 
-        sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true)
-        sprite.createNumbers(p_time.toString().split(".")[0], 820, 40, -40, true)
+        this.app.scene.add(sprite.createNumbers(p_time.toString().split(".")[0], 820, 50, -40, true))
+        this.app.scene.add(sprite.createNumbers(o_time.toString().split(".")[0], 820, 40, -40, true))
         
         
         if(winner === 0) {
-            sprite.createWord("player", 820, 30, -40, true)
-            sprite.createWord("opponent", 820, 20, -40, true)
+            this.app.scene.add(sprite.createWord(playerName, 820, 30, -40, true))
+            this.app.scene.add(sprite.createWord("opponent", 820, 20, -40, true))
         }
 
         else {
-            sprite.createWord("opponent", 820, 30, -40, true)
-            sprite.createWord("player", 820, 20, -40, true)
+            this.app.scene.add(sprite.createWord("opponent", 820, 30, -40, true))
+            this.app.scene.add(sprite.createWord(playerName, 820, 20, -40, true))
         }
-        const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" });
-        const plane = new THREE.PlaneGeometry(50, 20, 60, 70);
 
-        this.buttonRestart = new THREE.Mesh(plane, planeMaterial);
-        this.buttonRestart.rotation.y = Math.PI/2
-        this.buttonRestart.position.set(822, -35, -70)
-        this.buttonRestart.name = "mybuttonRestart"
+        this.app.scene.add(sprite.createWord("car player", 820, 10, 95, true))
+        this.app.scene.add(sprite.createWord("car op", 820, 0, 95, true))
+
+        const planeMaterial = new THREE.MeshBasicMaterial({ color: "#00ff00" });
+        const plane = new THREE.PlaneGeometry(60, 20, 60, 70);
 
         this.buttonInitRace = new THREE.Mesh(plane, planeMaterial);
         this.buttonInitRace.rotation.y = Math.PI/2
-        this.buttonInitRace.position.set(822, -35, 70)
+        this.buttonInitRace.position.set(822, -35, -70)
         this.buttonInitRace.name = "mybuttonInit"
+        this.app.scene.add(sprite.createWord("start", 824, -35, -55, true))
+
+        this.buttonRestart = new THREE.Mesh(plane, planeMaterial);
+        this.buttonRestart.rotation.y = Math.PI/2
+        this.buttonRestart.position.set(822, -35, 70)
+        this.buttonRestart.name = "mybuttonRestart"
+        this.app.scene.add(sprite.createWord("restart", 824, -35, 92, true))
         
         this.app.scene.add(display)
         this.app.scene.add(this.buttonRestart)
         this.app.scene.add(this.buttonInitRace)
-
-        let firework = new MyFirework(this.app)
 
     }
 
@@ -63,16 +66,17 @@ class MyEndDisplay extends THREE.Object3D {
         await pickingButton.pick()
         
         if(pickingButton.getIntersectedObject().name === "mybuttonRestart") {
-            this.app.setActiveCamera("Initial")
-            return "start"
+            this.app.setActiveCamera("Perspective")
+            //CUIDADO PORQUE O JOGO COMEÇA SEM CARROS...
+            return "game"
         }
 
         else {
-            this.app.setActiveCamera("Perspective")
-            return "game"
+            this.app.setActiveCamera("Initial")
+            return "start"
         }
-       
     }
+
 }
 
 export { MyEndDisplay };

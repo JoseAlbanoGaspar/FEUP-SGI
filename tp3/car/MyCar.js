@@ -3,6 +3,7 @@ import { MyWheel } from './MyWheel.js';
 import { MyCarAxis } from './MyCarAxis.js';
 import { MyBody } from './MyBody.js';
 import { MyCarLights } from './MyCarLights.js';
+import { MySpriteSheets } from '../MySpritesheets.js';
 
 
 class MyCar extends THREE.Object3D {
@@ -84,6 +85,10 @@ class MyCar extends THREE.Object3D {
         this.powerUpIncrease = 1; // this factor increases to increase velocity and decreases to reduce velocity
         this.stopFlag = false
         this.invertCommands = 1
+        this.elapsedFlag = false
+
+        this.sprite = new MySpriteSheets(this.app)
+
     }
 
     getPosition(){
@@ -331,12 +336,12 @@ class MyCar extends THREE.Object3D {
 
     updatePowerUpIncrease() {
       const elapsed = this.powerUpTimer.getElapsedTime()
-      //console.log("elapsed: ", elapsed)
       if (elapsed > this.POWER_UP_DURATION){
         this.powerUpIncrease = 1
         this.invertCommands = 1
         this.stopFlag = false
         console.log("reseted")
+        this.elapsedFlag = true
         this.powerUpTimer = new THREE.Clock(false);
       }
     }

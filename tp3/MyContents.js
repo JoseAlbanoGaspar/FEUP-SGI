@@ -13,6 +13,7 @@ import { MyGameMenu } from './MyGameMenu.js';
 import { MyOutdoor } from './MyOutdoor.js';
 import { MyEndDisplay } from './MyEndDisplay.js';
 import { MySpriteSheets } from './MySpritesheets.js';
+import { MyFirework } from './MyFirework.js';
 
 /**
  *  This class contains the contents of out application
@@ -36,8 +37,10 @@ class MyContents  {
         this.initialized = false
         this.state = "start"
         this.oldState = null
-        this.oldLapP = null
-        this.oldLapO = null
+        this.oldLapP = 0
+        this.oldLapO = 0
+        this.typeCollision = ""
+        this.fireworks = []
     }
 
     initializeParkingLots() {
@@ -84,6 +87,9 @@ class MyContents  {
         for (let obstacle in this.obstacles){
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
             if(distance <= 3){
+                this.typeCollision = "obstacle"
+                this.app.scene.add(this.sprite.createWord("obstacle collision", -122, 28, 110, true))
+                this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
                 this.playerCar.reduceVelocity()
             }
         }
@@ -92,9 +98,12 @@ class MyContents  {
     async colisionWithPowerUps() {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
-            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){               
+            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){ 
+                this.typeCollision = "powerup"          
                 this.collidedObs = true
                 this.state = "chooseObstacle"  
+                this.app.scene.add(this.sprite.createWord("powerup collision", -122, 28, 110, true))
+                this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
             }
@@ -107,8 +116,10 @@ class MyContents  {
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
         if(distance <= 5){
+            this.typeCollision = "car"
+            this.app.scene.add(this.sprite.createWord("car collision", -122, 28, 110, true))
+            this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
             this.playerCar.stop()
-            console.log("colided")
         }
     }
 
@@ -118,6 +129,8 @@ class MyContents  {
                 let st = new MyInitialMenu(this.app)
                 this.oldState = "start"
                 this.state = await st.start()
+                this.playerName = st.getPlayerName()
+                console.log(this.playerName)
                 this.app.setActiveCamera("PlayerPark")
                 break;
 
@@ -145,6 +158,7 @@ class MyContents  {
                     
             case "game":
                 this.oldState = "game"
+                
                 break;
 
             case "chooseObstacle":
@@ -161,7 +175,7 @@ class MyContents  {
                 
             case "end":
                 this.oldState = "end"
-                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.race.getPlayerTime(), this.race.getOpponentTime())
+                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.playerName, this.race.getPlayerTime(), this.race.getOpponentTime())
                 this.state = await end.choose()
                 break;    
         
@@ -208,6 +222,8 @@ class MyContents  {
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track);
         this.drawPowerUps()
+        this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -60, true))
+        this.app.scene.add(this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -60, true))
     }
 
     initMountains() {
@@ -342,8 +358,6 @@ class MyContents  {
         textureMaterialBottom.wrapT = THREE.RepeatWrapping;
         textureMaterialBottom.repeat.set(16, 16);
 
-        
-
         materialObject5.map = textureMaterialBottom
  
         const bottom_plane = new THREE.Mesh(geometry5, materialObject5)
@@ -413,6 +427,7 @@ class MyContents  {
 
         new MyOutdoor(this.app)
         this.sprite = new MySpriteSheets(this.app)
+        this.sprite.createNumbers("120", -122, 48, -60, true)
 
         this.initSkyBox()
         this.initFence()
@@ -518,6 +533,39 @@ class MyContents  {
      * 
      */
 
+    updateSpritesheets() {
+        if(this.oldLapP !== this.race.getPlayerLap()) {
+            this.app.scene.add(this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -60, true))
+            this.oldLapP = this.race.getPlayerLap()
+        }
+
+        if(this.oldLapO !== this.race.getOpponentLap()){
+            this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -60, true)
+            this.oldLapO = this.race.getOpponentLap()
+        }
+
+        if(this.playerCar.elapsedFlag) {
+            this.sprite.removeSprite("elapsed time")
+            switch (this.typeCollision) {
+                case "car":
+                    this.sprite.removeSprite("car collision")
+                    break;
+            
+                case "obstacle":
+                    this.sprite.removeSprite("obstacle collision")
+                    break;   
+                
+                case "powerup":
+                    this.sprite.removeSprite("powerup collision")
+                break;
+                default:
+                    break;
+            }
+        
+        }
+
+    }
+
     update() {
         if(this.state !== this.oldState) this.stateGame(this.state)
 
@@ -527,20 +575,12 @@ class MyContents  {
             this.colisionWithPowerUps();
             this.colisionWithOtherCar();
 
+            this.updateSpritesheets()
             if(this.race.gameOver()) {
                 this.state = "end"
-                console.log("op", this.race.getOpponentTime())
+                this.changeCamera=true
             }
 
-            if(this.oldLapP !== this.race.getPlayerLap()) {
-                this.sprite.createNumbers(this.race.getPlayerLap(), -122, 68, -40, true)
-                this.oldLapP = this.race.getPlayerLap()
-            }
-    
-            if(this.oldLapO !== this.race.getOpponentLap()){
-                this.sprite.createNumbers(this.race.getOpponentLap(), -122, 58, -40, true)
-                this.oldLapO = this.race.getOpponentLap()
-            }
         }
 
         // update shaders
@@ -548,6 +588,25 @@ class MyContents  {
             if (this.shaders[currentShader] !== undefined && this.shaders[currentShader] !== null) {
                 this.shaders[currentShader].update(this.app.clock.getElapsedTime())
                 
+        }
+
+        if(this.state === "end") {
+            // add new fireworks every 5% of the calls
+            if(Math.random()  < 0.1 ) {
+                this.fireworks.push(new MyFirework(this.app, this))
+            }
+
+            // for each fireworks 
+            for( let i = 0; i < this.fireworks.length; i++ ) {
+                // is firework finished?
+                if (this.fireworks[i].done) {
+                    // remove firework 
+                    this.fireworks.splice(i,1) 
+                    continue 
+                }
+                // otherwise upsdate  firework
+                this.fireworks[i].update()
+            }
         }
 
     }

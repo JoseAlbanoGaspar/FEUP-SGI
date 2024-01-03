@@ -13,7 +13,7 @@ class MyRace {
         this.initialized = false; // true after init() function and used on update()
 
         // lap counter
-        this.LAP_NUM = 3;
+        this.LAP_NUM = 1;
         this.playerLaps = 0;
         this.prevPlayerPos = this.playerCar.getPosition();
         this.opponentLaps = 0;
