@@ -45,15 +45,18 @@ class MyContents  {
         this.restarted = false
     }
 
+    /**
+     * create and displays the parking lots
+     */
     initializeParkingLots() {
         this.playerPark = new MyParkingLot(145, -80)
-        this.car1 = new MyCar(this.app, 145, -90, Math.PI, "#ff0000", true)
+        this.car1 = new MyCar(this.app, 145, -90, Math.PI, "#ff1111", true)
         this.car2 = new MyCar(this.app, 145, -76, Math.PI, "#ff00ff", true)
-        this.car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa500", true)
+        this.car3 = new MyCar(this.app, 145, -62, Math.PI, "#ffa511", true)
         
         this.opponentPark = new MyParkingLot(145, 80)
-        this.carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#0000ff", true)
-        this.carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#006400", true)
+        this.carOpponent1 = new MyCar(this.app, 145, 70, Math.PI, "#1111ff", true)
+        this.carOpponent2 = new MyCar(this.app, 145, 84, Math.PI, "#116411", true)
         this.carOpponent3 = new MyCar(this.app, 145, 98, Math.PI, "#7600bc", true)
 
         this.obstaclesPark = new MyParkingLot(145, 0)
@@ -79,30 +82,34 @@ class MyContents  {
         
     }
 
+    /**
+     * draw the powerups
+     */
     drawPowerUps() {
         const powerups = new MyPowerUps(this.app, 20, 80)
         this.powerUps.push(powerups)
         return powerups
     }
 
+    /**
+     * detects collision with obs
+     */
     colisionWithObstacle() {
         for (let obstacle in this.obstacles){
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
             if(distance <= 3){
-                this.typeCollision = "obstacle"
-                this.app.scene.add(this.sprite.createWord("obstacle collision", -122, 28, 110, true))
+                this.typeCollision = "obstacle" 
                 this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
                 this.playerCar.reduceVelocity()
             }
         }
     }
   
-    async colisionWithPowerUps() {
+    colisionWithPowerUps() {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
             if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){ 
                 this.typeCollision = "powerup"          
-                this.collidedObs = true
                 this.state = "chooseObstacle"  
                 this.app.scene.add(this.sprite.createWord("powerup collision", -122, 28, 110, true))
                 this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
@@ -119,8 +126,7 @@ class MyContents  {
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
         if(distance <= 5){
-            this.typeCollision = "car"
-            this.app.scene.add(this.sprite.createWord("car collision", -122, 28, 110, true))
+            this.typeCollision = "car" 
             this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
             this.playerCar.stop()
         }
@@ -129,16 +135,16 @@ class MyContents  {
     async stateGame() {
         switch (this.state) {
             case "start":
-                let st = new MyInitialMenu(this.app)
+                if(this.initial !== undefined) this.app.scene.remove(this.initial)
+                this.initial = new MyInitialMenu(this.app)
+                this.app.scene.add(this.initial)
                 this.oldState = "start"
-                this.state = await st.start()
-                this.playerName = st.getPlayerName()
-                console.log(this.playerName)
+                this.state = await this.initial.start()
+                this.playerName = this.initial.getPlayerName()
                 this.app.setActiveCamera("PlayerPark")
                 break;
 
             case "choosePlayerCar":
-                if(this.restart === "restart") this.race.restart()
                 this.oldState = "choosePlayerCar"
                 await this.choosePlayerCar()
                 this.state = "chooseOpponentCar"
@@ -164,7 +170,6 @@ class MyContents  {
                     
             case "game":
                 this.oldState = "game"
-                
                 break;
 
             case "chooseObstacle":
@@ -174,20 +179,18 @@ class MyContents  {
                 this.race.resumeGame()
                 this.state = "game"
                 break; 
-
-            case "pause":
-                this.state = "pause"
-                break;    
                 
             case "end":
+                if(this.end !== undefined) this.app.scene.remove(this.end)
                 this.oldState = "end"
-                let end = new MyEndDisplay(this.app, this.race.checkWinner(), this.playerName, this.race.getPlayerTime(), this.race.getOpponentTime(), this.mode)
-                let infos = await end.choose()
-                this.state = infos[1]
+                this.end = new MyEndDisplay(this.app, this.race.checkWinner(), this.playerName, this.race.getPlayerTime(), this.race.getOpponentTime(), this.mode, this.colorPlayer.getHex().toString(16), this.colorOpponent.getHex().toString(16))
+                this.app.scene.add(this.end)
+                this.state = await this.end.choose()
+                this.restartGame()
+                this.race.restart()
                 break;    
-        
+            
             default:
-                console.log("nvjhbrvbnvrhj")
                 break;
         }
     }
@@ -215,7 +218,6 @@ class MyContents  {
     }
 
     async chooseObstacle() {
-        
         let pickingObstacle = new MyPicking(this.app, "obstacle")
         pickingObstacle.addPickableObjects(this.obst1)
         pickingObstacle.addPickableObjects(this.obst2)
@@ -225,6 +227,7 @@ class MyContents  {
     }
 
     initialState() {
+        console.log("op", this.colorOpponent.getHex().toString(16))
         this.playerCar = new MyCar(this.app, 47, 0, Math.PI / 2, this.colorPlayer, true);
         this.opponentCar = new MyCar(this.app, 56, 0, 0, this.colorOpponent, false);
         this.race = new MyRace(this.app, this.playerCar, this.opponentCar, this.track, this.mode);
@@ -399,11 +402,6 @@ class MyContents  {
         for (const mountain in this.mountains) {
             this.setCurrentShader(this.shaders[1], this.mountains[mountain])
         }
-         // set initial shader
-         //this.onSelectedShaderChanged(this.selectedShaderIndex);
- 
-         // set initial shader details visualization
-         //this.onShaderCodeVizChanged(this.showShaderCode);
     }
 
     setCurrentShader(shader, selectedObject) {
@@ -417,6 +415,22 @@ class MyContents  {
         }
     }
 
+    restartGame() {
+        for (let obs in this.obstacles) {
+            if(this.obstacles[obs].name === "obs1") {
+                this.obstacles[obs].position.set(145, 2, 3)
+            }
+            else if(this.obstacles[obs].name === "obs2") {
+                this.obstacles[obs].position.set(145, 2, 16)
+            }
+            else {
+                this.obstacles[obs].position.set(145, 2, -10)
+            }
+        }
+        this.sprite.removeNumber("pr" + this.oldLapP.toString())
+        this.sprite.removeNumber("or" + this.oldLapO.toString())
+    }
+
     //-----------------END OF SHADER FUNCTIONS ----------------------
 
     /**
@@ -424,7 +438,6 @@ class MyContents  {
      * this method is called from the render method of the app
      * 
      */
-
     updateSpritesheets() {
         if(this.oldLapP !== this.race.getPlayerLap()) {
             this.sprite.removeNumber("pr" + this.oldLapP.toString())
@@ -444,11 +457,9 @@ class MyContents  {
                 case "car":
                     this.sprite.removeSprite("car collision")
                     break;
-            
                 case "obstacle":
                     this.sprite.removeSprite("obstacle collision")
                     break;   
-                
                 case "powerup":
                     this.sprite.removeSprite("powerup collision")
                     this.sprite.removeNumber("v150")
@@ -456,9 +467,7 @@ class MyContents  {
                 default:
                     break;
             }
-        
         }
-
     }
 
     update() {
@@ -469,8 +478,8 @@ class MyContents  {
             this.colisionWithObstacle();
             this.colisionWithPowerUps();
             this.colisionWithOtherCar();
-
             this.updateSpritesheets()
+
             if(this.race.gameOver()) {
                 this.state = "end"
             }
@@ -493,7 +502,6 @@ class MyContents  {
                     this.fireworks.splice(i,1) 
                     continue 
                 }
-                
                 this.fireworks[i].update()
             }
         }

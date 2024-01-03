@@ -32,14 +32,14 @@ class MyInitialMenu extends THREE.Object3D {
         this.input.position.set(400, -40, 0)
 
         this.sprite = new MySpriteSheets(this.app)
-        this.app.scene.add(this.sprite.createWord("feup turismo", 401, 60, 40, true))
-        this.app.scene.add(this.sprite.createWord("start", 401, 0, 16, true))
+        this.add(this.sprite.createWord("feup turismo", 401, 60, 40, true))
+        this.add(this.sprite.createWord("start", 401, 0, 16, true))
 
-        this.app.scene.add(this.sprite.createWord("inês gaspar", 401, -70, 170, true))
-        this.app.scene.add(this.sprite.createWord("josé gaspar", 401, -70, -90, true))
-        this.app.scene.add(menu)
-        this.app.scene.add(this.buttonInit)
-        this.app.scene.add(this.input)
+        this.add(this.sprite.createWord("inês gaspar", 401, -70, 170, true))
+        this.add(this.sprite.createWord("josé gaspar", 401, -70, -90, true))
+        this.add(menu)
+        this.add(this.buttonInit)
+        this.add(this.input)
 
         this.keyDownHandler = this.handleKeyDown.bind(this);
         document.addEventListener('keydown', this.keyDownHandler);
@@ -151,5 +151,7 @@ class MyInitialMenu extends THREE.Object3D {
             this.z = this.z - 8
         }
     }
+
+    MyInitialMenu.prototype.isGroup = true
 
 export { MyInitialMenu };

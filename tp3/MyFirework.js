@@ -34,8 +34,8 @@ class MyFirework {
      */
 
      launch() {
-        let x = THREE.MathUtils.randFloat(700, 800);
-        let y = THREE.MathUtils.randFloat(20, 200);
+        let x = THREE.MathUtils.randFloat(750, 800);
+        let y = THREE.MathUtils.randFloat(20, 150);
         let z = THREE.MathUtils.randFloat(-120, 120);
     
         let from = new THREE.Vector3(x, -10, z);

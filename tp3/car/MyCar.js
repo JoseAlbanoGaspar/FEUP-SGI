@@ -315,14 +315,12 @@ class MyCar extends THREE.Object3D {
       if (!this.mapCoordinatesToPixelIndex(this.position.x, this.position.z, this.trackSize)) {
         this.velocity *= 0.95
       }
-      
     }
 
     reduceVelocity() {
       this.powerUpTimer = new THREE.Clock()
       this.invertCommands = -1 // this inverts the keys a and d
       this.collided = true
-      //this.powerUpIncrease = 0.001;
     }
 
     increaseVelocity() {

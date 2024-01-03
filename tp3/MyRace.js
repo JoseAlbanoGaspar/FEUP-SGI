@@ -25,6 +25,7 @@ class MyRace {
         this.timer = new THREE.Clock()
         this.playerTime = 0;  // these variables are in seconds
         this.opponentTime = 0;
+        this.timerGlobal = 0
 
         //game pause and its event listener
         this.isPaused = false;
@@ -197,8 +198,9 @@ class MyRace {
         if (this.opponentLaps != this.LAP_NUM)
             this.opponentTime += elapsed
 
-        //ATENÇÃO QUE NO RESTART PODE DAR PROBLEMAS COM O COUNTTIME, TEM QUE SER REINICIADO
-        const s = this.playerTime.toString().split('.')[0]
+        this.timerGlobal += elapsed    
+
+        const s = this.timerGlobal.toString().split('.')[0]
         if(s !== this.countTime) {
             if(this.countTime === null) {
               this.countTime = s
@@ -231,6 +233,10 @@ class MyRace {
     }
 
     restart() {
+        this.sprite.removeNumber("time"+this.countTime.toString())
+        this.timer = 0
+        this.playerTime = 0
+        this.opponentTime = 0
         this.playerLaps = 0
         this.opponentLaps = 0
         this.countTime = null

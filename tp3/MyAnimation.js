@@ -10,6 +10,9 @@ class MyAnimation {
         this.initAnimation();
     }
 
+    /**
+     * Generates all the animations for the automatic car
+     */
     initAnimation() {
         const numKeyframes = this.route.length; // Get the length of this.route
         const keyframeIndices = Array.from({ length: numKeyframes }, (_, i) => i);
@@ -78,14 +81,23 @@ class MyAnimation {
         this.steeringClip = new THREE.AnimationClip('steeringAnimation', this.animationMaxDuration, [quaterionWheelsKF])
     }
 
+    /**
+     * get animation for the position of the automatic car
+     */
     getPositionClip() {
         return this.positionClip;
     }
 
+    /**
+     * get animation for the rotation of the automatic car
+     */
     getRotationClip() {
         return this.rotationClip;
     }
 
+    /**
+     * get animation for the wheels of the automatic car
+     */
     getWheelSteeringClip() {
         return this.steeringClip;
     }
