@@ -146,7 +146,7 @@ class MyInitialMenu extends THREE.Object3D {
         }
 
         auxFunction(char) {
-            this.app.scene.add(this.sprite.createWord(char, this.x, this.y, this.z, true))
+            this.add(this.sprite.createWord(char, this.x, this.y, this.z, true))
             this.playerName += char
             this.z = this.z - 8
         }

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { MyAxis } from './MyAxis.js';
 import { MyCar } from './car/MyCar.js';
 import { MyTrack } from './MyTrack.js';
 import { MyParkingLot } from './MyParkingLot.js';
@@ -98,8 +97,6 @@ class MyContents  {
         for (let obstacle in this.obstacles){
             let distance = this.playerCar.getPosition().distanceTo(this.obstacles[obstacle].position);
             if(distance <= 3){
-                this.typeCollision = "obstacle" 
-                this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
                 this.playerCar.reduceVelocity()
             }
         }
@@ -108,11 +105,8 @@ class MyContents  {
     colisionWithPowerUps() {
         for (let powerUp in this.powerUps){       
             let distance = this.playerCar.getPosition().distanceTo(this.powerUps[powerUp].getObject().position);
-            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){ 
-                this.typeCollision = "powerup"          
+            if (distance <= 2 && !this.powerUps[powerUp].previouslyCollided()){         
                 this.state = "chooseObstacle"  
-                this.app.scene.add(this.sprite.createWord("powerup collision", -122, 28, 110, true))
-                this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
                 this.app.scene.add(this.sprite.createNumbers("150", -122, 58, -60, "v150"))
                 this.playerCar.increaseVelocity()
                 this.powerUps[powerUp].disableCollision()
@@ -126,8 +120,6 @@ class MyContents  {
     colisionWithOtherCar() {
         let distance = this.playerCar.getPosition().distanceTo(this.opponentCar.getPosition());
         if(distance <= 5){
-            this.typeCollision = "car" 
-            this.app.scene.add(this.sprite.createWord("elapsed time", -122, 18, 110, true))
             this.playerCar.stop()
         }
     }
@@ -277,12 +269,6 @@ class MyContents  {
      * initializes the contents
      */
     init() {
-        // create once 
-        if (this.axis === null) {
-            // create and attach the axis to the scene
-            this.axis = new MyAxis(this)
-            this.app.scene.add(this.axis)
-        }
 
         const pointLight = new THREE.PointLight( 0xffffff, 1000, 0 );
         pointLight.position.set( 0, 20, 0 );
@@ -355,19 +341,11 @@ class MyContents  {
         const texture3  = new THREE.TextureLoader().load('textures/heightmap.jpg' )
         texture3.wrapS = THREE.RepeatWrapping;
         texture3.wrapT = THREE.RepeatWrapping;
-        
-        this.shaderSamplers = {
-            'obstacle' : texture1,
-            'mountain' : texture2,
-            'heightmap': texture3
-        }
 
         /**
          * Usage:
          *  index 0 - shader for pulsing obstacles
          *  index 1 - shader for mountains
-         *  index 2 - TBD 
-         *  ...
          */
         this.shaders = [
                 new MyShader(this.app, "Pulsing Obstacle", "Used to animate obstacles",
@@ -397,7 +375,7 @@ class MyContents  {
          // set initial shader on obstacles
         for (const obstacle in this.obstacles) {
             this.setCurrentShader(this.shaders[0], this.obstacles[obstacle])
-        } 
+        }
         
         for (const mountain in this.mountains) {
             this.setCurrentShader(this.shaders[1], this.mountains[mountain])
@@ -429,6 +407,10 @@ class MyContents  {
         }
         this.sprite.removeNumber("pr" + this.oldLapP.toString())
         this.sprite.removeNumber("or" + this.oldLapO.toString())
+        this.sprite.removeNumber("v150" + this.oldLapO.toString())
+
+        this.oldLapO = 0
+        this.oldLapP = 0
     }
 
     //-----------------END OF SHADER FUNCTIONS ----------------------
@@ -452,21 +434,7 @@ class MyContents  {
         }
 
         if(!this.playerCar.collided) {
-            this.sprite.removeSprite("elapsed time")
-            switch (this.typeCollision) {
-                case "car":
-                    this.sprite.removeSprite("car collision")
-                    break;
-                case "obstacle":
-                    this.sprite.removeSprite("obstacle collision")
-                    break;   
-                case "powerup":
-                    this.sprite.removeSprite("powerup collision")
-                    this.sprite.removeNumber("v150")
-                    break;
-                default:
-                    break;
-            }
+            this.sprite.removeNumber("v150")
         }
     }
 
@@ -491,12 +459,12 @@ class MyContents  {
                 this.shaders[currentShader].update(this.app.clock.getElapsedTime())
         }
 
+        //Fireworks
         if(this.state === "end") {
             if(Math.random()  < 0.1 ) {
                 this.fireworks.push(new MyFirework(this.app, this))
             }
 
-            // for each fireworks 
             for( let i = 0; i < this.fireworks.length; i++ ) {
                 if (this.fireworks[i].done) {
                     this.fireworks.splice(i,1) 

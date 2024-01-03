@@ -42,7 +42,7 @@ class MyRace {
 
         this.init();
         
-        this.debugKeyFrames(); // only for debug purposes
+        //this.debugKeyFrames(); // only for debug purposes
     }
 
     async init() {

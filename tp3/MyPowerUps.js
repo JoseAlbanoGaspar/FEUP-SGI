@@ -9,12 +9,12 @@ class MyPowerUps extends THREE.Object3D {
         this.collided = false;
         let texture = new THREE.TextureLoader().load("textures/powerup.jpg")
         const material = new THREE.MeshPhongMaterial({map: texture})
-        const box = new THREE.BoxGeometry(3, 3, 3, 32, 32, 32)
+        const box = new THREE.IcosahedronGeometry(2)
         const powerups = new THREE.Mesh(box, material)
         powerups.receiveShadow = true
         powerups.castShadow = true
 
-        powerups.position.set(x, 3, z)
+        powerups.position.set(x, 3.5, z)
 
         this.app.scene.add(powerups)
         this.mesh = powerups

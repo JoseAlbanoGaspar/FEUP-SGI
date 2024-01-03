@@ -85,7 +85,6 @@ class MyCar extends THREE.Object3D {
         this.powerUpIncrease = 1; // this factor increases to increase velocity and decreases to reduce velocity
         this.stopFlag = false
         this.invertCommands = 1
-        this.elapsedFlag = false
         this.collided = false
 
         this.secondsPassed = null
@@ -332,7 +331,7 @@ class MyCar extends THREE.Object3D {
     //Car stops during 5 seconds
     stop() {
       this.powerUpTimer = new THREE.Clock()
-      this.powerUpIncrease = 0;
+      this.stopFlag = true
       this.collided = true
     }
 
@@ -343,11 +342,11 @@ class MyCar extends THREE.Object3D {
       if(s !== this.secondsPassed && this.collided) {
         if(this.secondsPassed === null) {
           this.secondsPassed = s
-          this.app.scene.add(this.sprite.createNumbers(s, -122, 18, -60, "elapsed"+s.toString()))
+          this.app.scene.add(this.sprite.createNumbers(s, -122, 28, -60, "elapsed"+s.toString()))
         }
         else {
           this.sprite.removeNumber("elapsed"+this.secondsPassed.toString())
-          this.app.scene.add(this.sprite.createNumbers(s, -122, 18, -60, "elapsed"+s.toString()))
+          this.app.scene.add(this.sprite.createNumbers(s, -122, 28, -60, "elapsed"+s.toString()))
           this.secondsPassed = s
         }
       }
