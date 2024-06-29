@@ -1,4 +1,4 @@
-# SGI Project 1
+# SGI Project 2
 
 ## Group T03G35
 | Name             | Number    | E-Mail             |
